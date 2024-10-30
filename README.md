@@ -17,8 +17,11 @@ Kratko opisati cilj Vašeg projekta. Vaša motivacija?  (Napomena: odgovor nije 
 
 # Funkcijski zahtjevi
 **STANOVNICI:** pregledavati proizvode, potvrditi dolazak na događaje, spremiti ponude, ostavljati recenzije, ocjenjivati trgovine
+
 **VLASNICI:** objavljivati proizvode, kreirati događaje, kreirati ponude i popuste, odgovarati na recenzije
+
 **MODERATORI:** pregledavati i odobriti proizvode, ponude i događaje, uklanjati neprikladne recenzije
+
 **ADMINISTRATORI:** dodjeljivati uloge, izbaciti korisnike iz aplikacije po potrebi
 
 # Tehnologije
