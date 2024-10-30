@@ -4,9 +4,9 @@
 # Opis projekta
 Ovaj projekt je reultat timskog rada u sklopu projektnog zadatka kolegija [Programsko inženjerstvo](https://www.fer.unizg.hr/predmet/proinz) na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu. 
 
-CILJ: Cilj ovog projekta je razviti modernu i prilagođenu platformu za kupovinu u lokalnim trgovinama koja olakšava povezivanje stanovnika s kvartovskim trgovcima. Platforma pod nazivom "Kupuj u kvartu" pružit će digitalno mjesto za trgovine, dobavljače i kupce, gdje će moći lako razmjenjivati informacije o proizvodima, popustima, događajima i recenzijama. 
+#CILJ: Cilj ovog projekta je razviti modernu i prilagođenu platformu za kupovinu u lokalnim trgovinama koja olakšava povezivanje stanovnika s kvartovskim trgovcima. Platforma pod nazivom "Kupuj u kvartu" pružit će digitalno mjesto za trgovine, dobavljače i kupce, gdje će moći lako razmjenjivati informacije o proizvodima, popustima, događajima i recenzijama. 
 
-MOTIVACIJA: otivacija za projekt proizlazi iz potrebe za jednostavnijim i bržim pristupom proizvodima iz lokalnih trgovina, što omogućava veću podršku malim poduzetnicima u zajednici.
+#MOTIVACIJA: otivacija za projekt proizlazi iz potrebe za jednostavnijim i bržim pristupom proizvodima iz lokalnih trgovina, što omogućava veću podršku malim poduzetnicima u zajednici.
 
 PROBLEM KOJI RJEŠAVAMO: Ovaj projekt omogućava rješenje problema nepraktičnosti tradicionalne kupovine u lokalnim trgovinama, gdje stanovnici moraju fizički ići u različite trgovine kako bi pronašli ono što im treba. Naša platforma nudi jednostavno digitalno rješenje, gdje trgovine mogu promovirati svoje proizvode i usluge, a kupci na jednom mjestu pregledati ponudu, usporediti cijene, kupiti proizvode, dobiti popuste i potvrditi dolakaz na događaje.
 
