@@ -28,13 +28,13 @@ Kratko opisati cilj Vašeg projekta. Vaša motivacija?  (Napomena: odgovor nije 
 Kao framework za frontend koristimo React, a za backend SpringBoot. Takoder smo koristili alate kao Vite i Bootstrap da nam olakšaju izradu. Za testiranje backenda smo se poslužili POSTMAN clientom, a za testiranje frontenda smo iskoristili Google development tools.
 
 # Članovi tima 
-Andrej Lukas
-Barbara Bobeta
-Josip Hajpek
-Katarina Prlenda
-Križan Tandara
-Marin Grković
-Petar Božović
+Andrej Lukas <br/>
+Barbara Bobeta  <br/>
+Josip Hajpek  <br/>
+Katarina Prlenda  <br/>
+Križan Tandara  <br/>
+Marin Grković  <br/>
+Petar Božović  <br/>
 
 
 # Kontribucije
