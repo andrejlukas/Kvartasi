@@ -1,7 +1,7 @@
 package com.mojkvart.service;
 
-import com.mojkvart.dtos.ModeratorDTO;
-import com.mojkvart.entities.Moderator;
+import com.mojkvart.domain.Moderator;
+import com.mojkvart.model.ModeratorDTO;
 import com.mojkvart.repos.ModeratorRepository;
 import com.mojkvart.util.NotFoundException;
 import java.util.List;

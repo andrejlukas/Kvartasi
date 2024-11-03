@@ -1,8 +1,8 @@
 package com.mojkvart.service;
 
-import com.mojkvart.dtos.VlasnikDTO;
-import com.mojkvart.entities.Trgovina;
-import com.mojkvart.entities.Vlasnik;
+import com.mojkvart.domain.Trgovina;
+import com.mojkvart.domain.Vlasnik;
+import com.mojkvart.model.VlasnikDTO;
 import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.repos.VlasnikRepository;
 import com.mojkvart.util.NotFoundException;
