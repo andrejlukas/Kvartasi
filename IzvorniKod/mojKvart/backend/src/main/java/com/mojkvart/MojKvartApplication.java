@@ -5,10 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-public class MojkvartApplication {
+public class MojKvartApplication {
 
     public static void main(final String[] args) {
-        SpringApplication.run(MojkvartApplication.class, args);
+        SpringApplication.run(MojKvartApplication.class, args);
     }
 
 }
