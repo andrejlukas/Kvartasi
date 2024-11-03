@@ -1,8 +1,7 @@
 package com.mojkvart.repos;
 
+import com.mojkvart.domain.Moderator;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.mojkvart.entities.Moderator;
 
 
 public interface ModeratorRepository extends JpaRepository<Moderator, Integer> {

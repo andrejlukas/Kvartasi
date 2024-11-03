@@ -1,9 +1,9 @@
 package com.mojkvart.service;
 
-import com.mojkvart.dtos.OcjenaDTO;
-import com.mojkvart.entities.Ocjena;
-import com.mojkvart.entities.OcjenaProizvodKorisnik;
-import com.mojkvart.repos.OcjenaProizvodKorisnikRepository;
+import com.mojkvart.domain.Ocjena;
+import com.mojkvart.domain.OcjenaProizvodKupac;
+import com.mojkvart.model.OcjenaDTO;
+import com.mojkvart.repos.OcjenaProizvodKupacRepository;
 import com.mojkvart.repos.OcjenaRepository;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
@@ -16,12 +16,12 @@ import org.springframework.stereotype.Service;
 public class OcjenaService {
 
     private final OcjenaRepository ocjenaRepository;
-    private final OcjenaProizvodKorisnikRepository ocjenaProizvodKorisnikRepository;
+    private final OcjenaProizvodKupacRepository ocjenaProizvodKupacRepository;
 
     public OcjenaService(final OcjenaRepository ocjenaRepository,
-            final OcjenaProizvodKorisnikRepository ocjenaProizvodKorisnikRepository) {
+            final OcjenaProizvodKupacRepository ocjenaProizvodKupacRepository) {
         this.ocjenaRepository = ocjenaRepository;
-        this.ocjenaProizvodKorisnikRepository = ocjenaProizvodKorisnikRepository;
+        this.ocjenaProizvodKupacRepository = ocjenaProizvodKupacRepository;
     }
 
     public List<OcjenaDTO> findAll() {
@@ -69,10 +69,10 @@ public class OcjenaService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Ocjena ocjena = ocjenaRepository.findById(ocjenaId)
                 .orElseThrow(NotFoundException::new);
-        final OcjenaProizvodKorisnik ocjenaOcjenaProizvodKorisnik = ocjenaProizvodKorisnikRepository.findFirstByOcjena(ocjena);
-        if (ocjenaOcjenaProizvodKorisnik != null) {
-            referencedWarning.setKey("ocjena.ocjenaProizvodKorisnik.ocjena.referenced");
-            referencedWarning.addParam(ocjenaOcjenaProizvodKorisnik.getId());
+        final OcjenaProizvodKupac ocjenaOcjenaProizvodKupac = ocjenaProizvodKupacRepository.findFirstByOcjena(ocjena);
+        if (ocjenaOcjenaProizvodKupac != null) {
+            referencedWarning.setKey("ocjena.ocjenaProizvodKupac.ocjena.referenced");
+            referencedWarning.addParam(ocjenaOcjenaProizvodKupac.getId());
             return referencedWarning;
         }
         return null;

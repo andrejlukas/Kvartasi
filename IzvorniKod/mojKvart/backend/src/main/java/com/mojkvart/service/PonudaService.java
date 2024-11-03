@@ -1,8 +1,8 @@
 package com.mojkvart.service;
 
-import com.mojkvart.dtos.PonudaDTO;
-import com.mojkvart.entities.Ponuda;
-import com.mojkvart.entities.PonudaPopust;
+import com.mojkvart.domain.Ponuda;
+import com.mojkvart.domain.PonudaPopust;
+import com.mojkvart.model.PonudaDTO;
 import com.mojkvart.repos.PonudaPopustRepository;
 import com.mojkvart.repos.PonudaRepository;
 import com.mojkvart.util.NotFoundException;
@@ -55,12 +55,14 @@ public class PonudaService {
 
     private PonudaDTO mapToDTO(final Ponuda ponuda, final PonudaDTO ponudaDTO) {
         ponudaDTO.setPonudaId(ponuda.getPonudaId());
+        ponudaDTO.setPonudaNaziv(ponuda.getPonudaNaziv());
         ponudaDTO.setPonudaOpis(ponuda.getPonudaOpis());
         ponudaDTO.setPonudaPopust(ponuda.getPonudaPopust() == null ? null : ponuda.getPonudaPopust().getPonudaPopustId());
         return ponudaDTO;
     }
 
     private Ponuda mapToEntity(final PonudaDTO ponudaDTO, final Ponuda ponuda) {
+        ponuda.setPonudaNaziv(ponudaDTO.getPonudaNaziv());
         ponuda.setPonudaOpis(ponudaDTO.getPonudaOpis());
         final PonudaPopust ponudaPopust = ponudaDTO.getPonudaPopust() == null ? null : ponudaPopustRepository.findById(ponudaDTO.getPonudaPopust())
                 .orElseThrow(() -> new NotFoundException("ponudaPopust not found"));

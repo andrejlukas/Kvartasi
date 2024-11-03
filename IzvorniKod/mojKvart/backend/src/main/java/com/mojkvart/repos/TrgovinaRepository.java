@@ -1,10 +1,9 @@
 package com.mojkvart.repos;
 
+import com.mojkvart.domain.Atribut;
+import com.mojkvart.domain.Trgovina;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.mojkvart.entities.Atribut;
-import com.mojkvart.entities.Trgovina;
 
 
 public interface TrgovinaRepository extends JpaRepository<Trgovina, Integer> {

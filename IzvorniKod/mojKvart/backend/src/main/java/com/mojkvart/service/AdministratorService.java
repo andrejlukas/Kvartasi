@@ -1,7 +1,7 @@
 package com.mojkvart.service;
 
-import com.mojkvart.dtos.AdministratorDTO;
-import com.mojkvart.entities.Administrator;
+import com.mojkvart.domain.Administrator;
+import com.mojkvart.model.AdministratorDTO;
 import com.mojkvart.repos.AdministratorRepository;
 import com.mojkvart.util.NotFoundException;
 import java.util.List;
