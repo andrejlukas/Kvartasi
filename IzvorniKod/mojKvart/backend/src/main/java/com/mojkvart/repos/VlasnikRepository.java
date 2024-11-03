@@ -1,9 +1,8 @@
 package com.mojkvart.repos;
 
+import com.mojkvart.domain.Trgovina;
+import com.mojkvart.domain.Vlasnik;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.mojkvart.entities.Trgovina;
-import com.mojkvart.entities.Vlasnik;
 
 
 public interface VlasnikRepository extends JpaRepository<Vlasnik, Integer> {

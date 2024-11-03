@@ -1,10 +1,12 @@
 package com.mojkvart.service;
 
-import com.mojkvart.dtos.DogadajDTO;
-import com.mojkvart.entities.Dogadaj;
-import com.mojkvart.entities.KorisnikDogadajTrgovina;
+import com.mojkvart.domain.Dogadaj;
+import com.mojkvart.domain.KupacDogadajTrgovina;
+import com.mojkvart.domain.Trgovina;
+import com.mojkvart.model.DogadajDTO;
 import com.mojkvart.repos.DogadajRepository;
-import com.mojkvart.repos.KorisnikDogadajTrgovinaRepository;
+import com.mojkvart.repos.KupacDogadajTrgovinaRepository;
+import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
 import java.util.List;
@@ -16,12 +18,15 @@ import org.springframework.stereotype.Service;
 public class DogadajService {
 
     private final DogadajRepository dogadajRepository;
-    private final KorisnikDogadajTrgovinaRepository korisnikDogadajTrgovinaRepository;
+    private final TrgovinaRepository trgovinaRepository;
+    private final KupacDogadajTrgovinaRepository kupacDogadajTrgovinaRepository;
 
     public DogadajService(final DogadajRepository dogadajRepository,
-            final KorisnikDogadajTrgovinaRepository korisnikDogadajTrgovinaRepository) {
+            final TrgovinaRepository trgovinaRepository,
+            final KupacDogadajTrgovinaRepository kupacDogadajTrgovinaRepository) {
         this.dogadajRepository = dogadajRepository;
-        this.korisnikDogadajTrgovinaRepository = korisnikDogadajTrgovinaRepository;
+        this.trgovinaRepository = trgovinaRepository;
+        this.kupacDogadajTrgovinaRepository = kupacDogadajTrgovinaRepository;
     }
 
     public List<DogadajDTO> findAll() {
@@ -60,6 +65,7 @@ public class DogadajService {
         dogadajDTO.setDogadajNaziv(dogadaj.getDogadajNaziv());
         dogadajDTO.setDogadajVrijeme(dogadaj.getDogadajVrijeme());
         dogadajDTO.setDogadajSlika(dogadaj.getDogadajSlika());
+        dogadajDTO.setTrgovina(dogadaj.getTrgovina() == null ? null : dogadaj.getTrgovina().getTrgovinaId());
         return dogadajDTO;
     }
 
@@ -68,6 +74,9 @@ public class DogadajService {
         dogadaj.setDogadajNaziv(dogadajDTO.getDogadajNaziv());
         dogadaj.setDogadajVrijeme(dogadajDTO.getDogadajVrijeme());
         dogadaj.setDogadajSlika(dogadajDTO.getDogadajSlika());
+        final Trgovina trgovina = dogadajDTO.getTrgovina() == null ? null : trgovinaRepository.findById(dogadajDTO.getTrgovina())
+                .orElseThrow(() -> new NotFoundException("trgovina not found"));
+        dogadaj.setTrgovina(trgovina);
         return dogadaj;
     }
 
@@ -75,10 +84,10 @@ public class DogadajService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Dogadaj dogadaj = dogadajRepository.findById(dogadajId)
                 .orElseThrow(NotFoundException::new);
-        final KorisnikDogadajTrgovina dogadajKorisnikDogadajTrgovina = korisnikDogadajTrgovinaRepository.findFirstByDogadaj(dogadaj);
-        if (dogadajKorisnikDogadajTrgovina != null) {
-            referencedWarning.setKey("dogadaj.korisnikDogadajTrgovina.dogadaj.referenced");
-            referencedWarning.addParam(dogadajKorisnikDogadajTrgovina.getId());
+        final KupacDogadajTrgovina dogadajKupacDogadajTrgovina = kupacDogadajTrgovinaRepository.findFirstByDogadaj(dogadaj);
+        if (dogadajKupacDogadajTrgovina != null) {
+            referencedWarning.setKey("dogadaj.kupacDogadajTrgovina.dogadaj.referenced");
+            referencedWarning.addParam(dogadajKupacDogadajTrgovina.getId());
             return referencedWarning;
         }
         return null;
