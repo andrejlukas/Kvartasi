@@ -1,7 +1,7 @@
 package com.mojkvart.service;
 
-import com.mojkvart.dtos.AtributDTO;
-import com.mojkvart.entities.Atribut;
+import com.mojkvart.domain.Atribut;
+import com.mojkvart.model.AtributDTO;
 import com.mojkvart.repos.AtributRepository;
 import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.util.NotFoundException;

@@ -1,16 +1,24 @@
 package com.mojkvart.service;
 
-import com.mojkvart.dtos.TrgovinaDTO;
-import com.mojkvart.entities.Atribut;
-import com.mojkvart.entities.KorisnikDogadajTrgovina;
-import com.mojkvart.entities.KorisnikTrgovinaPonuda;
-import com.mojkvart.entities.KorisnikTrgovinaRecenzija;
-import com.mojkvart.entities.Trgovina;
-import com.mojkvart.entities.Vlasnik;
+import com.mojkvart.domain.Atribut;
+import com.mojkvart.domain.Dogadaj;
+import com.mojkvart.domain.KupacDogadajTrgovina;
+import com.mojkvart.domain.KupacProizvodTrgovina;
+import com.mojkvart.domain.KupacTrgovinaPonudaPopust;
+import com.mojkvart.domain.KupacTrgovinaRecenzija;
+import com.mojkvart.domain.PonudaPopust;
+import com.mojkvart.domain.Proizvod;
+import com.mojkvart.domain.Trgovina;
+import com.mojkvart.domain.Vlasnik;
+import com.mojkvart.model.TrgovinaDTO;
 import com.mojkvart.repos.AtributRepository;
-import com.mojkvart.repos.KorisnikDogadajTrgovinaRepository;
-import com.mojkvart.repos.KorisnikTrgovinaPonudaRepository;
-import com.mojkvart.repos.KorisnikTrgovinaRecenzijaRepository;
+import com.mojkvart.repos.DogadajRepository;
+import com.mojkvart.repos.KupacDogadajTrgovinaRepository;
+import com.mojkvart.repos.KupacProizvodTrgovinaRepository;
+import com.mojkvart.repos.KupacTrgovinaPonudaPopustRepository;
+import com.mojkvart.repos.KupacTrgovinaRecenzijaRepository;
+import com.mojkvart.repos.PonudaPopustRepository;
+import com.mojkvart.repos.ProizvodRepository;
 import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.repos.VlasnikRepository;
 import com.mojkvart.util.NotFoundException;
@@ -29,22 +37,34 @@ public class TrgovinaService {
 
     private final TrgovinaRepository trgovinaRepository;
     private final AtributRepository atributRepository;
+    private final ProizvodRepository proizvodRepository;
+    private final DogadajRepository dogadajRepository;
+    private final PonudaPopustRepository ponudaPopustRepository;
     private final VlasnikRepository vlasnikRepository;
-    private final KorisnikDogadajTrgovinaRepository korisnikDogadajTrgovinaRepository;
-    private final KorisnikTrgovinaRecenzijaRepository korisnikTrgovinaRecenzijaRepository;
-    private final KorisnikTrgovinaPonudaRepository korisnikTrgovinaPonudaRepository;
+    private final KupacDogadajTrgovinaRepository kupacDogadajTrgovinaRepository;
+    private final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository;
+    private final KupacTrgovinaPonudaPopustRepository kupacTrgovinaPonudaPopustRepository;
+    private final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository;
 
     public TrgovinaService(final TrgovinaRepository trgovinaRepository,
-            final AtributRepository atributRepository, final VlasnikRepository vlasnikRepository,
-            final KorisnikDogadajTrgovinaRepository korisnikDogadajTrgovinaRepository,
-            final KorisnikTrgovinaRecenzijaRepository korisnikTrgovinaRecenzijaRepository,
-            final KorisnikTrgovinaPonudaRepository korisnikTrgovinaPonudaRepository) {
+            final AtributRepository atributRepository, final ProizvodRepository proizvodRepository,
+            final DogadajRepository dogadajRepository,
+            final PonudaPopustRepository ponudaPopustRepository,
+            final VlasnikRepository vlasnikRepository,
+            final KupacDogadajTrgovinaRepository kupacDogadajTrgovinaRepository,
+            final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository,
+            final KupacTrgovinaPonudaPopustRepository kupacTrgovinaPonudaPopustRepository,
+            final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository) {
         this.trgovinaRepository = trgovinaRepository;
         this.atributRepository = atributRepository;
+        this.proizvodRepository = proizvodRepository;
+        this.dogadajRepository = dogadajRepository;
+        this.ponudaPopustRepository = ponudaPopustRepository;
         this.vlasnikRepository = vlasnikRepository;
-        this.korisnikDogadajTrgovinaRepository = korisnikDogadajTrgovinaRepository;
-        this.korisnikTrgovinaRecenzijaRepository = korisnikTrgovinaRecenzijaRepository;
-        this.korisnikTrgovinaPonudaRepository = korisnikTrgovinaPonudaRepository;
+        this.kupacDogadajTrgovinaRepository = kupacDogadajTrgovinaRepository;
+        this.kupacTrgovinaRecenzijaRepository = kupacTrgovinaRecenzijaRepository;
+        this.kupacTrgovinaPonudaPopustRepository = kupacTrgovinaPonudaPopustRepository;
+        this.kupacProizvodTrgovinaRepository = kupacProizvodTrgovinaRepository;
     }
 
     public List<TrgovinaDTO> findAll() {
@@ -109,28 +129,52 @@ public class TrgovinaService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Trgovina trgovina = trgovinaRepository.findById(trgovinaId)
                 .orElseThrow(NotFoundException::new);
+        final Proizvod trgovinaProizvod = proizvodRepository.findFirstByTrgovina(trgovina);
+        if (trgovinaProizvod != null) {
+            referencedWarning.setKey("trgovina.proizvod.trgovina.referenced");
+            referencedWarning.addParam(trgovinaProizvod.getProizvodId());
+            return referencedWarning;
+        }
+        final Dogadaj trgovinaDogadaj = dogadajRepository.findFirstByTrgovina(trgovina);
+        if (trgovinaDogadaj != null) {
+            referencedWarning.setKey("trgovina.dogadaj.trgovina.referenced");
+            referencedWarning.addParam(trgovinaDogadaj.getDogadajId());
+            return referencedWarning;
+        }
+        final PonudaPopust trgovinaPonudaPopust = ponudaPopustRepository.findFirstByTrgovina(trgovina);
+        if (trgovinaPonudaPopust != null) {
+            referencedWarning.setKey("trgovina.ponudaPopust.trgovina.referenced");
+            referencedWarning.addParam(trgovinaPonudaPopust.getPonudaPopustId());
+            return referencedWarning;
+        }
         final Vlasnik trgovinaVlasnik = vlasnikRepository.findFirstByTrgovina(trgovina);
         if (trgovinaVlasnik != null) {
             referencedWarning.setKey("trgovina.vlasnik.trgovina.referenced");
             referencedWarning.addParam(trgovinaVlasnik.getVlasnikId());
             return referencedWarning;
         }
-        final KorisnikDogadajTrgovina trgovinaKorisnikDogadajTrgovina = korisnikDogadajTrgovinaRepository.findFirstByTrgovina(trgovina);
-        if (trgovinaKorisnikDogadajTrgovina != null) {
-            referencedWarning.setKey("trgovina.korisnikDogadajTrgovina.trgovina.referenced");
-            referencedWarning.addParam(trgovinaKorisnikDogadajTrgovina.getId());
+        final KupacDogadajTrgovina trgovinaKupacDogadajTrgovina = kupacDogadajTrgovinaRepository.findFirstByTrgovina(trgovina);
+        if (trgovinaKupacDogadajTrgovina != null) {
+            referencedWarning.setKey("trgovina.kupacDogadajTrgovina.trgovina.referenced");
+            referencedWarning.addParam(trgovinaKupacDogadajTrgovina.getId());
             return referencedWarning;
         }
-        final KorisnikTrgovinaRecenzija trgovinaKorisnikTrgovinaRecenzija = korisnikTrgovinaRecenzijaRepository.findFirstByTrgovina(trgovina);
-        if (trgovinaKorisnikTrgovinaRecenzija != null) {
-            referencedWarning.setKey("trgovina.korisnikTrgovinaRecenzija.trgovina.referenced");
-            referencedWarning.addParam(trgovinaKorisnikTrgovinaRecenzija.getId());
+        final KupacTrgovinaRecenzija trgovinaKupacTrgovinaRecenzija = kupacTrgovinaRecenzijaRepository.findFirstByTrgovina(trgovina);
+        if (trgovinaKupacTrgovinaRecenzija != null) {
+            referencedWarning.setKey("trgovina.kupacTrgovinaRecenzija.trgovina.referenced");
+            referencedWarning.addParam(trgovinaKupacTrgovinaRecenzija.getId());
             return referencedWarning;
         }
-        final KorisnikTrgovinaPonuda trgovinaKorisnikTrgovinaPonuda = korisnikTrgovinaPonudaRepository.findFirstByTrgovina(trgovina);
-        if (trgovinaKorisnikTrgovinaPonuda != null) {
-            referencedWarning.setKey("trgovina.korisnikTrgovinaPonuda.trgovina.referenced");
-            referencedWarning.addParam(trgovinaKorisnikTrgovinaPonuda.getId());
+        final KupacTrgovinaPonudaPopust trgovinaKupacTrgovinaPonudaPopust = kupacTrgovinaPonudaPopustRepository.findFirstByTrgovina(trgovina);
+        if (trgovinaKupacTrgovinaPonudaPopust != null) {
+            referencedWarning.setKey("trgovina.kupacTrgovinaPonudaPopust.trgovina.referenced");
+            referencedWarning.addParam(trgovinaKupacTrgovinaPonudaPopust.getId());
+            return referencedWarning;
+        }
+        final KupacProizvodTrgovina trgovinaKupacProizvodTrgovina = kupacProizvodTrgovinaRepository.findFirstByTrgovina(trgovina);
+        if (trgovinaKupacProizvodTrgovina != null) {
+            referencedWarning.setKey("trgovina.kupacProizvodTrgovina.trgovina.referenced");
+            referencedWarning.addParam(trgovinaKupacProizvodTrgovina.getId());
             return referencedWarning;
         }
         return null;
