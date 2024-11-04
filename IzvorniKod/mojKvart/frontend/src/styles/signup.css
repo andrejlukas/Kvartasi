@@ -1,0 +1,64 @@
+
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+   /* background-image: url('../assets/vege.avif');  treba nam bolja slika */ 
+    background-size: cover;
+    background-position: center;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-box {
+    width: 100%;
+    text-align: center;
+}
+
+.form-box h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.form-group {
+    display: flex;
+    gap: 10px;
+}
+
+.form-group input[type="text"] {
+    width: 100%;
+}
+
+.signup-inputs {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.signup-buttons {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #ccc;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+

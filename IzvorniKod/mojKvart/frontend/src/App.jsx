@@ -1,19 +1,21 @@
-
-//sretno s frontendom!
-
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './styles/App.css'
+import { Login } from "./pages/Login"
+import { Routes, Route } from "react-router-dom";
+import { Signup } from './pages/Signup';
+import {NotFound} from "./pages/NotFound"
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
-        <h1>Naslov Test</h1>
-      </div>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      
     </>
   )
 }
