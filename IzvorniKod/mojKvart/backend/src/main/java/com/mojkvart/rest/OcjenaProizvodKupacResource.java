@@ -39,6 +39,7 @@ public class OcjenaProizvodKupacResource {
         return ResponseEntity.ok(ocjenaProizvodKupacService.get(id));
     }
 
+    //UC21, koristite api/ocjenaProizvodKupacs za davanje ocjene proizvodu, saljete JSON 
     @PostMapping
     public ResponseEntity<Long> createOcjenaProizvodKupac(
             @RequestBody @Valid final OcjenaProizvodKupacDTO ocjenaProizvodKupacDTO) {

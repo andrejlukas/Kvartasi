@@ -47,6 +47,7 @@ public class RecenzijaResource {
         return new ResponseEntity<>(createdRecenzijaId, HttpStatus.CREATED);
     }
 
+    //UC14, koristite api/recenzijas/{recenzijaId} za upisivanje odgovora u recenzijaOdgovor atribut
     @PutMapping("/{recenzijaId}")
     public ResponseEntity<Integer> updateRecenzija(
             @PathVariable(name = "recenzijaId") final Integer recenzijaId,
@@ -55,6 +56,7 @@ public class RecenzijaResource {
         return ResponseEntity.ok(recenzijaId);
     }
 
+    //UC9, koristite api/recenzijas/{recenzijaId} za brisanje recenzija
     @DeleteMapping("/{recenzijaId}")
     public ResponseEntity<Void> deleteRecenzija(
             @PathVariable(name = "recenzijaId") final Integer recenzijaId) {

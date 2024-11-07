@@ -34,12 +34,14 @@ public class TrgovinaResource {
         return ResponseEntity.ok(trgovinaService.findAll());
     }
 
+    //UC4, koristite api/trgovinas/{trgovinaId} za pregled osnovnih podataka
     @GetMapping("/{trgovinaId}")
     public ResponseEntity<TrgovinaDTO> getTrgovina(
             @PathVariable(name = "trgovinaId") final Integer trgovinaId) {
         return ResponseEntity.ok(trgovinaService.get(trgovinaId));
     }
 
+    //UC5, koristite api/trgovinas za kreiranje nove trgovine
     @PostMapping
     public ResponseEntity<Integer> createTrgovina(
             @RequestBody @Valid final TrgovinaDTO trgovinaDTO) {
@@ -47,6 +49,7 @@ public class TrgovinaResource {
         return new ResponseEntity<>(createdTrgovinaId, HttpStatus.CREATED);
     }
 
+    //UC4, koristite api/trgovinas/{trgovinaId} za uredivanje osnovnih podataka
     @PutMapping("/{trgovinaId}")
     public ResponseEntity<Integer> updateTrgovina(
             @PathVariable(name = "trgovinaId") final Integer trgovinaId,
@@ -55,6 +58,7 @@ public class TrgovinaResource {
         return ResponseEntity.ok(trgovinaId);
     }
 
+    //UC6, koristite api/trgovinas/{trgovinaId} za brisanje trgovine iz sustava
     @DeleteMapping("/{trgovinaId}")
     public ResponseEntity<Void> deleteTrgovina(
             @PathVariable(name = "trgovinaId") final Integer trgovinaId) {

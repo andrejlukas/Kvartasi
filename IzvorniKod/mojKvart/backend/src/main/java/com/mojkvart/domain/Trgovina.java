@@ -40,6 +40,9 @@ public class Trgovina {
     @Column(nullable = false, length = 500)
     private String trgovinaOpis;
 
+    @Column(nullable = false, length = 500)
+    private String trgovinaKategorija;
+
     @Column(nullable = false, length = 50)
     private String trgovinaLokacija;
 

@@ -38,6 +38,7 @@ public class ModeratorResource {
         return ResponseEntity.ok(moderatorService.get(moderatorId));
     }
 
+    //UC5, koristite api/moderators i pošaljite JSON objekt za kreiranje novog moderatora
     @PostMapping
     public ResponseEntity<Integer> createModerator(
             @RequestBody @Valid final ModeratorDTO moderatorDTO) {
@@ -53,6 +54,7 @@ public class ModeratorResource {
         return ResponseEntity.ok(moderatorId);
     }
 
+    //UC6, koristite api/moderators/{moderatorId} za brisanje moderatora iz sustava
     @DeleteMapping("/{moderatorId}")
     public ResponseEntity<Void> deleteModerator(
             @PathVariable(name = "moderatorId") final Integer moderatorId) {

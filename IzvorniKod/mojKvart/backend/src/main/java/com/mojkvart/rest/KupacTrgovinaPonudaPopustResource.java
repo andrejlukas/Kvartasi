@@ -39,6 +39,7 @@ public class KupacTrgovinaPonudaPopustResource {
         return ResponseEntity.ok(kupacTrgovinaPonudaPopustService.get(id));
     }
 
+    //UC19, koristite api/kupacTrgovinaPonudaPopusts za spremanje ponude i popusta
     @PostMapping
     public ResponseEntity<Long> createKupacTrgovinaPonudaPopust(
             @RequestBody @Valid final KupacTrgovinaPonudaPopustDTO kupacTrgovinaPonudaPopustDTO) {
