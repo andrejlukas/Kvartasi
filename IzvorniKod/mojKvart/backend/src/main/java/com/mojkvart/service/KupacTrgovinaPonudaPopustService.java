@@ -68,7 +68,6 @@ public class KupacTrgovinaPonudaPopustService {
             final KupacTrgovinaPonudaPopust kupacTrgovinaPonudaPopust,
             final KupacTrgovinaPonudaPopustDTO kupacTrgovinaPonudaPopustDTO) {
         kupacTrgovinaPonudaPopustDTO.setId(kupacTrgovinaPonudaPopust.getId());
-        kupacTrgovinaPonudaPopustDTO.setKupacTrgovinaPonudaPopustFlag(kupacTrgovinaPonudaPopust.getKupacTrgovinaPonudaPopustFlag());
         kupacTrgovinaPonudaPopustDTO.setKupac(kupacTrgovinaPonudaPopust.getKupac() == null ? null : kupacTrgovinaPonudaPopust.getKupac().getKupacId());
         kupacTrgovinaPonudaPopustDTO.setTrgovina(kupacTrgovinaPonudaPopust.getTrgovina() == null ? null : kupacTrgovinaPonudaPopust.getTrgovina().getTrgovinaId());
         kupacTrgovinaPonudaPopustDTO.setPonudaPopust(kupacTrgovinaPonudaPopust.getPonudaPopust() == null ? null : kupacTrgovinaPonudaPopust.getPonudaPopust().getPonudaPopustId());
@@ -78,7 +77,6 @@ public class KupacTrgovinaPonudaPopustService {
     private KupacTrgovinaPonudaPopust mapToEntity(
             final KupacTrgovinaPonudaPopustDTO kupacTrgovinaPonudaPopustDTO,
             final KupacTrgovinaPonudaPopust kupacTrgovinaPonudaPopust) {
-        kupacTrgovinaPonudaPopust.setKupacTrgovinaPonudaPopustFlag(kupacTrgovinaPonudaPopustDTO.getKupacTrgovinaPonudaPopustFlag());
         final Kupac kupac = kupacTrgovinaPonudaPopustDTO.getKupac() == null ? null : kupacRepository.findById(kupacTrgovinaPonudaPopustDTO.getKupac())
                 .orElseThrow(() -> new NotFoundException("kupac not found"));
         kupacTrgovinaPonudaPopust.setKupac(kupac);

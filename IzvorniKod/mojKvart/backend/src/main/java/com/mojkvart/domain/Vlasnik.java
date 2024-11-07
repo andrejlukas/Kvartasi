@@ -38,7 +38,7 @@ public class Vlasnik {
     @Column(nullable = false, length = 50)
     private String vlasnikPrezime;
 
-    @Column(nullable = false, length = 50)
+    @Column(unique = true, nullable = false, length = 50)
     private String vlasnikEmail;
 
     @Column(nullable = false, length = 50)

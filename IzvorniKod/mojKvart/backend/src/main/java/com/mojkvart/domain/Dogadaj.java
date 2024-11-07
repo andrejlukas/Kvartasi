@@ -34,9 +34,6 @@ public class Dogadaj {
     )
     private Integer dogadajId;
 
-    @Column(length = 50)
-    private String dogadajOpis;
-
     @Column(nullable = false, length = 50)
     private String dogadajNaziv;
 
@@ -45,6 +42,9 @@ public class Dogadaj {
 
     @Column(nullable = false, length = 50)
     private String dogadajSlika;
+
+    @Column(length = 50)
+    private String dogadajOpis;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trgovina_id", nullable = false)

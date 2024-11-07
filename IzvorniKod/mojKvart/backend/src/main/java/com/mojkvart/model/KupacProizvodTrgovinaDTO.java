@@ -12,7 +12,7 @@ public class KupacProizvodTrgovinaDTO {
     private Long id;
 
     @NotNull
-    private Boolean kupacProizvodTrgovinaFlag;
+    private String kupacProizvodTrgovinaFlag;
 
     @NotNull
     private Integer kupac;
