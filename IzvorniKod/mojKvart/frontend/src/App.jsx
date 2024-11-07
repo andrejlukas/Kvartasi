@@ -4,6 +4,7 @@ import { Login } from "./pages/Login"
 import { Routes, Route } from "react-router-dom";
 import { Signup } from './pages/Signup';
 import {NotFound} from "./pages/NotFound"
+import { Home } from './pages/Home';
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
       
     </>
