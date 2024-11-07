@@ -66,7 +66,6 @@ public class KupacDogadajTrgovinaService {
     private KupacDogadajTrgovinaDTO mapToDTO(final KupacDogadajTrgovina kupacDogadajTrgovina,
             final KupacDogadajTrgovinaDTO kupacDogadajTrgovinaDTO) {
         kupacDogadajTrgovinaDTO.setId(kupacDogadajTrgovina.getId());
-        kupacDogadajTrgovinaDTO.setKupacDogadajTrgovinaFlag(kupacDogadajTrgovina.getKupacDogadajTrgovinaFlag());
         kupacDogadajTrgovinaDTO.setKupac(kupacDogadajTrgovina.getKupac() == null ? null : kupacDogadajTrgovina.getKupac().getKupacId());
         kupacDogadajTrgovinaDTO.setDogadaj(kupacDogadajTrgovina.getDogadaj() == null ? null : kupacDogadajTrgovina.getDogadaj().getDogadajId());
         kupacDogadajTrgovinaDTO.setTrgovina(kupacDogadajTrgovina.getTrgovina() == null ? null : kupacDogadajTrgovina.getTrgovina().getTrgovinaId());
@@ -75,7 +74,6 @@ public class KupacDogadajTrgovinaService {
 
     private KupacDogadajTrgovina mapToEntity(final KupacDogadajTrgovinaDTO kupacDogadajTrgovinaDTO,
             final KupacDogadajTrgovina kupacDogadajTrgovina) {
-        kupacDogadajTrgovina.setKupacDogadajTrgovinaFlag(kupacDogadajTrgovinaDTO.getKupacDogadajTrgovinaFlag());
         final Kupac kupac = kupacDogadajTrgovinaDTO.getKupac() == null ? null : kupacRepository.findById(kupacDogadajTrgovinaDTO.getKupac())
                 .orElseThrow(() -> new NotFoundException("kupac not found"));
         kupacDogadajTrgovina.setKupac(kupac);

@@ -1,13 +1,11 @@
 package com.mojkvart.service;
 
 import com.mojkvart.domain.Kupac;
-import com.mojkvart.domain.Ocjena;
 import com.mojkvart.domain.OcjenaProizvodKupac;
 import com.mojkvart.domain.Proizvod;
 import com.mojkvart.model.OcjenaProizvodKupacDTO;
 import com.mojkvart.repos.KupacRepository;
 import com.mojkvart.repos.OcjenaProizvodKupacRepository;
-import com.mojkvart.repos.OcjenaRepository;
 import com.mojkvart.repos.ProizvodRepository;
 import com.mojkvart.util.NotFoundException;
 import java.util.List;
@@ -20,16 +18,14 @@ public class OcjenaProizvodKupacService {
 
     private final OcjenaProizvodKupacRepository ocjenaProizvodKupacRepository;
     private final ProizvodRepository proizvodRepository;
-    private final OcjenaRepository ocjenaRepository;
     private final KupacRepository kupacRepository;
 
     public OcjenaProizvodKupacService(
             final OcjenaProizvodKupacRepository ocjenaProizvodKupacRepository,
-            final ProizvodRepository proizvodRepository, final OcjenaRepository ocjenaRepository,
+            final ProizvodRepository proizvodRepository,
             final KupacRepository kupacRepository) {
         this.ocjenaProizvodKupacRepository = ocjenaProizvodKupacRepository;
         this.proizvodRepository = proizvodRepository;
-        this.ocjenaRepository = ocjenaRepository;
         this.kupacRepository = kupacRepository;
     }
 
@@ -67,7 +63,7 @@ public class OcjenaProizvodKupacService {
             final OcjenaProizvodKupacDTO ocjenaProizvodKupacDTO) {
         ocjenaProizvodKupacDTO.setId(ocjenaProizvodKupac.getId());
         ocjenaProizvodKupacDTO.setProizvod(ocjenaProizvodKupac.getProizvod() == null ? null : ocjenaProizvodKupac.getProizvod().getProizvodId());
-        ocjenaProizvodKupacDTO.setOcjena(ocjenaProizvodKupac.getOcjena() == null ? null : ocjenaProizvodKupac.getOcjena().getOcjenaId());
+        ocjenaProizvodKupacDTO.setOcjena(ocjenaProizvodKupac.getOcjena());
         ocjenaProizvodKupacDTO.setKupac(ocjenaProizvodKupac.getKupac() == null ? null : ocjenaProizvodKupac.getKupac().getKupacId());
         return ocjenaProizvodKupacDTO;
     }
@@ -77,8 +73,7 @@ public class OcjenaProizvodKupacService {
         final Proizvod proizvod = ocjenaProizvodKupacDTO.getProizvod() == null ? null : proizvodRepository.findById(ocjenaProizvodKupacDTO.getProizvod())
                 .orElseThrow(() -> new NotFoundException("proizvod not found"));
         ocjenaProizvodKupac.setProizvod(proizvod);
-        final Ocjena ocjena = ocjenaProizvodKupacDTO.getOcjena() == null ? null : ocjenaRepository.findById(ocjenaProizvodKupacDTO.getOcjena())
-                .orElseThrow(() -> new NotFoundException("ocjena not found"));
+        final Integer ocjena = ocjenaProizvodKupacDTO.getOcjena();
         ocjenaProizvodKupac.setOcjena(ocjena);
         final Kupac kupac = ocjenaProizvodKupacDTO.getKupac() == null ? null : kupacRepository.findById(ocjenaProizvodKupacDTO.getKupac())
                 .orElseThrow(() -> new NotFoundException("kupac not found"));

@@ -35,7 +35,7 @@ public class Moderator {
     @Column(nullable = false, length = 50)
     private String moderatorPrezime;
 
-    @Column(nullable = false, length = 50)
+    @Column(unique = true, nullable = false, length = 50)
     private String moderatorEmail;
 
     @Column(nullable = false, length = 50)

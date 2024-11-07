@@ -33,7 +33,7 @@ public class KupacProizvodTrgovina {
     private Long id;
 
     @Column(nullable = false)
-    private Boolean kupacProizvodTrgovinaFlag;
+    private String kupacProizvodTrgovinaFlag; // kasnije promjeniti u racunId i stvoriti sve za Racun bitno
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kupac_id", nullable = false)

@@ -31,7 +31,7 @@ public class Kupac {
     )
     private Integer kupacId;
 
-    @Column(nullable = false, length = 50)
+    @Column(unique = true, nullable = false, length = 50)
     private String kupacEmail;
 
     @Column(nullable = false, length = 20)
@@ -60,5 +60,4 @@ public class Kupac {
 
     @OneToMany(mappedBy = "kupac")
     private Set<KupacProizvodTrgovina> kupacKupacProizvodTrgovinas;
-
 }

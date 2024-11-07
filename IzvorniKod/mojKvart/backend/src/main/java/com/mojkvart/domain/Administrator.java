@@ -29,14 +29,14 @@ public class Administrator {
     )
     private Integer administratorId;
 
+    @Column(unique = true, nullable = false, length = 50)
+    private String administratorEmail;
+
     @Column(nullable = false, length = 50)
     private String administratorIme;
 
     @Column(nullable = false, length = 50)
     private String administratorPrezime;
-
-    @Column(nullable = false, length = 50)
-    private String administratorEmail;
 
     @Column(nullable = false, length = 50)
     private String administratorSifra;
