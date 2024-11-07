@@ -2,21 +2,19 @@ package com.mojkvart.rest;
 
 import com.mojkvart.model.KupacDTO;
 import com.mojkvart.service.KupacService;
+import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -24,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class KupacResource {
 
     private final KupacService kupacService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public KupacResource(final KupacService kupacService) {
         this.kupacService = kupacService;
@@ -45,8 +46,23 @@ public class KupacResource {
     //UC1, koristite api/kupacs i pošaljite JSON objekt za registraciju
     @PostMapping
     public ResponseEntity<Integer> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
-        final Integer createdKupacId = kupacService.create(kupacDTO);
-        return new ResponseEntity<>(createdKupacId, HttpStatus.CREATED);
+        Optional<KupacDTO> previousKupacDTO = kupacService.findAll().stream().
+                filter(k -> k.getKupacEmail().equals(kupacDTO.getKupacEmail())).findFirst();
+        if(previousKupacDTO.isPresent()) {
+            KupacDTO previousKupac = previousKupacDTO.get();
+            if(!passwordEncoder.encode(kupacDTO.getKupacSifra()).
+                    equals(previousKupac.getKupacSifra())) {
+                throw new NotFoundException("Wrong password!");
+            }
+            System.out.println("Right Password!");
+            return ResponseEntity.ok(previousKupac.getKupacId());
+        } else {
+            if(kupacDTO.getKupacIme().isEmpty())
+                throw new NotFoundException("You don't have an account! Try using Sign up!");
+            kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
+            final Integer createdKupacId = kupacService.create(kupacDTO);
+            return new ResponseEntity<>(createdKupacId, HttpStatus.CREATED);
+        }
     }
 
     //UC3, koristite api/kupacs/{kupacId} za uređivanje osobnih podataka
