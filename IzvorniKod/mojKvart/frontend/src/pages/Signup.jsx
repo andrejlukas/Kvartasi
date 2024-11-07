@@ -1,7 +1,7 @@
 import "../styles/signup.css"
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function Signup() {
    const navigate = useNavigate();
@@ -10,20 +10,19 @@ export function Signup() {
    const [homeAddress, setHomeAddress] = useState('')
    const [emailAddress, setEmailAddress] = useState('')
    const [password, setPassword] = useState('')
-   const [emailExists, setEmailExists] = useState(false); // Dodato stanje za proveru emaila
+   const [emailExists, setEmailExists] = useState(false); // Dodato stanje za provjeru emaila
 
    useEffect(() => {
       if (emailAddress.length > 0) {
         fetch(`/api/kupacs`)
-          .then((response) => response.json())
-          .then((registriraniKorisnici) => {
-            const duplikat = registriraniKorisnici.some(
-              (korisnik) => korisnik.kupacEmail === emailAddress
-            );
-            setEmailExists(duplikat);
-          });
+            .then((response) => response.json())
+            .then((registriraniKorisnici) => {
+               const duplikat = registriraniKorisnici.some(
+                  (korisnik) => korisnik.kupacEmail === emailAddress );
+               setEmailExists(duplikat);
+            });
       }
-    }, [emailAddress]);
+   }, [emailAddress]);
 
    function saveNoviClan(e){
       
@@ -42,24 +41,22 @@ export function Signup() {
         kupacSifra : password
       };
       const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(data)
       };
       console.log(JSON.stringify(data))
   
       return fetch('/api/kupacs', options)
-        .then(response => {
-          if (response.ok) {
-            navigate('/');
-            alert("Uspješna registracija! Sada se možeš prijaviti")
-            console.log("sve okej dodan")
-          }
-        });
-  
-     
+         .then(response => {
+            if (response.ok) {
+               navigate('/');
+               alert("Uspješna registracija! Sada se možeš prijaviti")
+               console.log("sve okej dodan")
+            }
+         });  
    }
 
    function isValid() {
@@ -69,10 +66,6 @@ export function Signup() {
 
       return firstName.length > 0 && lastName.length > 0 && emailAddress.length > 0
       && password.length > 0 && homeAddress.length > 0 && !emailExists ;
-    }
-  
-   function handlerEmailAdress(e){
-      setEmailAddress(e.target.value)
    }
 
    
@@ -91,22 +84,22 @@ export function Signup() {
                   <input type="text" placeholder="Home address" className="signup-inputs"  name="homeAddress" value={homeAddress}
                      onChange={(e) => setHomeAddress(e.target.value)}/>
                   <input type="email" placeholder="Email address" className="signup-inputs"  name="emailAddress" value={emailAddress}
-                     onChange={handlerEmailAdress}/>
+                     onChange={(e) => setEmailAddress(e.target.value)}/>
                       
                   <input type="password" placeholder="Password" className="signup-inputs"  name="password" value={password}
                      onChange={(e) => setPassword(e.target.value)}/>
                      {emailExists && (
                         <p style={{ color: "red", marginTop: "4px" ,  marginBottom: "4px", fontWeight: "bold" }}>
-                           Email adresa je već korištena!
+                           This e-mail address is already in use!
                         </p>
                         )}
-                  <button type="submit" className="signup-buttons" >Sign up</button>
+                  <button type="submit" className="signup-buttons" disabled={ !isValid() }>Sign up</button>
                   <Link to="/login">
-                     <button type="submit" disabled={!isValid()}className="signup-buttons" >Back to Sign in</button>
+                     <button type="submit" className="signup-buttons">Back to Sign in</button>
                   </Link>
                </form>
-        </div>
-      </div>
+            </div>
+         </div>
       </div>
    
    );

@@ -43,7 +43,7 @@ public class Kupac {
     @Column(nullable = false, length = 50)
     private String kupacAdresa;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 200)
     private String kupacSifra;
 
     @OneToMany(mappedBy = "kupac")
