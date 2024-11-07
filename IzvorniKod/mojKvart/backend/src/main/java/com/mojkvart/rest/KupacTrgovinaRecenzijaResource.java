@@ -43,6 +43,7 @@ public class KupacTrgovinaRecenzijaResource {
         return ResponseEntity.ok(kupacTrgovinaRecenzijaService.get(id));
     }
 
+    //UC20, koristite api/kupacTrgovinaRecenzijas za pisanje nove recenzije trgovini
     @PostMapping
     public ResponseEntity<Long> createKupacTrgovinaRecenzija(
             @RequestBody @Valid final KupacTrgovinaRecenzijaDTO kupacTrgovinaRecenzijaDTO) {

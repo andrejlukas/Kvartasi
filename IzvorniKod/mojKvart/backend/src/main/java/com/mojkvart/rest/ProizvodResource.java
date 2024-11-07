@@ -40,6 +40,7 @@ public class ProizvodResource {
         return ResponseEntity.ok(proizvodService.get(proizvodId));
     }
 
+    //UC11, koristite api/proizvods te pošaljite JSON objekt za kriranje novog proizvoda od strane trgovine
     @PostMapping
     public ResponseEntity<Integer> createProizvod(
             @RequestBody @Valid final ProizvodDTO proizvodDTO) {
@@ -47,6 +48,7 @@ public class ProizvodResource {
         return new ResponseEntity<>(createdProizvodId, HttpStatus.CREATED);
     }
 
+    //UC7, koristite api/proizvods/{proizvodId} za mijenjanje atributa iz F u T ako je odobren
     @PutMapping("/{proizvodId}")
     public ResponseEntity<Integer> updateProizvod(
             @PathVariable(name = "proizvodId") final Integer proizvodId,

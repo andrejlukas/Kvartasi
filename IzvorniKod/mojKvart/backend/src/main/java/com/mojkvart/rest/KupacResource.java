@@ -28,24 +28,28 @@ public class KupacResource {
     public KupacResource(final KupacService kupacService) {
         this.kupacService = kupacService;
     }
-
+ 
+   
     @GetMapping
     public ResponseEntity<List<KupacDTO>> getAllKupacs() {
         return ResponseEntity.ok(kupacService.findAll());
     }
 
+    //UC3, koristite api/kupacs/{kupacId} za dohvaćanje osobnih podataka
     @GetMapping("/{kupacId}")
     public ResponseEntity<KupacDTO> getKupac(
             @PathVariable(name = "kupacId") final Integer kupacId) {
         return ResponseEntity.ok(kupacService.get(kupacId));
     }
 
+    //UC1, koristite api/kupacs i pošaljite JSON objekt za registraciju
     @PostMapping
     public ResponseEntity<Integer> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
         final Integer createdKupacId = kupacService.create(kupacDTO);
         return new ResponseEntity<>(createdKupacId, HttpStatus.CREATED);
     }
 
+    //UC3, koristite api/kupacs/{kupacId} za uređivanje osobnih podataka
     @PutMapping("/{kupacId}")
     public ResponseEntity<Integer> updateKupac(
             @PathVariable(name = "kupacId") final Integer kupacId,
@@ -54,6 +58,7 @@ public class KupacResource {
         return ResponseEntity.ok(kupacId);
     }
 
+    //UC6, koristite api/kupacs/{kupacId} za brisanje kupca iz sustava
     @DeleteMapping("/{kupacId}")
     public ResponseEntity<Void> deleteKupac(@PathVariable(name = "kupacId") final Integer kupacId) {
         final ReferencedWarning referencedWarning = kupacService.getReferencedWarning(kupacId);

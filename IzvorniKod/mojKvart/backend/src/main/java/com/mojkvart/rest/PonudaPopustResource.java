@@ -40,6 +40,7 @@ public class PonudaPopustResource {
         return ResponseEntity.ok(ponudaPopustService.get(ponudaPopustId));
     }
 
+    //UC13, koristite api/ponudaPopusts i posaljite JSON objekt za kreiranje nove ponudePopusta
     @PostMapping
     public ResponseEntity<Integer> createPonudaPopust(
             @RequestBody @Valid final PonudaPopustDTO ponudaPopustDTO) {
@@ -47,6 +48,7 @@ public class PonudaPopustResource {
         return new ResponseEntity<>(createdPonudaPopustId, HttpStatus.CREATED);
     }
 
+    //UC8, koristite api/ponudaPopusts/{ponudaPopustId} za mijenjanje atributa iz F u T ako su odobreni
     @PutMapping("/{ponudaPopustId}")
     public ResponseEntity<Integer> updatePonudaPopust(
             @PathVariable(name = "ponudaPopustId") final Integer ponudaPopustId,

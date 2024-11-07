@@ -1,5 +1,10 @@
 package com.mojkvart.model;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -20,5 +25,7 @@ public class RecenzijaDTO {
 
     @Size(max = 500)
     private String recenzijaOdgovor;
+
+    private LocalDateTime vrijemeKreiranja;
 
 }

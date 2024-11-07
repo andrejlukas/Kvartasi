@@ -7,7 +7,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+
+import java.time.LocalDateTime;
 import java.util.Set;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,6 +44,10 @@ public class Recenzija {
 
     @Column(length = 500)
     private String recenzijaOdgovor;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime vrijemeKreiranja;
 
     @OneToMany(mappedBy = "recenzija")
     private Set<KupacTrgovinaRecenzija> recenzijaKupacTrgovinaRecenzijas;

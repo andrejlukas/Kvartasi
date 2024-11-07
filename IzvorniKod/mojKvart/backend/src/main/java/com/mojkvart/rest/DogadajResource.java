@@ -29,6 +29,8 @@ public class DogadajResource {
         this.dogadajService = dogadajService;
     }
 
+    //UC10, koristite api/dogadajs za dohvacanje svih dogadaja od strane moderatora
+    //UC17, koristite api/dogadajs za dohvacanje svih dogadaja od strane korisnika
     @GetMapping
     public ResponseEntity<List<DogadajDTO>> getAllDogadajs() {
         return ResponseEntity.ok(dogadajService.findAll());
@@ -40,6 +42,7 @@ public class DogadajResource {
         return ResponseEntity.ok(dogadajService.get(dogadajId));
     }
 
+    //UC12, koristite api/dogadajs i posaljite JSON objekt za kreiranje novog dogadaja od strane trgovine
     @PostMapping
     public ResponseEntity<Integer> createDogadaj(@RequestBody @Valid final DogadajDTO dogadajDTO) {
         final Integer createdDogadajId = dogadajService.create(dogadajDTO);
@@ -54,6 +57,7 @@ public class DogadajResource {
         return ResponseEntity.ok(dogadajId);
     }
 
+    //UC10, koristite api/dogadajs/{dogadajId} za brisanje nekog dogadaja od strane moderatora
     @DeleteMapping("/{dogadajId}")
     public ResponseEntity<Void> deleteDogadaj(
             @PathVariable(name = "dogadajId") final Integer dogadajId) {

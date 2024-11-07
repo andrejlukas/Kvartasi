@@ -23,6 +23,10 @@ public class TrgovinaDTO {
 
     @NotNull
     @Size(max = 50)
+    private String trgovinaKategorija;
+
+    @NotNull
+    @Size(max = 50)
     private String trgovinaLokacija;
 
     @NotNull
