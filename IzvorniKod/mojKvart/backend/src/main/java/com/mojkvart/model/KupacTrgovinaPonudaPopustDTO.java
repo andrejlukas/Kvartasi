@@ -12,6 +12,9 @@ public class KupacTrgovinaPonudaPopustDTO {
     private Long id;
 
     @NotNull
+    private Boolean kupacTrgovinaPonudaPopustFlag;
+
+    @NotNull
     private Integer kupac;
 
     @NotNull
