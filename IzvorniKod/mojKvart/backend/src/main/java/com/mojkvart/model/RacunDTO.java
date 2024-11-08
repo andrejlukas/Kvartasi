@@ -4,25 +4,23 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class KupacProizvodTrgovinaDTO {
+public class RacunDTO {
 
-    private Long id;
+    private Long racunId;
 
     @NotNull
-    private Integer kolicinaProizvoda;
+    private LocalDateTime vrijemeDatumNastanka;
 
-    private Long racun;
+    @NotNull
+    private boolean placen;
 
     @NotNull
     private Integer kupac;
 
     @NotNull
     private Integer trgovina;
-
-    @NotNull
-    private Integer proizvod;
-
 }

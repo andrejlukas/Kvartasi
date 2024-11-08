@@ -60,4 +60,7 @@ public class Kupac {
 
     @OneToMany(mappedBy = "kupac")
     private Set<KupacProizvodTrgovina> kupacKupacProizvodTrgovinas;
+
+    @OneToMany(mappedBy = "kupac")
+    private Set<Racun> kupacRacuns;
 }

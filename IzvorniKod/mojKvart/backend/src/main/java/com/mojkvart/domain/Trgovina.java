@@ -76,6 +76,9 @@ public class Trgovina {
     @OneToMany(mappedBy = "trgovina")
     private Set<KupacProizvodTrgovina> trgovinaKupacProizvodTrgovinas;
 
+    @OneToMany(mappedBy = "trgovina")
+    private Set<Racun> trgovinaRacuns;
+
     @ManyToMany
     @JoinTable(
             name = "ImaAtribute",

@@ -1,24 +1,15 @@
 package com.mojkvart.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.validation.constraints.Min;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-public class KupacProizvodTrgovina {
-
+public class Racun {
     @Id
     @Column(nullable = false, updatable = false)
     @SequenceGenerator(
@@ -31,15 +22,13 @@ public class KupacProizvodTrgovina {
             strategy = GenerationType.SEQUENCE,
             generator = "primary_sequence"
     )
-    private Long id;
+    private Long racunId;
 
-    @Min(1)
     @Column(nullable = false)
-    private Integer kolicinaProizvoda;
+    private LocalDateTime vrijemeDatumNastanka;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "racun_id")
-    private Racun racun;
+    @Column(nullable = false)
+    private boolean placen;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kupac_id", nullable = false)
@@ -48,9 +37,4 @@ public class KupacProizvodTrgovina {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trgovina_id", nullable = false)
     private Trgovina trgovina;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "proizvod_id", nullable = false)
-    private Proizvod proizvod;
-
 }
