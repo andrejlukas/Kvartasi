@@ -1,14 +1,8 @@
 package com.mojkvart.service;
 
-import com.mojkvart.domain.Kupac;
-import com.mojkvart.domain.KupacProizvodTrgovina;
-import com.mojkvart.domain.Proizvod;
-import com.mojkvart.domain.Trgovina;
+import com.mojkvart.domain.*;
 import com.mojkvart.model.KupacProizvodTrgovinaDTO;
-import com.mojkvart.repos.KupacProizvodTrgovinaRepository;
-import com.mojkvart.repos.KupacRepository;
-import com.mojkvart.repos.ProizvodRepository;
-import com.mojkvart.repos.TrgovinaRepository;
+import com.mojkvart.repos.*;
 import com.mojkvart.util.NotFoundException;
 import java.util.List;
 import org.springframework.data.domain.Sort;
@@ -19,15 +13,19 @@ import org.springframework.stereotype.Service;
 public class KupacProizvodTrgovinaService {
 
     private final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository;
+    private final RacunRepository racunRepository;
     private final KupacRepository kupacRepository;
     private final TrgovinaRepository trgovinaRepository;
     private final ProizvodRepository proizvodRepository;
 
     public KupacProizvodTrgovinaService(
             final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository,
-            final KupacRepository kupacRepository, final TrgovinaRepository trgovinaRepository,
+            final RacunRepository racunRepository,
+            final KupacRepository kupacRepository,
+            final TrgovinaRepository trgovinaRepository,
             final ProizvodRepository proizvodRepository) {
         this.kupacProizvodTrgovinaRepository = kupacProizvodTrgovinaRepository;
+        this.racunRepository = racunRepository;
         this.kupacRepository = kupacRepository;
         this.trgovinaRepository = trgovinaRepository;
         this.proizvodRepository = proizvodRepository;
@@ -67,7 +65,8 @@ public class KupacProizvodTrgovinaService {
     private KupacProizvodTrgovinaDTO mapToDTO(final KupacProizvodTrgovina kupacProizvodTrgovina,
             final KupacProizvodTrgovinaDTO kupacProizvodTrgovinaDTO) {
         kupacProizvodTrgovinaDTO.setId(kupacProizvodTrgovina.getId());
-        kupacProizvodTrgovinaDTO.setKupacProizvodTrgovinaFlag(kupacProizvodTrgovina.getKupacProizvodTrgovinaFlag());
+        kupacProizvodTrgovinaDTO.setKolicinaProizvoda(kupacProizvodTrgovina.getKolicinaProizvoda());
+        kupacProizvodTrgovinaDTO.setRacun(kupacProizvodTrgovina.getRacun() == null ? null : kupacProizvodTrgovina.getRacun().getRacunId());
         kupacProizvodTrgovinaDTO.setKupac(kupacProizvodTrgovina.getKupac() == null ? null : kupacProizvodTrgovina.getKupac().getKupacId());
         kupacProizvodTrgovinaDTO.setTrgovina(kupacProizvodTrgovina.getTrgovina() == null ? null : kupacProizvodTrgovina.getTrgovina().getTrgovinaId());
         kupacProizvodTrgovinaDTO.setProizvod(kupacProizvodTrgovina.getProizvod() == null ? null : kupacProizvodTrgovina.getProizvod().getProizvodId());
@@ -77,7 +76,10 @@ public class KupacProizvodTrgovinaService {
     private KupacProizvodTrgovina mapToEntity(
             final KupacProizvodTrgovinaDTO kupacProizvodTrgovinaDTO,
             final KupacProizvodTrgovina kupacProizvodTrgovina) {
-        kupacProizvodTrgovina.setKupacProizvodTrgovinaFlag(kupacProizvodTrgovinaDTO.getKupacProizvodTrgovinaFlag());
+        kupacProizvodTrgovina.setKolicinaProizvoda(kupacProizvodTrgovinaDTO.getKolicinaProizvoda());
+        final Racun racun = kupacProizvodTrgovinaDTO.getRacun() == null ? null : racunRepository.findById(kupacProizvodTrgovinaDTO.getRacun())
+                .orElseThrow(() -> new NotFoundException("racun not found"));
+        kupacProizvodTrgovina.setRacun(racun);
         final Kupac kupac = kupacProizvodTrgovinaDTO.getKupac() == null ? null : kupacRepository.findById(kupacProizvodTrgovinaDTO.getKupac())
                 .orElseThrow(() -> new NotFoundException("kupac not found"));
         kupacProizvodTrgovina.setKupac(kupac);
