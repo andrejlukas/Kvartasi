@@ -66,6 +66,7 @@ public class KupacTrgovinaRecenzijaService {
     private KupacTrgovinaRecenzijaDTO mapToDTO(final KupacTrgovinaRecenzija kupacTrgovinaRecenzija,
             final KupacTrgovinaRecenzijaDTO kupacTrgovinaRecenzijaDTO) {
         kupacTrgovinaRecenzijaDTO.setId(kupacTrgovinaRecenzija.getId());
+        kupacTrgovinaRecenzijaDTO.setOdobrioModerator(kupacTrgovinaRecenzija.getOdobrioModerator());
         kupacTrgovinaRecenzijaDTO.setKupac(kupacTrgovinaRecenzija.getKupac() == null ? null : kupacTrgovinaRecenzija.getKupac().getKupacId());
         kupacTrgovinaRecenzijaDTO.setTrgovina(kupacTrgovinaRecenzija.getTrgovina() == null ? null : kupacTrgovinaRecenzija.getTrgovina().getTrgovinaId());
         kupacTrgovinaRecenzijaDTO.setRecenzija(kupacTrgovinaRecenzija.getRecenzija() == null ? null : kupacTrgovinaRecenzija.getRecenzija().getRecenzijaId());
@@ -75,6 +76,7 @@ public class KupacTrgovinaRecenzijaService {
     private KupacTrgovinaRecenzija mapToEntity(
             final KupacTrgovinaRecenzijaDTO kupacTrgovinaRecenzijaDTO,
             final KupacTrgovinaRecenzija kupacTrgovinaRecenzija) {
+        kupacTrgovinaRecenzija.setOdobrioModerator(kupacTrgovinaRecenzijaDTO.getOdobrioModerator());
         final Kupac kupac = kupacTrgovinaRecenzijaDTO.getKupac() == null ? null : kupacRepository.findById(kupacTrgovinaRecenzijaDTO.getKupac())
                 .orElseThrow(() -> new NotFoundException("kupac not found"));
         kupacTrgovinaRecenzija.setKupac(kupac);

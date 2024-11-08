@@ -31,6 +31,9 @@ public class KupacTrgovinaRecenzija {
             generator = "primary_sequence"
     )
     private Long id;
+    
+    @JoinColumn(name = "odobrio_moderator_id", nullable = false)
+    private Boolean odobrioModerator;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kupac_id", nullable = false)

@@ -12,6 +12,9 @@ public class KupacTrgovinaRecenzijaDTO {
     private Long id;
 
     @NotNull
+    private Boolean odobrioModerator;
+
+    @NotNull
     private Integer kupac;
 
     @NotNull

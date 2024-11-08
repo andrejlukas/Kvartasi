@@ -32,6 +32,9 @@ public class KupacTrgovinaPonudaPopust {
     )
     private Long id;
 
+    @Column(nullable = false)
+    private Boolean kupacTrgovinaPonudaPopustFlag;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kupac_id", nullable = false)
     private Kupac kupac;
