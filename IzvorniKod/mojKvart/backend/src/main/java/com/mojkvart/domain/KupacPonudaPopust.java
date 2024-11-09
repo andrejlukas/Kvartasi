@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class KupacTrgovinaPonudaPopust {
+public class KupacPonudaPopust {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -33,15 +33,11 @@ public class KupacTrgovinaPonudaPopust {
     private Long id;
 
     @Column(nullable = false)
-    private Boolean kupacTrgovinaPonudaPopustFlag;
+    private Boolean kupacPonudaPopustFlag;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kupac_id", nullable = false)
     private Kupac kupac;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trgovina_id", nullable = false)
-    private Trgovina trgovina;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ponuda_popust_id", nullable = false)

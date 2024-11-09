@@ -7,14 +7,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class KupacProizvodTrgovinaDTO {
+public class KupacPonudaPopustDTO {
 
     private Long id;
 
     @NotNull
-    private Integer kolicinaProizvoda;
-
-    private Long racun;
+    private Boolean kupacPonudaPopustFlag;
 
     @NotNull
     private Integer kupac;
@@ -23,6 +21,6 @@ public class KupacProizvodTrgovinaDTO {
     private Integer trgovina;
 
     @NotNull
-    private Integer proizvod;
+    private Integer ponudaPopust;
 
 }

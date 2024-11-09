@@ -2,8 +2,6 @@ package com.mojkvart.service;
 
 import com.mojkvart.domain.Atribut;
 import com.mojkvart.domain.Dogadaj;
-import com.mojkvart.domain.KupacProizvodTrgovina;
-import com.mojkvart.domain.KupacTrgovinaPonudaPopust;
 import com.mojkvart.domain.KupacTrgovinaRecenzija;
 import com.mojkvart.domain.PonudaPopust;
 import com.mojkvart.domain.Proizvod;
@@ -12,8 +10,8 @@ import com.mojkvart.model.TrgovinaDTO;
 import com.mojkvart.repos.AtributRepository;
 import com.mojkvart.repos.DogadajRepository;
 import com.mojkvart.repos.KupacDogadajRepository;
-import com.mojkvart.repos.KupacProizvodTrgovinaRepository;
-import com.mojkvart.repos.KupacTrgovinaPonudaPopustRepository;
+import com.mojkvart.repos.KupacProizvodRepository;
+import com.mojkvart.repos.KupacPonudaPopustRepository;
 import com.mojkvart.repos.KupacTrgovinaRecenzijaRepository;
 import com.mojkvart.repos.PonudaPopustRepository;
 import com.mojkvart.repos.ProizvodRepository;
@@ -37,10 +35,7 @@ public class TrgovinaService {
     private final ProizvodRepository proizvodRepository;
     private final DogadajRepository dogadajRepository;
     private final PonudaPopustRepository ponudaPopustRepository;
-    private final KupacDogadajRepository kupacDogadajTrgovinaRepository;
     private final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository;
-    private final KupacTrgovinaPonudaPopustRepository kupacTrgovinaPonudaPopustRepository;
-    private final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository;
 
     public TrgovinaService(final TrgovinaRepository trgovinaRepository,
             final AtributRepository atributRepository, final ProizvodRepository proizvodRepository,
@@ -48,18 +43,15 @@ public class TrgovinaService {
             final PonudaPopustRepository ponudaPopustRepository,
             final KupacDogadajRepository kupacDogadajTrgovinaRepository,
             final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository,
-            final KupacTrgovinaPonudaPopustRepository kupacTrgovinaPonudaPopustRepository,
-            final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository) {
+            final KupacPonudaPopustRepository kupacTrgovinaPonudaPopustRepository,
+            final KupacProizvodRepository kupacProizvodTrgovinaRepository) {
         this.trgovinaRepository = trgovinaRepository;
         this.atributRepository = atributRepository;
         this.proizvodRepository = proizvodRepository;
         this.dogadajRepository = dogadajRepository;
         this.ponudaPopustRepository = ponudaPopustRepository;
-        this.kupacDogadajTrgovinaRepository = kupacDogadajTrgovinaRepository;
         this.kupacTrgovinaRecenzijaRepository = kupacTrgovinaRecenzijaRepository;
-        this.kupacTrgovinaPonudaPopustRepository = kupacTrgovinaPonudaPopustRepository;
-        this.kupacProizvodTrgovinaRepository = kupacProizvodTrgovinaRepository;
-    }
+        }
 
     public List<TrgovinaDTO> findAll() {
         final List<Trgovina> trgovinas = trgovinaRepository.findAll(Sort.by("trgovinaId"));
@@ -143,18 +135,6 @@ public class TrgovinaService {
         if (trgovinaKupacTrgovinaRecenzija != null) {
             referencedWarning.setKey("trgovina.kupacTrgovinaRecenzija.trgovina.referenced");
             referencedWarning.addParam(trgovinaKupacTrgovinaRecenzija.getId());
-            return referencedWarning;
-        }
-        final KupacTrgovinaPonudaPopust trgovinaKupacTrgovinaPonudaPopust = kupacTrgovinaPonudaPopustRepository.findFirstByTrgovina(trgovina);
-        if (trgovinaKupacTrgovinaPonudaPopust != null) {
-            referencedWarning.setKey("trgovina.kupacTrgovinaPonudaPopust.trgovina.referenced");
-            referencedWarning.addParam(trgovinaKupacTrgovinaPonudaPopust.getId());
-            return referencedWarning;
-        }
-        final KupacProizvodTrgovina trgovinaKupacProizvodTrgovina = kupacProizvodTrgovinaRepository.findFirstByTrgovina(trgovina);
-        if (trgovinaKupacProizvodTrgovina != null) {
-            referencedWarning.setKey("trgovina.kupacProizvodTrgovina.trgovina.referenced");
-            referencedWarning.addParam(trgovinaKupacProizvodTrgovina.getId());
             return referencedWarning;
         }
         return null;

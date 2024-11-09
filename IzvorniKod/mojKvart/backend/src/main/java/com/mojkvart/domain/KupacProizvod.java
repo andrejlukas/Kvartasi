@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class KupacProizvodTrgovina {
+public class KupacProizvod {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -44,11 +44,7 @@ public class KupacProizvodTrgovina {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kupac_id", nullable = false)
     private Kupac kupac;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trgovina_id", nullable = false)
-    private Trgovina trgovina;
-
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "proizvod_id", nullable = false)
     private Proizvod proizvod;
