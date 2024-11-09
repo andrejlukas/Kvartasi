@@ -7,12 +7,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class KupacDogadajTrgovinaDTO {
+public class KupacDogadajDTO {
 
     private Long id;
 
     @NotNull
-    private Boolean kupacDogadajTrgovinaFlag;
+    private Boolean kupacDogadajFlag;
 
     @NotNull
     private Integer kupac;
@@ -20,7 +20,5 @@ public class KupacDogadajTrgovinaDTO {
     @NotNull
     private Integer dogadaj;
 
-    @NotNull
-    private Integer trgovina;
 
 }

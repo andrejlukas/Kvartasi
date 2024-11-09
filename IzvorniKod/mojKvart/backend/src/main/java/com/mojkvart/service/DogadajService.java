@@ -1,11 +1,11 @@
 package com.mojkvart.service;
 
 import com.mojkvart.domain.Dogadaj;
-import com.mojkvart.domain.KupacDogadajTrgovina;
+import com.mojkvart.domain.KupacDogadaj;
 import com.mojkvart.domain.Trgovina;
 import com.mojkvart.model.DogadajDTO;
 import com.mojkvart.repos.DogadajRepository;
-import com.mojkvart.repos.KupacDogadajTrgovinaRepository;
+import com.mojkvart.repos.KupacDogadajRepository;
 import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
@@ -19,14 +19,14 @@ public class DogadajService {
 
     private final DogadajRepository dogadajRepository;
     private final TrgovinaRepository trgovinaRepository;
-    private final KupacDogadajTrgovinaRepository kupacDogadajTrgovinaRepository;
+    private final KupacDogadajRepository kupacDogadajRepository;
 
     public DogadajService(final DogadajRepository dogadajRepository,
             final TrgovinaRepository trgovinaRepository,
-            final KupacDogadajTrgovinaRepository kupacDogadajTrgovinaRepository) {
+            final KupacDogadajRepository kupacDogadajRepository) {
         this.dogadajRepository = dogadajRepository;
         this.trgovinaRepository = trgovinaRepository;
-        this.kupacDogadajTrgovinaRepository = kupacDogadajTrgovinaRepository;
+        this.kupacDogadajRepository = kupacDogadajRepository;
     }
 
     public List<DogadajDTO> findAll() {
@@ -84,10 +84,10 @@ public class DogadajService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Dogadaj dogadaj = dogadajRepository.findById(dogadajId)
                 .orElseThrow(NotFoundException::new);
-        final KupacDogadajTrgovina dogadajKupacDogadajTrgovina = kupacDogadajTrgovinaRepository.findFirstByDogadaj(dogadaj);
-        if (dogadajKupacDogadajTrgovina != null) {
-            referencedWarning.setKey("dogadaj.kupacDogadajTrgovina.dogadaj.referenced");
-            referencedWarning.addParam(dogadajKupacDogadajTrgovina.getId());
+        final KupacDogadaj dogadajKupacDogadaj = kupacDogadajRepository.findFirstByDogadaj(dogadaj);
+        if (dogadajKupacDogadaj != null) {
+            referencedWarning.setKey("dogadaj.kupacDogadaj.dogadaj.referenced");
+            referencedWarning.addParam(dogadajKupacDogadaj.getId());
             return referencedWarning;
         }
         return null;

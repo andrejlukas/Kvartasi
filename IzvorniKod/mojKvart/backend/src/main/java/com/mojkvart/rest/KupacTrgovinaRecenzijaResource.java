@@ -1,10 +1,6 @@
 package com.mojkvart.rest;
 
-import com.mojkvart.domain.Kupac;
-import com.mojkvart.domain.KupacTrgovinaRecenzija;
 import com.mojkvart.model.KupacTrgovinaRecenzijaDTO;
-import com.mojkvart.repos.KupacRepository;
-import com.mojkvart.service.KupacService;
 import com.mojkvart.service.KupacTrgovinaRecenzijaService;
 import jakarta.validation.Valid;
 import java.util.List;
