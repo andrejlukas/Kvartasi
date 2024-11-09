@@ -48,6 +48,6 @@ public class PonudaPopust {
     private Set<Popust> ponudaPopustPopusts;
 
     @OneToMany(mappedBy = "ponudaPopust")
-    private Set<KupacTrgovinaPonudaPopust> ponudaPopustKupacTrgovinaPonudaPopusts;
+    private Set<KupacPonudaPopust> ponudaPopustKupacPonudaPopusts;
 
 }

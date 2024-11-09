@@ -56,10 +56,10 @@ public class Kupac {
     private Set<OcjenaProizvodKupac> kupacOcjenaProizvodKupacs;
 
     @OneToMany(mappedBy = "kupac")
-    private Set<KupacTrgovinaPonudaPopust> kupacKupacTrgovinaPonudaPopusts;
+    private Set<KupacPonudaPopust> kupacKupacPonudaPopusts;
 
     @OneToMany(mappedBy = "kupac")
-    private Set<KupacProizvodTrgovina> kupacKupacProizvodTrgovinas;
+    private Set<KupacProizvod> kupacKupacProizvods;
 
     @OneToMany(mappedBy = "kupac")
     private Set<Racun> kupacRacuns;

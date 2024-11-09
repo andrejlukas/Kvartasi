@@ -60,6 +60,6 @@ public class Proizvod {
     private Set<OcjenaProizvodKupac> proizvodOcjenaProizvodKupacs;
 
     @OneToMany(mappedBy = "proizvod")
-    private Set<KupacProizvodTrgovina> proizvodKupacProizvodTrgovinas;
+    private Set<KupacProizvod> proizvodKupacProizvods;
 
 }
