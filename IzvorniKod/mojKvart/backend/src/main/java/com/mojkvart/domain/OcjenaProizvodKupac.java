@@ -44,6 +44,6 @@ public class OcjenaProizvodKupac {
 
     @Min(1)
     @Max(5)
-    @Column(name = "ocjena_id", nullable = false)
+    @Column(name = "ocjena", nullable = false)
     private Integer ocjena;
 }

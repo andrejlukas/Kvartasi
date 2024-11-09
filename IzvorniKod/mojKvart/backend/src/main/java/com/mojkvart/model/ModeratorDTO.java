@@ -25,7 +25,7 @@ public class ModeratorDTO {
     private String moderatorEmail;
 
     @NotNull
-    @Size(max = 50)
+    @Size(max = 200)
     private String moderatorSifra;
 
 }

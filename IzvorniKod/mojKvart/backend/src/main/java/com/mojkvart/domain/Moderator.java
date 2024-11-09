@@ -38,7 +38,7 @@ public class Moderator {
     @Column(unique = true, nullable = false, length = 50)
     private String moderatorEmail;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 200)
     private String moderatorSifra;
 
 }

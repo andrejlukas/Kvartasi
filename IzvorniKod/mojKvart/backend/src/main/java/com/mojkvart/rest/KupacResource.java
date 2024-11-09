@@ -1,13 +1,17 @@
 package com.mojkvart.rest;
 
 import com.mojkvart.model.KupacDTO;
+import com.mojkvart.model.LoginDTO;
+import com.mojkvart.model.Response;
+import com.mojkvart.service.AdministratorService;
 import com.mojkvart.service.KupacService;
-import com.mojkvart.util.NotFoundException;
+import com.mojkvart.service.ModeratorService;
+import com.mojkvart.service.TrgovinaService;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
+import com.mojkvart.util.jwtUtil;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,14 +25,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/kupacs", produces = MediaType.APPLICATION_JSON_VALUE)
 public class KupacResource {
 
-    private final KupacService kupacService;
+    @Autowired
+    private AdministratorService administratorService;
+
+    @Autowired
+    private ModeratorService moderatorService;
+
+    @Autowired
+    private TrgovinaService trgovinaService;
+
+    @Autowired
+    private KupacService kupacService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    public KupacResource(final KupacService kupacService) {
-        this.kupacService = kupacService;
-    }
  
    
     @GetMapping
@@ -38,31 +48,46 @@ public class KupacResource {
 
     //UC3, koristite api/kupacs/{kupacId} za dohvaćanje osobnih podataka
     @GetMapping("/{kupacId}")
-    public ResponseEntity<KupacDTO> getKupac(
-            @PathVariable(name = "kupacId") final Integer kupacId) {
+    public ResponseEntity<KupacDTO> getKupac(@PathVariable(name = "kupacId") final Integer kupacId) {
         return ResponseEntity.ok(kupacService.get(kupacId));
     }
 
     //UC1, koristite api/kupacs i pošaljite JSON objekt za registraciju
     @PostMapping
     public ResponseEntity<Integer> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
-        Optional<KupacDTO> previousKupacDTO = kupacService.findAll().stream().
-                filter(k -> k.getKupacEmail().equals(kupacDTO.getKupacEmail())).findFirst();
-        if(previousKupacDTO.isPresent()) {
-            KupacDTO previousKupac = previousKupacDTO.get();
-            if(!passwordEncoder.encode(kupacDTO.getKupacSifra()).
-                    equals(previousKupac.getKupacSifra())) {
-                throw new NotFoundException("Wrong password!");
-            }
-            System.out.println("Right Password!");
-            return ResponseEntity.ok(previousKupac.getKupacId());
-        } else {
-            if(kupacDTO.getKupacIme().isEmpty())
-                throw new NotFoundException("You don't have an account! Try using Sign up!");
-            kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
-            final Integer createdKupacId = kupacService.create(kupacDTO);
-            return new ResponseEntity<>(createdKupacId, HttpStatus.CREATED);
+        kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
+        final Integer createdKupacId = kupacService.create(kupacDTO);
+        return new ResponseEntity<>(createdKupacId, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Object> checkIfUserExists(@RequestBody @Valid LoginDTO loginDTO) {
+        String email = loginDTO.getEmail();
+        String sifra = loginDTO.getSifra();
+        String sifraIzBaze, role = "";
+
+        if (administratorService.findAll().stream().anyMatch(a -> a.getAdministratorEmail().equals(email))) {
+            role = "ADMIN";
+            sifraIzBaze = administratorService.findAll().stream().filter(a -> a.getAdministratorEmail().equals(email)).findFirst().get().getAdministratorSifra();
+        } else if (moderatorService.findAll().stream().anyMatch(m -> m.getModeratorEmail().equals(email))) {
+            role = "MODERATOR";
+            sifraIzBaze = moderatorService.findAll().stream().filter(m -> m.getModeratorEmail().equals(email)).findFirst().get().getModeratorSifra();
+        } else if (trgovinaService.findAll().stream().anyMatch(v -> v.getTrgovinaEmail().equals(email))) {
+            role = "VLASNIK";
+            sifraIzBaze = trgovinaService.findAll().stream().filter(v -> v.getTrgovinaEmail().equals(email)).findFirst().get().getTrgovinaSifra();
+        } else if (kupacService.findAll().stream().anyMatch(k -> k.getKupacEmail().equals(email))) {
+            role = "KUPAC";
+            sifraIzBaze = kupacService.findAll().stream().filter(k -> k.getKupacEmail().equals(email)).findFirst().get().getKupacSifra();
+        } else
+            return ResponseEntity.badRequest().body("Nepostojeći e-mail!");
+
+        if (passwordEncoder.matches(sifra, sifraIzBaze)){
+            String token = jwtUtil.generateToken(email, role);
+            Response resp = new Response(token, role);
+            return ResponseEntity.ok().body(resp);
         }
+        else
+            return ResponseEntity.badRequest().body("Kriva lozinka!");
     }
 
     //UC3, koristite api/kupacs/{kupacId} za uređivanje osobnih podataka
