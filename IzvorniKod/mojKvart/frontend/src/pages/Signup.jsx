@@ -14,7 +14,7 @@ export function Signup() {
 
    useEffect(() => {
       if (emailAddress.length > 0) {
-        fetch(`/api/kupacs`)
+        fetch('/api/kupacs')
             .then((response) => response.json())
             .then((registriraniKorisnici) => {
                const duplikat = registriraniKorisnici.some(
@@ -29,9 +29,8 @@ export function Signup() {
       e.preventDefault();
 
       if (emailExists) {
-         //alert("Email adresa je već korištena!");
          return;
-       }
+      }
 
       const data = {
         kupacEmail: emailAddress,
@@ -47,23 +46,18 @@ export function Signup() {
          },
          body: JSON.stringify(data)
       };
-      console.log(JSON.stringify(data))
   
       return fetch('/api/kupacs', options)
          .then(response => {
             if (response.ok) {
-               navigate('/');
-               alert("Uspješna registracija! Sada se možeš prijaviti")
-               console.log("sve okej dodan")
+               navigate('/home');
+               alert("Uspješna registracija!");
             }
          });  
    }
 
    function isValid() {
       //vec koristena adresa
-      
-
-
       return firstName.length > 0 && lastName.length > 0 && emailAddress.length > 0
       && password.length > 0 && homeAddress.length > 0 && !emailExists ;
    }

@@ -1,17 +1,8 @@
 package com.mojkvart.service;
 
-import com.mojkvart.domain.Kupac;
-import com.mojkvart.domain.KupacProizvodTrgovina;
-import com.mojkvart.domain.KupacTrgovinaPonudaPopust;
-import com.mojkvart.domain.KupacTrgovinaRecenzija;
-import com.mojkvart.domain.OcjenaProizvodKupac;
+import com.mojkvart.domain.*;
 import com.mojkvart.model.KupacDTO;
-import com.mojkvart.repos.KupacDogadajRepository;
-import com.mojkvart.repos.KupacProizvodTrgovinaRepository;
-import com.mojkvart.repos.KupacRepository;
-import com.mojkvart.repos.KupacTrgovinaPonudaPopustRepository;
-import com.mojkvart.repos.KupacTrgovinaRecenzijaRepository;
-import com.mojkvart.repos.OcjenaProizvodKupacRepository;
+import com.mojkvart.repos.*;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
 import java.util.List;
@@ -26,15 +17,15 @@ public class KupacService {
     private final KupacDogadajRepository kupacDogadajRepository;
     private final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository;
     private final OcjenaProizvodKupacRepository ocjenaProizvodKupacRepository;
-    private final KupacTrgovinaPonudaPopustRepository kupacTrgovinaPonudaPopustRepository;
-    private final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository;
+    private final KupacPonudaPopustRepository kupacTrgovinaPonudaPopustRepository;
+    private final KupacProizvodRepository kupacProizvodTrgovinaRepository;
 
     public KupacService(final KupacRepository kupacRepository,
             final KupacDogadajRepository kupacDogadajRepository,
             final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository,
             final OcjenaProizvodKupacRepository ocjenaProizvodKupacRepository,
-            final KupacTrgovinaPonudaPopustRepository kupacTrgovinaPonudaPopustRepository,
-            final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository) {
+            final KupacPonudaPopustRepository kupacTrgovinaPonudaPopustRepository,
+            final KupacProizvodRepository kupacProizvodTrgovinaRepository) {
         this.kupacRepository = kupacRepository;
         this.kupacDogadajRepository = kupacDogadajRepository;
         this.kupacTrgovinaRecenzijaRepository = kupacTrgovinaRecenzijaRepository;
@@ -114,13 +105,13 @@ public class KupacService {
             referencedWarning.addParam(kupacOcjenaProizvodKupac.getId());
             return referencedWarning;
         }
-        final KupacTrgovinaPonudaPopust kupacKupacTrgovinaPonudaPopust = kupacTrgovinaPonudaPopustRepository.findFirstByKupac(kupac);
+        final KupacPonudaPopust kupacKupacTrgovinaPonudaPopust = kupacTrgovinaPonudaPopustRepository.findFirstByKupac(kupac);
         if (kupacKupacTrgovinaPonudaPopust != null) {
             referencedWarning.setKey("kupac.kupacTrgovinaPonudaPopust.kupac.referenced");
             referencedWarning.addParam(kupacKupacTrgovinaPonudaPopust.getId());
             return referencedWarning;
         }
-        final KupacProizvodTrgovina kupacKupacProizvodTrgovina = kupacProizvodTrgovinaRepository.findFirstByKupac(kupac);
+        final KupacProizvod kupacKupacProizvodTrgovina = kupacProizvodTrgovinaRepository.findFirstByKupac(kupac);
         if (kupacKupacProizvodTrgovina != null) {
             referencedWarning.setKey("kupac.kupacProizvodTrgovina.kupac.referenced");
             referencedWarning.addParam(kupacKupacProizvodTrgovina.getId());

@@ -1,22 +1,21 @@
 import IMAGE from "../assets/vege.avif" //treba nam bolja slika 
 import "../styles/login.css"
-import { Link } from "react-router-dom";
+import { json, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function Login() {
    const navigate = useNavigate();
-   const firstName = "";
-   const lastName = "";
-   const homeAddress = "";
    const [emailAddress, setEmailAddress] = useState('');
    const [password, setPassword] = useState('');
    const [emailExists, setEmailExists] = useState(false); // Dodato stanje za provjeru emaila
    const [logInTrigger, setTrigger] = useState(true);
 
    useEffect(() => {
+      if(!logInTrigger && emailExists)
+         setTrigger(true);
       if (emailAddress.length > 0) {
-         fetch(`/api/kupacs`)
+         fetch('/api/kupacs')
             .then((response) => response.json())
             .then((registriraniKorisnici) => {
                const duplikat = registriraniKorisnici.some(
@@ -36,12 +35,13 @@ export function Login() {
          return;
       }
 
+      // ovo inicijaliziras prije options: const token = localStorage.getItem('token');
+      // ovo dodajes u headers zahtjevau options: 'Authorization': `Bearer ${token}`,
+      // ovdje to jasno ne treba jer tek ides u login
+
       const data = {
-        kupacEmail: emailAddress,
-        kupacIme: firstName,
-        kupacPrezime: lastName,
-        kupacAdresa : homeAddress,
-        kupacSifra : password
+        email: emailAddress,
+        sifra : password
       };
       const options = {
          method: 'POST',
@@ -50,19 +50,44 @@ export function Login() {
          },
          body: JSON.stringify(data)
       };
-      console.log(JSON.stringify(data))
   
-      return fetch('/api/kupacs', options) // nesto ovdje popraviti, baca CORS ERROR
+      console.log(data)
+      /*return fetch('/api/kupacs/login', options) 
          .then(response => {
             if (response.ok) {
+               console.log(typeof(response.role));
+               console.log(response.role);
+               localStorage.setItem('token', data.token);
+               localStorage.setItem('role', data.role);
                navigate("/home");
                alert("Uspješna prijava!");
-               console.log("sve okej, idemo na home page");
             } else {
                navigate('/');
-               console.log("pa zasto smo ovdje")
+               console.log("Kriva lozinka!")
             }
-         });
+      });*/
+      return fetch('/api/kupacs/login', options) 
+         .then(response => {
+            console.log(response);
+            if (response.ok) {
+               return response.json();
+            } else {
+               throw new Error("Kriva lozinka!");
+            }
+         })
+         .then(data => {
+               localStorage.setItem('token', data.token);
+               localStorage.setItem('role', data.role);
+               navigate("/home");
+               alert("Uspješna prijava!");
+         })
+         .catch(
+            error => {
+               navigate('/');
+               console.log("Kriva lozinka!");
+            }
+         );
+
    }
 
    return (
@@ -102,7 +127,7 @@ export function Login() {
                         </p>
                )}
 
-               <button type="submit" disabled={ !emailExists }>Log in</button>
+               <button type="submit">Log in</button>
 
                <div className="divider"></div>
 

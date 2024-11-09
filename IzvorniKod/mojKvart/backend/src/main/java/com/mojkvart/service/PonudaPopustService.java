@@ -1,12 +1,12 @@
 package com.mojkvart.service;
 
-import com.mojkvart.domain.KupacTrgovinaPonudaPopust;
+import com.mojkvart.domain.KupacPonudaPopust;
 import com.mojkvart.domain.Ponuda;
 import com.mojkvart.domain.PonudaPopust;
 import com.mojkvart.domain.Popust;
 import com.mojkvart.domain.Trgovina;
 import com.mojkvart.model.PonudaPopustDTO;
-import com.mojkvart.repos.KupacTrgovinaPonudaPopustRepository;
+import com.mojkvart.repos.KupacPonudaPopustRepository;
 import com.mojkvart.repos.PonudaPopustRepository;
 import com.mojkvart.repos.PonudaRepository;
 import com.mojkvart.repos.PopustRepository;
@@ -25,12 +25,12 @@ public class PonudaPopustService {
     private final TrgovinaRepository trgovinaRepository;
     private final PonudaRepository ponudaRepository;
     private final PopustRepository popustRepository;
-    private final KupacTrgovinaPonudaPopustRepository kupacTrgovinaPonudaPopustRepository;
+    private final KupacPonudaPopustRepository kupacTrgovinaPonudaPopustRepository;
 
     public PonudaPopustService(final PonudaPopustRepository ponudaPopustRepository,
             final TrgovinaRepository trgovinaRepository, final PonudaRepository ponudaRepository,
             final PopustRepository popustRepository,
-            final KupacTrgovinaPonudaPopustRepository kupacTrgovinaPonudaPopustRepository) {
+            final KupacPonudaPopustRepository kupacTrgovinaPonudaPopustRepository) {
         this.ponudaPopustRepository = ponudaPopustRepository;
         this.trgovinaRepository = trgovinaRepository;
         this.ponudaRepository = ponudaRepository;
@@ -101,7 +101,7 @@ public class PonudaPopustService {
             referencedWarning.addParam(ponudaPopustPopust.getPopustId());
             return referencedWarning;
         }
-        final KupacTrgovinaPonudaPopust ponudaPopustKupacTrgovinaPonudaPopust = kupacTrgovinaPonudaPopustRepository.findFirstByPonudaPopust(ponudaPopust);
+        final KupacPonudaPopust ponudaPopustKupacTrgovinaPonudaPopust = kupacTrgovinaPonudaPopustRepository.findFirstByPonudaPopust(ponudaPopust);
         if (ponudaPopustKupacTrgovinaPonudaPopust != null) {
             referencedWarning.setKey("ponudaPopust.kupacTrgovinaPonudaPopust.ponudaPopust.referenced");
             referencedWarning.addParam(ponudaPopustKupacTrgovinaPonudaPopust.getId());

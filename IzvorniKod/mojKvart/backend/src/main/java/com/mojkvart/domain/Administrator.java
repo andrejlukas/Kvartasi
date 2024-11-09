@@ -38,7 +38,7 @@ public class Administrator {
     @Column(nullable = false, length = 50)
     private String administratorPrezime;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 200)
     private String administratorSifra;
 
 }

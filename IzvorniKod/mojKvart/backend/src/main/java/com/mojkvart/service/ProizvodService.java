@@ -1,11 +1,11 @@
 package com.mojkvart.service;
 
-import com.mojkvart.domain.KupacProizvodTrgovina;
+import com.mojkvart.domain.KupacProizvod;
 import com.mojkvart.domain.OcjenaProizvodKupac;
 import com.mojkvart.domain.Proizvod;
 import com.mojkvart.domain.Trgovina;
 import com.mojkvart.model.ProizvodDTO;
-import com.mojkvart.repos.KupacProizvodTrgovinaRepository;
+import com.mojkvart.repos.KupacProizvodRepository;
 import com.mojkvart.repos.OcjenaProizvodKupacRepository;
 import com.mojkvart.repos.ProizvodRepository;
 import com.mojkvart.repos.TrgovinaRepository;
@@ -22,12 +22,12 @@ public class ProizvodService {
     private final ProizvodRepository proizvodRepository;
     private final TrgovinaRepository trgovinaRepository;
     private final OcjenaProizvodKupacRepository ocjenaProizvodKupacRepository;
-    private final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository;
+    private final KupacProizvodRepository kupacProizvodTrgovinaRepository;
 
     public ProizvodService(final ProizvodRepository proizvodRepository,
             final TrgovinaRepository trgovinaRepository,
             final OcjenaProizvodKupacRepository ocjenaProizvodKupacRepository,
-            final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository) {
+            final KupacProizvodRepository kupacProizvodTrgovinaRepository) {
         this.proizvodRepository = proizvodRepository;
         this.trgovinaRepository = trgovinaRepository;
         this.ocjenaProizvodKupacRepository = ocjenaProizvodKupacRepository;
@@ -99,7 +99,7 @@ public class ProizvodService {
             referencedWarning.addParam(proizvodOcjenaProizvodKupac.getId());
             return referencedWarning;
         }
-        final KupacProizvodTrgovina proizvodKupacProizvodTrgovina = kupacProizvodTrgovinaRepository.findFirstByProizvod(proizvod);
+        final KupacProizvod proizvodKupacProizvodTrgovina = kupacProizvodTrgovinaRepository.findFirstByProizvod(proizvod);
         if (proizvodKupacProizvodTrgovina != null) {
             referencedWarning.setKey("proizvod.kupacProizvodTrgovina.proizvod.referenced");
             referencedWarning.addParam(proizvodKupacProizvodTrgovina.getId());
