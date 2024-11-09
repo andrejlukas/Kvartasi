@@ -47,7 +47,7 @@ public class Kupac {
     private String kupacSifra;
 
     @OneToMany(mappedBy = "kupac")
-    private Set<KupacDogadajTrgovina> kupacKupacDogadajTrgovinas;
+    private Set<KupacDogadaj> kupacKupacDogadajs;
 
     @OneToMany(mappedBy = "kupac")
     private Set<KupacTrgovinaRecenzija> kupacKupacTrgovinaRecenzijas;

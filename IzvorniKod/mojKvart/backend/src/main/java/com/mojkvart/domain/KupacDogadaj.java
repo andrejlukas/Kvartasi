@@ -16,7 +16,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Vlasnik {
+public class KupacDogadaj{
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -30,22 +30,17 @@ public class Vlasnik {
             strategy = GenerationType.SEQUENCE,
             generator = "primary_sequence"
     )
-    private Integer vlasnikId;
+    private Long id;
 
-    @Column(nullable = false, length = 50)
-    private String vlasnikIme;
-
-    @Column(nullable = false, length = 50)
-    private String vlasnikPrezime;
-
-    @Column(unique = true, nullable = false, length = 50)
-    private String vlasnikEmail;
-
-    @Column(nullable = false, length = 50)
-    private String vlasnikSifra;
+    @Column(nullable = false)
+    private Boolean kupacDogadajFlag;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trgovina_id")
-    private Trgovina trgovina;
+    @JoinColumn(name = "kupac_id", nullable = false)
+    private Kupac kupac;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dogadaj_id", nullable = false)
+    private Dogadaj dogadaj;
 
 }

@@ -51,6 +51,6 @@ public class Dogadaj {
     private Trgovina trgovina;
 
     @OneToMany(mappedBy = "dogadaj")
-    private Set<KupacDogadajTrgovina> dogadajKupacDogadajTrgovinas;
+    private Set<KupacDogadaj> dogadajKupacDogadajs;
 
 }

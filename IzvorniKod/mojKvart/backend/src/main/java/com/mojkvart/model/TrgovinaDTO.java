@@ -15,6 +15,10 @@ public class TrgovinaDTO {
 
     @NotNull
     @Size(max = 50)
+    private String trgovinaEmail;
+
+    @NotNull
+    @Size(max = 50)
     private String trgovinaNaziv;
 
     @NotNull
@@ -34,8 +38,17 @@ public class TrgovinaDTO {
     private String trgovinaSlika;
 
     @NotNull
+    @Size(max = 5)
+    private String trgovinaRadnoVrijemeOd;
+    
+    @NotNull
+    @Size(max = 5)
+    private String trgovinaRadnoVrijemeDo;
+
+    @NotNull
     @Size(max = 50)
-    private String trgovinaAtributi;
+    private String trgovinaSifra;
+
 
     private List<Integer> imaAtributeAtributs;
 

@@ -34,7 +34,10 @@ public class Trgovina {
     )
     private Integer trgovinaId;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 100)
+    private String trgovinaEmail;
+
+    @Column(nullable = false, length = 100)
     private String trgovinaNaziv;
 
     @Column(nullable = false, length = 500)
@@ -49,8 +52,14 @@ public class Trgovina {
     @Column(nullable = false, length = 50)
     private String trgovinaSlika;
 
-    @Column(nullable = false, length = 50)
-    private String trgovinaAtributi;
+    @Column(nullable = false, length = 5)
+    private String trgovinaRadnoVrijemeOd;   //upisuje se u formatu "xx:yy"
+
+    @Column(nullable = false, length = 5)
+    private String trgovinaRadnoVrijemeDo;   //upisuje se u formatu "xx:yy"
+    
+    @Column(nullable = false, length = 100)
+    private String trgovinaSifra;
 
     @OneToMany(mappedBy = "trgovina")
     private Set<Proizvod> trgovinaProizvods;
@@ -60,12 +69,6 @@ public class Trgovina {
 
     @OneToMany(mappedBy = "trgovina")
     private Set<PonudaPopust> trgovinaPonudaPopusts;
-
-    @OneToMany(mappedBy = "trgovina")
-    private Set<Vlasnik> trgovinaVlasniks;
-
-    @OneToMany(mappedBy = "trgovina")
-    private Set<KupacDogadajTrgovina> trgovinaKupacDogadajTrgovinas;
 
     @OneToMany(mappedBy = "trgovina")
     private Set<KupacTrgovinaRecenzija> trgovinaKupacTrgovinaRecenzijas;

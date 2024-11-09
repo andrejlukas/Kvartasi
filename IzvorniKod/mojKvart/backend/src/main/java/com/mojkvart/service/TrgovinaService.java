@@ -2,25 +2,22 @@ package com.mojkvart.service;
 
 import com.mojkvart.domain.Atribut;
 import com.mojkvart.domain.Dogadaj;
-import com.mojkvart.domain.KupacDogadajTrgovina;
 import com.mojkvart.domain.KupacProizvodTrgovina;
 import com.mojkvart.domain.KupacTrgovinaPonudaPopust;
 import com.mojkvart.domain.KupacTrgovinaRecenzija;
 import com.mojkvart.domain.PonudaPopust;
 import com.mojkvart.domain.Proizvod;
 import com.mojkvart.domain.Trgovina;
-import com.mojkvart.domain.Vlasnik;
 import com.mojkvart.model.TrgovinaDTO;
 import com.mojkvart.repos.AtributRepository;
 import com.mojkvart.repos.DogadajRepository;
-import com.mojkvart.repos.KupacDogadajTrgovinaRepository;
+import com.mojkvart.repos.KupacDogadajRepository;
 import com.mojkvart.repos.KupacProizvodTrgovinaRepository;
 import com.mojkvart.repos.KupacTrgovinaPonudaPopustRepository;
 import com.mojkvart.repos.KupacTrgovinaRecenzijaRepository;
 import com.mojkvart.repos.PonudaPopustRepository;
 import com.mojkvart.repos.ProizvodRepository;
 import com.mojkvart.repos.TrgovinaRepository;
-import com.mojkvart.repos.VlasnikRepository;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.transaction.Transactional;
@@ -40,8 +37,7 @@ public class TrgovinaService {
     private final ProizvodRepository proizvodRepository;
     private final DogadajRepository dogadajRepository;
     private final PonudaPopustRepository ponudaPopustRepository;
-    private final VlasnikRepository vlasnikRepository;
-    private final KupacDogadajTrgovinaRepository kupacDogadajTrgovinaRepository;
+    private final KupacDogadajRepository kupacDogadajTrgovinaRepository;
     private final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository;
     private final KupacTrgovinaPonudaPopustRepository kupacTrgovinaPonudaPopustRepository;
     private final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository;
@@ -50,8 +46,7 @@ public class TrgovinaService {
             final AtributRepository atributRepository, final ProizvodRepository proizvodRepository,
             final DogadajRepository dogadajRepository,
             final PonudaPopustRepository ponudaPopustRepository,
-            final VlasnikRepository vlasnikRepository,
-            final KupacDogadajTrgovinaRepository kupacDogadajTrgovinaRepository,
+            final KupacDogadajRepository kupacDogadajTrgovinaRepository,
             final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository,
             final KupacTrgovinaPonudaPopustRepository kupacTrgovinaPonudaPopustRepository,
             final KupacProizvodTrgovinaRepository kupacProizvodTrgovinaRepository) {
@@ -60,7 +55,6 @@ public class TrgovinaService {
         this.proizvodRepository = proizvodRepository;
         this.dogadajRepository = dogadajRepository;
         this.ponudaPopustRepository = ponudaPopustRepository;
-        this.vlasnikRepository = vlasnikRepository;
         this.kupacDogadajTrgovinaRepository = kupacDogadajTrgovinaRepository;
         this.kupacTrgovinaRecenzijaRepository = kupacTrgovinaRecenzijaRepository;
         this.kupacTrgovinaPonudaPopustRepository = kupacTrgovinaPonudaPopustRepository;
@@ -103,7 +97,6 @@ public class TrgovinaService {
         trgovinaDTO.setTrgovinaOpis(trgovina.getTrgovinaOpis());
         trgovinaDTO.setTrgovinaLokacija(trgovina.getTrgovinaLokacija());
         trgovinaDTO.setTrgovinaSlika(trgovina.getTrgovinaSlika());
-        trgovinaDTO.setTrgovinaAtributi(trgovina.getTrgovinaAtributi());
         trgovinaDTO.setImaAtributeAtributs(trgovina.getImaAtributeAtributs().stream()
                 .map(atribut -> atribut.getAtributId())
                 .toList());
@@ -115,7 +108,6 @@ public class TrgovinaService {
         trgovina.setTrgovinaOpis(trgovinaDTO.getTrgovinaOpis());
         trgovina.setTrgovinaLokacija(trgovinaDTO.getTrgovinaLokacija());
         trgovina.setTrgovinaSlika(trgovinaDTO.getTrgovinaSlika());
-        trgovina.setTrgovinaAtributi(trgovinaDTO.getTrgovinaAtributi());
         final List<Atribut> imaAtributeAtributs = atributRepository.findAllById(
                 trgovinaDTO.getImaAtributeAtributs() == null ? Collections.emptyList() : trgovinaDTO.getImaAtributeAtributs());
         if (imaAtributeAtributs.size() != (trgovinaDTO.getImaAtributeAtributs() == null ? 0 : trgovinaDTO.getImaAtributeAtributs().size())) {
@@ -145,18 +137,6 @@ public class TrgovinaService {
         if (trgovinaPonudaPopust != null) {
             referencedWarning.setKey("trgovina.ponudaPopust.trgovina.referenced");
             referencedWarning.addParam(trgovinaPonudaPopust.getPonudaPopustId());
-            return referencedWarning;
-        }
-        final Vlasnik trgovinaVlasnik = vlasnikRepository.findFirstByTrgovina(trgovina);
-        if (trgovinaVlasnik != null) {
-            referencedWarning.setKey("trgovina.vlasnik.trgovina.referenced");
-            referencedWarning.addParam(trgovinaVlasnik.getVlasnikId());
-            return referencedWarning;
-        }
-        final KupacDogadajTrgovina trgovinaKupacDogadajTrgovina = kupacDogadajTrgovinaRepository.findFirstByTrgovina(trgovina);
-        if (trgovinaKupacDogadajTrgovina != null) {
-            referencedWarning.setKey("trgovina.kupacDogadajTrgovina.trgovina.referenced");
-            referencedWarning.addParam(trgovinaKupacDogadajTrgovina.getId());
             return referencedWarning;
         }
         final KupacTrgovinaRecenzija trgovinaKupacTrgovinaRecenzija = kupacTrgovinaRecenzijaRepository.findFirstByTrgovina(trgovina);
