@@ -1,6 +1,6 @@
 import IMAGE from "../assets/vege.avif" //treba nam bolja slika 
 import "../styles/login.css"
-import { json, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,10 +9,10 @@ export function Login() {
    const [emailAddress, setEmailAddress] = useState('');
    const [password, setPassword] = useState('');
    const [emailExists, setEmailExists] = useState(false); // Dodato stanje za provjeru emaila
-   const [logInTrigger, setTrigger] = useState(true);
+   const [logInTrigger, setTrigger] = useState(true); // Za obavijest o krivom pokušaju prijave
 
    useEffect(() => {
-      if(!logInTrigger && emailExists)
+      if(!logInTrigger && !emailExists) 
          setTrigger(true);
       if (emailAddress.length > 0) {
          fetch('/api/kupacs')
@@ -31,7 +31,6 @@ export function Login() {
 
       if (!emailExists) {
          setTrigger(false);
-         console.log("Ova email adresa ne postoji!");
          return;
       }
 
@@ -51,28 +50,23 @@ export function Login() {
          body: JSON.stringify(data)
       };
   
-      console.log(data)
       /*return fetch('/api/kupacs/login', options) 
          .then(response => {
             if (response.ok) {
-               console.log(typeof(response.role));
-               console.log(response.role);
                localStorage.setItem('token', data.token);
                localStorage.setItem('role', data.role);
                navigate("/home");
                alert("Uspješna prijava!");
             } else {
                navigate('/');
-               console.log("Kriva lozinka!")
             }
       });*/
       return fetch('/api/kupacs/login', options) 
          .then(response => {
-            console.log(response);
             if (response.ok) {
                return response.json();
             } else {
-               throw new Error("Kriva lozinka!");
+               throw new Error("Krivi podatci!");
             }
          })
          .then(data => {
@@ -81,12 +75,7 @@ export function Login() {
                navigate("/home");
                alert("Uspješna prijava!");
          })
-         .catch(
-            error => {
-               navigate('/');
-               console.log("Kriva lozinka!");
-            }
-         );
+         .catch( error => navigate('/') );
 
    }
 
@@ -123,7 +112,7 @@ export function Login() {
 
                {!logInTrigger && (
                         <p style={{ color: "red", marginTop: "4px" ,  marginBottom: "4px", fontWeight: "bold" }}>
-                           This e-mail address doesn't exist! Sign up?
+                           Wrong username or password!
                         </p>
                )}
 
