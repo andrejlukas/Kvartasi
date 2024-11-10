@@ -75,12 +75,12 @@ export function Signup() {
                      <input type="text" placeholder="Last name" className="signup-inputs" name="lastName" value={lastName}
                      onChange={(e) => setLastName(e.target.value)}/>
                   </div>
-                  <input type="text" placeholder="Home address" className="signup-inputs"  name="homeAddress" value={homeAddress}
+                  <input type="text" placeholder="Home address" id="home" className="signup-inputs"  name="homeAddress" value={homeAddress}
                      onChange={(e) => setHomeAddress(e.target.value)}/>
-                  <input type="email" placeholder="Email address" className="signup-inputs"  name="emailAddress" value={emailAddress}
+                  <input type="email" placeholder="Email address" id = "email" className="signup-inputs"  name="emailAddress" value={emailAddress}
                      onChange={(e) => setEmailAddress(e.target.value)}/>
                       
-                  <input type="password" placeholder="Password" className="signup-inputs"  name="password" value={password}
+                  <input type="password" placeholder="Password" id="pass" className="signup-inputs"  name="password" value={password}
                      onChange={(e) => setPassword(e.target.value)}/>
                      {emailExists && (
                         <p style={{ color: "red", marginTop: "4px" ,  marginBottom: "4px", fontWeight: "bold" }}>
@@ -89,7 +89,7 @@ export function Signup() {
                         )}
                   <button type="submit" className="signup-buttons" disabled={ !isValid() }>Sign up</button>
                   <Link to="/login">
-                     <button type="submit" className="signup-buttons">Back to Sign in</button>
+                     <button id="Back" type="submit" className="signup-buttons">Back to Sign in</button>
                   </Link>
                </form>
             </div>
