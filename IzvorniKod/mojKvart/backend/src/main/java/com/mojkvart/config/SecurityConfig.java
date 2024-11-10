@@ -19,11 +19,23 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests( registry -> {
-                    registry.requestMatchers("/api/administrators").permitAll();
-                    registry.requestMatchers("/api/moderators").permitAll();
-                    registry.requestMatchers("/api/vlasniks").permitAll();
-                    registry.requestMatchers("/api/kupacs").permitAll();
-                    registry.requestMatchers("/api/kupacs/login").permitAll();
+                    registry.requestMatchers("/api/administrators/**").permitAll();
+                    registry.requestMatchers("/api/atributs/**").permitAll();
+                    registry.requestMatchers("/api/dogadajs/**").permitAll();
+                    registry.requestMatchers("/api/kupacDogadajs/**").permitAll();
+                    registry.requestMatchers("/api/kupacPonudaPopusts/**").permitAll();
+                    registry.requestMatchers("/api/kupacProizvods/**").permitAll();
+                    registry.requestMatchers("/api/kupacs/**").permitAll();
+                    registry.requestMatchers("/api/kupacTrgovinaRecenzijas/**").permitAll();
+                    registry.requestMatchers("/api/moderators/**").permitAll();
+                    registry.requestMatchers("/api/ocjenaProizvodKupacs/**").permitAll();
+                    registry.requestMatchers("/api/ponudaPopusts/**").permitAll();
+                    registry.requestMatchers("/api/ponudas/**").permitAll();
+                    registry.requestMatchers("/api/popusts/**").permitAll();
+                    registry.requestMatchers("/api/proizvods/**").permitAll();
+                    registry.requestMatchers("/api/racuns/**").permitAll();
+                    registry.requestMatchers("/api/recenzijas/**").permitAll();
+                    registry.requestMatchers("/api/trgovinas/**").permitAll();
                 })
                 .build();
     }
