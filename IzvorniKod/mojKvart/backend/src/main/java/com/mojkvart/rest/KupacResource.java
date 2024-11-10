@@ -14,7 +14,6 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,6 +38,10 @@ public class KupacResource {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private static final String NAME_SURNAME_FORMAT = "^[A-ZČĆŽĐŠÁÉÍÓÚÑÇÀÈÌÒÙÄËÏÖÜÝŸÆŒ][a-zčćžđšáéíóúñçàèìòùäëïöüýÿæœ' -]{1,}$";
+    private static final String EMAIL_FORMAT = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    private static final String PASSWORD_STRENGTH = "(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}";
  
    
     @GetMapping
@@ -54,10 +57,13 @@ public class KupacResource {
 
     //UC1, koristite api/kupacs i pošaljite JSON objekt za registraciju
     @PostMapping
-    public ResponseEntity<Integer> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
+    public ResponseEntity<Object> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
         kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
-        final Integer createdKupacId = kupacService.create(kupacDTO);
-        return new ResponseEntity<>(createdKupacId, HttpStatus.CREATED);
+        kupacService.create(kupacDTO);
+
+        String token = jwtUtil.generateToken(kupacDTO.getKupacEmail(), "KUPAC");
+        Response resp = new Response(token, "KUPAC");
+        return ResponseEntity.ok().body(resp);
     }
 
     @PostMapping("/login")
