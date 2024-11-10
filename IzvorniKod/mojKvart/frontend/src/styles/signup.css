@@ -16,11 +16,10 @@
   
   }
 
-.container {
+.signup-container .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 120%;
     max-width: 500px;
     padding: 20px;
     background: rgba(255, 255, 255);
@@ -74,9 +73,12 @@
     font-family: Raleway, sans-serif;
 }
 
-.signup-buttons {
+.signup-buttons{
     width: 100%;
-    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     font-size: 16px;
     color: #fff;
     background-color: #b3b3b3;
@@ -105,7 +107,7 @@
   }
 
 #home, #email, #pass{
-    width: 96%;
+    width: 100%;
     justify-content: left;
     justify-items: left;
 }
