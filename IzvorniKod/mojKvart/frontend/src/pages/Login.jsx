@@ -1,4 +1,3 @@
-import IMAGE from "../assets/vege.avif" //treba nam bolja slika 
 import "../styles/login.css"
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -77,7 +76,10 @@ export function Login() {
                navigate("/home");
                alert("Uspješna prijava!");
          })
-         .catch( error => navigate('/') );
+         .catch( error => {
+            navigate('/');
+            setTrigger(false);
+         });
 
    }
 
