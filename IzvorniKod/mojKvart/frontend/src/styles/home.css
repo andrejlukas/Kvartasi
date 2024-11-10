@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+.navbar-nav {
+    white-space: nowrap;  /* Prevent line breaks between items */
+  }
+
+  #najvanjski{
+    background-color: #EDEDED;
+   
+  }
+
+  form .form-control {
+    width: 80%;
+    height: 3em;
+    flex-shrink: 0;
+    border-radius: 20px;
+    background: #EDEDED;
+    font-family: Raleway, sans-serif;
+    padding-left: 3%;
+  }
+
+  form .btn {
+    background-color: rgba(50, 49, 49, 0.70); /* Green background */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Add padding to the button */
+    font-family: Raleway, sans-serif;
+    border-radius: 20px; /* Make the button rounded */
+  }
+
+  
+
+  form .btn:hover {
+    background-color:rgba(62, 152, 30, 0.80); 
+    border-color: rgba(59, 145, 28, 0.8); 
+  }
+  
+  form .btn:focus {
+    outline: none; /* Remove the default outline when focused */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a subtle shadow when focused */
+  }
+
+  #Vanjski{
+    background-color: #fff;
+  }
+
+
+  #unutarnji{
+    margin-top:20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 5px;
+
+  }
+
+  #searchdiv{
+    width: 50%;
+    justify-content: center;
+  }
+
+  #MojRacun{
+    padding-right: 15px;
+    font-family: Raleway,sans-serif;
+    text-align: center;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    outline: none;
+    color: #323131;
+    text-decoration: none;
+    border-right: 2px solid rgba(50, 49, 49, 0.50);
+
+  }
+
+  #MojRacun:focus, #MojRacun:active {
+    text-decoration: none;
+    outline: none;
+  }
+
+  #MojRacun:hover {
+    transform: scale(1.05); /* Optional, if you want to underline on hover */
+    outline: none;
+    color: #323131; /* Adjust color if you want a different color on hover */
+}
+
+  #kosarica{
+    width: 35px;
+    height: 35px;
+  }
+
+  #drugiNav {
+    background-color: #fff;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    outline: none;
+    
+  }
+ 
+  #drugiNavLista{
+    color: #323131;
+    font-family: Raleway;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    text-decoration: none;
+    outline: none;
+    padding-bottom: 10px;
+  }
+
+
+.nav-link:hover {
+    transform: scale(1.05); /* Optional, if you want to underline on hover */
+    outline: none;
+    color: #323131; /* Adjust color if you want a different color on hover */
+}
+
+.nav-link:active{
+    outline: none;
+    font-weight: 300;
+}
