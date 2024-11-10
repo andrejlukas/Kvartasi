@@ -3,6 +3,8 @@ import "../styles/login.css"
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/MojKvart.png"
+
 
 export function Login() {
    const navigate = useNavigate();
@@ -86,14 +88,13 @@ export function Login() {
                <div className="overlay-box">
                   
                   <h1>
-                  <span style={{ fontWeight: "bold", color: "black" }}>Moj</span>
-                  <span style={{ fontWeight: "bold", color: "#098443" }}>Kvart</span>
+                  <img src={logo} alt="Logo" style={{ width: '200 px' }}></img>
+
                   </h1>
                   
-                  <p>Kupuj lokalno!</p>
+                  <p id="kupujlokalno">Kupuj lokalno!</p>
                </div>
             </div>        
-         <img src={IMAGE} className="responsive-image" />
          
          </div>
          <div className="big-container ">
@@ -101,17 +102,17 @@ export function Login() {
             <form className="login-form" onSubmit={ checkCorrectPassword }>
                <h2 className="naslov">Log in</h2>
 
-               <label htmlFor="email">Email address</label>
+               <label id="label" htmlFor="email">Email address</label>
                <input type="email" id="email" name="email"  className="inputs" onChange={(e) => setEmailAddress(e.target.value)}/>
 
                <div className="password-container">
-                  <label htmlFor="password">Your password</label>
+               <label id="label" htmlFor="password">Your password</label>
                {/* <span className="show-hide">Hide</span> */}
                </div>
                <input type="password" id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
 
                {!logInTrigger && (
-                        <p style={{ color: "red", marginTop: "4px" ,  marginBottom: "4px", fontWeight: "bold" }}>
+                        <p style={{ color: "red", marginTop: "4px" ,  marginBottom: "4px", fontWeight: "normal" }}>
                            Wrong username or password!
                         </p>
                )}
