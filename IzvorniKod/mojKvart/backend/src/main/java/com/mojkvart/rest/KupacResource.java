@@ -59,36 +59,41 @@ public class KupacResource {
     @PostMapping
     public ResponseEntity<Object> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
         kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
-        kupacService.create(kupacDTO);
+        Integer kupacId = kupacService.create(kupacDTO);
 
-        String token = jwtUtil.generateToken(kupacDTO.getKupacEmail(), "KUPAC");
-        Response resp = new Response(token, "KUPAC");
+        String token = jwtUtil.generateToken(kupacDTO.getKupacEmail(), "kupac", kupacId);
+        Response resp = new Response(token, "kupac");
         return ResponseEntity.ok().body(resp);
     }
 
     @PostMapping("/login")
     public ResponseEntity<Object> checkIfUserExists(@RequestBody @Valid LoginDTO loginDTO) {
+        Integer id = -1;
         String email = loginDTO.getEmail();
         String sifra = loginDTO.getSifra();
         String sifraIzBaze, role = "";
 
         if (administratorService.findAll().stream().anyMatch(a -> a.getAdministratorEmail().equals(email))) {
-            role = "ADMIN";
+            role = "admin";
+            id = administratorService.findAll().stream().filter(a -> a.getAdministratorEmail().equals(email)).findFirst().get().getAdministratorId();
             sifraIzBaze = administratorService.findAll().stream().filter(a -> a.getAdministratorEmail().equals(email)).findFirst().get().getAdministratorSifra();
         } else if (moderatorService.findAll().stream().anyMatch(m -> m.getModeratorEmail().equals(email))) {
-            role = "MODERATOR";
+            role = "moderator";
+            id = moderatorService.findAll().stream().filter(m -> m.getModeratorEmail().equals(email)).findFirst().get().getModeratorId();
             sifraIzBaze = moderatorService.findAll().stream().filter(m -> m.getModeratorEmail().equals(email)).findFirst().get().getModeratorSifra();
         } else if (trgovinaService.findAll().stream().anyMatch(v -> v.getTrgovinaEmail().equals(email))) {
-            role = "VLASNIK";
+            role = "trgovina";
+            id = trgovinaService.findAll().stream().filter(v -> v.getTrgovinaEmail().equals(email)).findFirst().get().getTrgovinaId();
             sifraIzBaze = trgovinaService.findAll().stream().filter(v -> v.getTrgovinaEmail().equals(email)).findFirst().get().getTrgovinaSifra();
         } else if (kupacService.findAll().stream().anyMatch(k -> k.getKupacEmail().equals(email))) {
-            role = "KUPAC";
+            role = "kupac";
+            id = kupacService.findAll().stream().filter(k -> k.getKupacEmail().equals(email)).findFirst().get().getKupacId();
             sifraIzBaze = kupacService.findAll().stream().filter(k -> k.getKupacEmail().equals(email)).findFirst().get().getKupacSifra();
         } else
             return ResponseEntity.badRequest().body("Nepostojeći e-mail!");
 
         if (passwordEncoder.matches(sifra, sifraIzBaze)){
-            String token = jwtUtil.generateToken(email, role);
+            String token = jwtUtil.generateToken(email, role, id);
             Response resp = new Response(token, role);
             return ResponseEntity.ok().body(resp);
         }
