@@ -24,6 +24,43 @@ export function Signup() {
       }
    }, [emailAddress]);
 
+   useEffect(() => {
+      if (emailAddress.length > 0) {
+        fetch('/api/moderators')
+            .then((response) => response.json())
+            .then((registriraniModeratori) => {
+               const duplikat = registriraniModeratori.some(
+                  (moderator) => moderator.kupacEmail === emailAddress );
+               setEmailExists(duplikat);
+            });
+      }
+   }, [emailAddress]);
+
+   useEffect(() => {
+      if (emailAddress.length > 0) {
+        fetch('/api/trgovinas')
+            .then((response) => response.json())
+            .then((registriranaTrgovina) => {
+               const duplikat = registriranaTrgovina.some(
+                  (trgovina) => trgovina.kupacEmail === emailAddress );
+               setEmailExists(duplikat);
+            });
+      }
+   }, [emailAddress]);
+
+   useEffect(() => {
+      if (emailAddress.length > 0) {
+        fetch('/api/administrators')
+            .then((response) => response.json())
+            .then((registriraniAdministratori) => {
+               const duplikat = registriraniAdministratori.some(
+                  (administrator) => administrator.kupacEmail === emailAddress );
+               setEmailExists(duplikat);
+            });
+      }
+   }, [emailAddress]);
+
+
    function saveNoviClan(e){
       
       e.preventDefault();
