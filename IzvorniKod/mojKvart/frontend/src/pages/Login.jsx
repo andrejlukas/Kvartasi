@@ -95,6 +95,7 @@ export function Login() {
                   <p id="kupujlokalno">Kupuj lokalno!</p>
                </div>
             </div>        
+
          
          </div>
          <div className="big-container ">
@@ -112,7 +113,7 @@ export function Login() {
                <input type="password" id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
 
                {!logInTrigger && (
-                        <p style={{ color: "red", marginTop: "4px" ,  marginBottom: "4px", fontWeight: "normal" }}>
+                        <p style={{ color: "red", marginTop: "4px" ,  marginBottom: "4px", fontWeight: "bold" }}>
                            Wrong username or password!
                         </p>
                )}
