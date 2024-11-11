@@ -5,6 +5,8 @@ import com.mojkvart.model.AdministratorDTO;
 import com.mojkvart.repos.AdministratorRepository;
 import com.mojkvart.util.NotFoundException;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,11 @@ public class AdministratorService {
         return administrators.stream()
                 .map(administrator -> mapToDTO(administrator, new AdministratorDTO()))
                 .toList();
+    }
+
+    public Optional<AdministratorDTO> findByAdministratorEmail(String email) {
+        return administratorRepository.findByAdministratorEmail(email)
+                .map(administrator -> mapToDTO(administrator, new AdministratorDTO()));
     }
 
     public AdministratorDTO get(final Integer administratorId) {

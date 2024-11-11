@@ -9,7 +9,6 @@ import com.mojkvart.domain.Trgovina;
 import com.mojkvart.model.TrgovinaDTO;
 import com.mojkvart.repos.AtributRepository;
 import com.mojkvart.repos.DogadajRepository;
-import com.mojkvart.repos.KupacDogadajRepository;
 import com.mojkvart.repos.KupacProizvodRepository;
 import com.mojkvart.repos.KupacPonudaPopustRepository;
 import com.mojkvart.repos.KupacTrgovinaRecenzijaRepository;
@@ -22,6 +21,8 @@ import jakarta.transaction.Transactional;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +58,11 @@ public class TrgovinaService {
         return trgovinas.stream()
                 .map(trgovina -> mapToDTO(trgovina, new TrgovinaDTO()))
                 .toList();
+    }
+
+    public Optional<TrgovinaDTO> findByTrgovinaEmail(String email) {
+        return trgovinaRepository.findByTrgovinaEmail(email)
+                .map(trgovina -> mapToDTO(trgovina, new TrgovinaDTO()));
     }
 
     public TrgovinaDTO get(final Integer trgovinaId) {

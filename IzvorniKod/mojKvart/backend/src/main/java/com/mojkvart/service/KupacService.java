@@ -6,6 +6,8 @@ import com.mojkvart.repos.*;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,11 @@ public class KupacService {
         return kupacs.stream()
                 .map(kupac -> mapToDTO(kupac, new KupacDTO()))
                 .toList();
+    }
+
+    public Optional<KupacDTO> findByKupacEmail(String email) {
+        return kupacRepository.findByKupacEmail(email)
+                .map(kupac -> mapToDTO(kupac, new KupacDTO()));
     }
 
     public KupacDTO get(final Integer kupacId) {

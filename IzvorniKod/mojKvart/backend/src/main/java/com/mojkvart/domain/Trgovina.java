@@ -49,7 +49,7 @@ public class Trgovina {
     @Column(nullable = false, length = 50)
     private String trgovinaLokacija;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 200)
     private String trgovinaSlika;
 
     @Column(nullable = false, length = 5)
@@ -58,7 +58,7 @@ public class Trgovina {
     @Column(nullable = false, length = 5)
     private String trgovinaRadnoVrijemeDo;   //upisuje se u formatu "xx:yy"
     
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 200)
     private String trgovinaSifra;
 
     @OneToMany(mappedBy = "trgovina")
