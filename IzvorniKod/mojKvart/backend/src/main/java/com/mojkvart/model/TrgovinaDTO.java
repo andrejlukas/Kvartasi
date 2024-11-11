@@ -34,7 +34,7 @@ public class TrgovinaDTO {
     private String trgovinaLokacija;
 
     @NotNull
-    @Size(max = 50)
+    @Size(max = 200)
     private String trgovinaSlika;
 
     @NotNull
@@ -46,7 +46,7 @@ public class TrgovinaDTO {
     private String trgovinaRadnoVrijemeDo;
 
     @NotNull
-    @Size(max = 50)
+    @Size(max = 200)
     private String trgovinaSifra;
 
 
