@@ -129,7 +129,7 @@
   transform: none; 
 }
 
-@media (max-width: 768px) {
+@media (max-width: 830px) {
  
   #unutarnji {
       flex-direction: column;
