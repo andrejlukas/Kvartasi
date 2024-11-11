@@ -1,10 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
 .navbar-nav {
-    white-space: nowrap;  /* Prevent line breaks between items */
+    white-space: nowrap;  
   }
 
   #najvanjski{
     background-color: #EDEDED;
+    border-radius: 0;
    
   }
 
@@ -19,11 +20,11 @@
   }
 
   form .btn {
-    background-color: rgba(50, 49, 49, 0.70); /* Green background */
-    color: white; /* White text color */
-    padding: 10px 20px; /* Add padding to the button */
+    background-color: rgba(50, 49, 49, 0.70); 
+    color: white; 
+    padding: 10px 20px; 
     font-family: Raleway, sans-serif;
-    border-radius: 20px; /* Make the button rounded */
+    border-radius: 20px; 
   }
 
   
@@ -34,12 +35,13 @@
   }
   
   form .btn:focus {
-    outline: none; /* Remove the default outline when focused */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a subtle shadow when focused */
+    outline: none; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
   }
 
   #Vanjski{
     background-color: #fff;
+    border-radius: 0 !important;
   }
 
 
@@ -48,6 +50,7 @@
     margin-left: 20px;
     margin-right: 20px;
     margin-bottom: 5px;
+    border-radius: 0; 
 
   }
 
@@ -77,9 +80,9 @@
   }
 
   #MojRacun:hover {
-    transform: scale(1.05); /* Optional, if you want to underline on hover */
+    transform: scale(1.05); 
     outline: none;
-    color: #323131; /* Adjust color if you want a different color on hover */
+    color: #323131; 
 }
 
   #kosarica{
@@ -109,12 +112,87 @@
 
 
 .nav-link:hover {
-    transform: scale(1.05); /* Optional, if you want to underline on hover */
+    transform: scale(1.05); 
     outline: none;
-    color: #323131; /* Adjust color if you want a different color on hover */
+    color: #323131; 
 }
 
-.nav-link:active{
-    outline: none;
-    font-weight: 300;
+.nav-item .nav-link.active {
+  color: #323131e3;  
+  font-weight: 300; 
+  outline: none; 
+}
+
+
+.nav-item .nav-link.active:hover {
+  font-weight: 700; 
+  transform: none; 
+}
+
+@media (max-width: 768px) {
+ 
+  #unutarnji {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  #searchdiv {
+    margin-top: 10px;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+
+#obruc{
+    width: 100%;
+    justify-content: flex-start; /* Ensure the items are aligned to the left */
+    margin-left: 0; /* Remove any left margin */
+    padding-left: 0; /* Remove any left padding */
+  }
+
+  #MojRacun, #kosarica {
+    margin-left: 0; /* Remove any left margin */
+    padding-left: 0px; /* Remove any left padding */
+  }
+
+  #MojRacun {
+    font-weight: 400; /* Regular weight */
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+  
+  #MojRacun:hover, #kosarica:hover {
+      font-weight: 700; 
+      transform: none; 
+  }
+
+ 
+  #drugiNavLista {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      text-align: left;
+      padding-left: 20px;
+      padding-right: 0;
+  }
+
+  .nav-item {
+      width: 100%;
+      text-align: left;
+  }
+
+
+  .nav-link {
+      width: 100%;
+      padding: 10px 0;
+      text-align: left;
+      font-weight: 300; 
+  }
+
+
+  .nav-link:hover {
+      font-weight: 700; 
+      transform: none;
+  }
 }
