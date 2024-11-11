@@ -46,7 +46,7 @@ public class Proizvod {
     @Column(nullable = false, length = 50)
     private String proizvodKategorija;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 200)
     private String proizvodSlika;
 
     @Column(nullable = false)

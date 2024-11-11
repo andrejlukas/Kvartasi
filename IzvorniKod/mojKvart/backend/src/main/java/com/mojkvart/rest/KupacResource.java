@@ -68,7 +68,7 @@ public class KupacResource {
         Integer kupacId = kupacService.create(kupacDTO);
 
         String token = jwtUtil.generateToken(kupacDTO.getKupacEmail(), "kupac", kupacId);
-        AuthenticationResponse resp = new AuthenticationResponse(token, "kupac");
+        AuthenticationResponse resp = new AuthenticationResponse(token, kupacId, "kupac");
         return ResponseEntity.ok().body(resp);
     }
 
@@ -100,7 +100,7 @@ public class KupacResource {
 
         if (passwordEncoder.matches(sifra, sifraIzBaze)){
             String token = jwtUtil.generateToken(email, role, id);
-            AuthenticationResponse resp = new AuthenticationResponse(token, role);
+            AuthenticationResponse resp = new AuthenticationResponse(token, id, role);
             return ResponseEntity.ok().body(resp);
         }
         else
