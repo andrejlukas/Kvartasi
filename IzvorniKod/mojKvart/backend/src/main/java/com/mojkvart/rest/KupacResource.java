@@ -3,13 +3,14 @@ package com.mojkvart.rest;
 import com.mojkvart.model.KupacDTO;
 import com.mojkvart.model.LoginDTO;
 import com.mojkvart.model.AuthenticationResponse;
+import com.mojkvart.model.TokenDTO;
 import com.mojkvart.service.AdministratorService;
 import com.mojkvart.service.KupacService;
 import com.mojkvart.service.ModeratorService;
 import com.mojkvart.service.TrgovinaService;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
-import com.mojkvart.util.jwtUtil;
+import com.mojkvart.util.JwtUtil;
 import jakarta.validation.Valid;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class KupacResource {
     private static final String NAME_SURNAME_FORMAT = "^[A-ZČĆŽĐŠÁÉÍÓÚÑÇÀÈÌÒÙÄËÏÖÜÝŸÆŒ][a-zčćžđšáéíóúñçàèìòùäëïöüýÿæœ' -]{1,}$";
     private static final String EMAIL_FORMAT = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static final String PASSWORD_STRENGTH = "(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}";
- 
+
    
     @GetMapping
     public ResponseEntity<List<KupacDTO>> getAllKupacs() {
@@ -67,7 +68,7 @@ public class KupacResource {
         kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
         Integer kupacId = kupacService.create(kupacDTO);
 
-        String token = jwtUtil.generateToken(kupacDTO.getKupacEmail(), "kupac", kupacId);
+        String token = JwtUtil.generateToken(kupacDTO.getKupacEmail(), "kupac", kupacId);
         AuthenticationResponse resp = new AuthenticationResponse(token, kupacId, "kupac");
         return ResponseEntity.ok().body(resp);
     }
@@ -99,7 +100,7 @@ public class KupacResource {
             return ResponseEntity.badRequest().body("Nepostojeći e-mail!");
 
         if (passwordEncoder.matches(sifra, sifraIzBaze)){
-            String token = jwtUtil.generateToken(email, role, id);
+            String token = JwtUtil.generateToken(email, role, id);
             AuthenticationResponse resp = new AuthenticationResponse(token, id, role);
             return ResponseEntity.ok().body(resp);
         }
