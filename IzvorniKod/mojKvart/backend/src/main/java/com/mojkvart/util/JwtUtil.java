@@ -11,9 +11,8 @@ import java.util.Date;
 import org.springframework.stereotype.Component;
 
 @Component
-public class jwtUtil {
+public class JwtUtil {
 
-    // Tajni ključ - ovo treba sklonit negdje
     private static final String SECRET_KEY = Base64.getEncoder().encodeToString("SuperSecretKeyThatIsAtLeast32Chars".getBytes());
 
     // Generiranje JWT tokena
@@ -21,7 +20,6 @@ public class jwtUtil {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + 3600000); // 1 sat trajanja tokena
 
-        // Kreiranje tokena
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)
@@ -31,4 +29,19 @@ public class jwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
+
+    public static Boolean isTokenValid(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            Date expirationDate = claims.getExpiration();
+            return expirationDate.after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

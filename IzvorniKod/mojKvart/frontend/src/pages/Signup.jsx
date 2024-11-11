@@ -103,9 +103,14 @@ export function Signup() {
          return fetch('/api/kupacs', options)
             .then(response => {
                if (response.ok) {
-                  navigate('/home');
-                  alert("Uspješna registracija!");
+                  return response.json();
                }
+            }).then(data => {
+               localStorage.setItem('token', data.token);
+               localStorage.setItem("id", data.id);
+               localStorage.setItem('role', data.role);
+               navigate('/home');
+                  alert("Uspješna registracija!");
             });
       })
       .catch(error => {
