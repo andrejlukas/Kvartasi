@@ -30,7 +30,7 @@ export function Signup() {
             .then((response) => response.json())
             .then((registriraniModeratori) => {
                const duplikat = registriraniModeratori.some(
-                  (moderator) => moderator.kupacEmail === emailAddress );
+                  (moderator) => moderator.moderatorEmail === emailAddress );
                setEmailExists(duplikat);
             });
       }
@@ -42,7 +42,7 @@ export function Signup() {
             .then((response) => response.json())
             .then((registriranaTrgovina) => {
                const duplikat = registriranaTrgovina.some(
-                  (trgovina) => trgovina.kupacEmail === emailAddress );
+                  (trgovina) => trgovina.trgovinaEmail === emailAddress );
                setEmailExists(duplikat);
             });
       }
@@ -54,7 +54,7 @@ export function Signup() {
             .then((response) => response.json())
             .then((registriraniAdministratori) => {
                const duplikat = registriraniAdministratori.some(
-                  (administrator) => administrator.kupacEmail === emailAddress );
+                  (administrator) => administrator.administratorEmail === emailAddress );
                setEmailExists(duplikat);
             });
       }
@@ -87,10 +87,15 @@ export function Signup() {
       return fetch('/api/kupacs', options)
          .then(response => {
             if (response.ok) {
-               navigate('/home');
-               alert("Uspješna registracija!");
+               return response.json();
             }
-         });  
+         }).then(data => {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem("id", data.id);
+            localStorage.setItem('role', data.role);
+            navigate('/home');
+            alert("Uspješna registracija!");
+         })  
    }
 
    function isValid() {

@@ -41,7 +41,6 @@ public class TrgovinaService {
             final AtributRepository atributRepository, final ProizvodRepository proizvodRepository,
             final DogadajRepository dogadajRepository,
             final PonudaPopustRepository ponudaPopustRepository,
-            final KupacDogadajRepository kupacDogadajTrgovinaRepository,
             final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository,
             final KupacPonudaPopustRepository kupacTrgovinaPonudaPopustRepository,
             final KupacProizvodRepository kupacProizvodTrgovinaRepository) {
@@ -85,21 +84,29 @@ public class TrgovinaService {
 
     private TrgovinaDTO mapToDTO(final Trgovina trgovina, final TrgovinaDTO trgovinaDTO) {
         trgovinaDTO.setTrgovinaId(trgovina.getTrgovinaId());
+        trgovinaDTO.setTrgovinaEmail(trgovina.getTrgovinaEmail());
         trgovinaDTO.setTrgovinaNaziv(trgovina.getTrgovinaNaziv());
         trgovinaDTO.setTrgovinaOpis(trgovina.getTrgovinaOpis());
+        trgovinaDTO.setTrgovinaKategorija(trgovina.getTrgovinaKategorija());
         trgovinaDTO.setTrgovinaLokacija(trgovina.getTrgovinaLokacija());
         trgovinaDTO.setTrgovinaSlika(trgovina.getTrgovinaSlika());
+        trgovinaDTO.setTrgovinaRadnoVrijemeOd(trgovina.getTrgovinaRadnoVrijemeOd());
+        trgovinaDTO.setTrgovinaRadnoVrijemeDo(trgovina.getTrgovinaRadnoVrijemeDo());
         trgovinaDTO.setImaAtributeAtributs(trgovina.getImaAtributeAtributs().stream()
-                .map(atribut -> atribut.getAtributId())
+                .map(Atribut::getAtributId)
                 .toList());
         return trgovinaDTO;
     }
 
     private Trgovina mapToEntity(final TrgovinaDTO trgovinaDTO, final Trgovina trgovina) {
+        trgovina.setTrgovinaEmail(trgovinaDTO.getTrgovinaEmail());
         trgovina.setTrgovinaNaziv(trgovinaDTO.getTrgovinaNaziv());
         trgovina.setTrgovinaOpis(trgovinaDTO.getTrgovinaOpis());
+        trgovina.setTrgovinaKategorija(trgovinaDTO.getTrgovinaKategorija());
         trgovina.setTrgovinaLokacija(trgovinaDTO.getTrgovinaLokacija());
         trgovina.setTrgovinaSlika(trgovinaDTO.getTrgovinaSlika());
+        trgovina.setTrgovinaRadnoVrijemeOd(trgovinaDTO.getTrgovinaRadnoVrijemeOd());
+        trgovina.setTrgovinaRadnoVrijemeDo(trgovinaDTO.getTrgovinaRadnoVrijemeDo());
         final List<Atribut> imaAtributeAtributs = atributRepository.findAllById(
                 trgovinaDTO.getImaAtributeAtributs() == null ? Collections.emptyList() : trgovinaDTO.getImaAtributeAtributs());
         if (imaAtributeAtributs.size() != (trgovinaDTO.getImaAtributeAtributs() == null ? 0 : trgovinaDTO.getImaAtributeAtributs().size())) {

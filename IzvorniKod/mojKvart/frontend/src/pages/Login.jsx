@@ -72,6 +72,7 @@ export function Login() {
          })
          .then(data => {
                localStorage.setItem('token', data.token);
+               localStorage.setItem("id", data.id);
                localStorage.setItem('role', data.role);
                navigate("/home");
                alert("Uspješna prijava!");
