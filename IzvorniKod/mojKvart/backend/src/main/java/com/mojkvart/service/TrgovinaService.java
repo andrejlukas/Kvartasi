@@ -2,7 +2,6 @@ package com.mojkvart.service;
 
 import com.mojkvart.domain.Atribut;
 import com.mojkvart.domain.Dogadaj;
-import com.mojkvart.domain.KupacTrgovinaRecenzija;
 import com.mojkvart.domain.PonudaPopust;
 import com.mojkvart.domain.Proizvod;
 import com.mojkvart.domain.Trgovina;
@@ -11,7 +10,6 @@ import com.mojkvart.repos.AtributRepository;
 import com.mojkvart.repos.DogadajRepository;
 import com.mojkvart.repos.KupacProizvodRepository;
 import com.mojkvart.repos.KupacPonudaPopustRepository;
-import com.mojkvart.repos.KupacTrgovinaRecenzijaRepository;
 import com.mojkvart.repos.PonudaPopustRepository;
 import com.mojkvart.repos.ProizvodRepository;
 import com.mojkvart.repos.TrgovinaRepository;
@@ -37,13 +35,11 @@ public class TrgovinaService {
     private final ProizvodRepository proizvodRepository;
     private final DogadajRepository dogadajRepository;
     private final PonudaPopustRepository ponudaPopustRepository;
-    private final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository;
 
     public TrgovinaService(final TrgovinaRepository trgovinaRepository,
             final AtributRepository atributRepository, final ProizvodRepository proizvodRepository,
             final DogadajRepository dogadajRepository,
             final PonudaPopustRepository ponudaPopustRepository,
-            final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository,
             final KupacPonudaPopustRepository kupacTrgovinaPonudaPopustRepository,
             final KupacProizvodRepository kupacProizvodTrgovinaRepository) {
         this.trgovinaRepository = trgovinaRepository;
@@ -51,7 +47,6 @@ public class TrgovinaService {
         this.proizvodRepository = proizvodRepository;
         this.dogadajRepository = dogadajRepository;
         this.ponudaPopustRepository = ponudaPopustRepository;
-        this.kupacTrgovinaRecenzijaRepository = kupacTrgovinaRecenzijaRepository;
         }
 
     public List<TrgovinaDTO> findAll() {
@@ -145,12 +140,6 @@ public class TrgovinaService {
         if (trgovinaPonudaPopust != null) {
             referencedWarning.setKey("trgovina.ponudaPopust.trgovina.referenced");
             referencedWarning.addParam(trgovinaPonudaPopust.getPonudaPopustId());
-            return referencedWarning;
-        }
-        final KupacTrgovinaRecenzija trgovinaKupacTrgovinaRecenzija = kupacTrgovinaRecenzijaRepository.findFirstByTrgovina(trgovina);
-        if (trgovinaKupacTrgovinaRecenzija != null) {
-            referencedWarning.setKey("trgovina.kupacTrgovinaRecenzija.trgovina.referenced");
-            referencedWarning.addParam(trgovinaKupacTrgovinaRecenzija.getId());
             return referencedWarning;
         }
         return null;

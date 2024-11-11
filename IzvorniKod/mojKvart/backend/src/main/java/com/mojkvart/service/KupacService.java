@@ -17,20 +17,17 @@ public class KupacService {
 
     private final KupacRepository kupacRepository;
     private final KupacDogadajRepository kupacDogadajRepository;
-    private final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository;
     private final OcjenaProizvodKupacRepository ocjenaProizvodKupacRepository;
     private final KupacPonudaPopustRepository kupacTrgovinaPonudaPopustRepository;
     private final KupacProizvodRepository kupacProizvodTrgovinaRepository;
 
     public KupacService(final KupacRepository kupacRepository,
             final KupacDogadajRepository kupacDogadajRepository,
-            final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository,
             final OcjenaProizvodKupacRepository ocjenaProizvodKupacRepository,
             final KupacPonudaPopustRepository kupacTrgovinaPonudaPopustRepository,
             final KupacProizvodRepository kupacProizvodTrgovinaRepository) {
         this.kupacRepository = kupacRepository;
         this.kupacDogadajRepository = kupacDogadajRepository;
-        this.kupacTrgovinaRecenzijaRepository = kupacTrgovinaRecenzijaRepository;
         this.ocjenaProizvodKupacRepository = ocjenaProizvodKupacRepository;
         this.kupacTrgovinaPonudaPopustRepository = kupacTrgovinaPonudaPopustRepository;
         this.kupacProizvodTrgovinaRepository = kupacProizvodTrgovinaRepository;
@@ -98,12 +95,6 @@ public class KupacService {
         if (kupackupacDogadaj != null) {
             referencedWarning.setKey("kupac.kupacDogadaj.kupac.referenced");
             referencedWarning.addParam(kupackupacDogadaj.getId());
-            return referencedWarning;
-        }
-        final KupacTrgovinaRecenzija kupacKupacTrgovinaRecenzija = kupacTrgovinaRecenzijaRepository.findFirstByKupac(kupac);
-        if (kupacKupacTrgovinaRecenzija != null) {
-            referencedWarning.setKey("kupac.kupacTrgovinaRecenzija.kupac.referenced");
-            referencedWarning.addParam(kupacKupacTrgovinaRecenzija.getId());
             return referencedWarning;
         }
         final OcjenaProizvodKupac kupacOcjenaProizvodKupac = ocjenaProizvodKupacRepository.findFirstByKupac(kupac);

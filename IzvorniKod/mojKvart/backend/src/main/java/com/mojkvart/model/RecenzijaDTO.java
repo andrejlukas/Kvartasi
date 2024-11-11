@@ -24,4 +24,13 @@ public class RecenzijaDTO {
 
     private LocalDateTime vrijemeKreiranja;
 
+    @NotNull
+    private Boolean odobrioModerator;
+
+    @NotNull
+    private Integer kupacId;
+
+    @NotNull
+    private Integer trgovinaId;
+
 }
