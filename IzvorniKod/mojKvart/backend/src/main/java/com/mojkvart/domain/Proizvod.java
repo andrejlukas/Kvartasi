@@ -41,7 +41,7 @@ public class Proizvod {
     private String proizvodOpis;
 
     @Column(nullable = false)
-    private Integer proizvodCijena;
+    private Double proizvodCijena;
 
     @Column(nullable = false, length = 50)
     private String proizvodKategorija;
