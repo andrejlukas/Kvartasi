@@ -27,7 +27,7 @@ public class ProizvodDTO {
     private String proizvodKategorija;
 
     @NotNull
-    @Size(max = 50)
+    @Size(max = 200)
     private String proizvodSlika;
 
     @NotNull

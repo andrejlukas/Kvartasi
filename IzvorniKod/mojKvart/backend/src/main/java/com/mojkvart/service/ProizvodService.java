@@ -41,6 +41,10 @@ public class ProizvodService {
                 .toList();
     }
 
+    public List<ProizvodDTO> findByTrgovina(Integer trgovinaId) {
+        return proizvodRepository.findByTrgovinaId(trgovinaId).stream().map(p -> mapToDTO(p, new ProizvodDTO())).toList();
+    }
+
     public ProizvodDTO get(final Integer proizvodId) {
         return proizvodRepository.findById(proizvodId)
                 .map(proizvod -> mapToDTO(proizvod, new ProizvodDTO()))
