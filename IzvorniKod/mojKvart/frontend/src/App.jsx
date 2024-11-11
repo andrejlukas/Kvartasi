@@ -8,6 +8,7 @@ import { Home } from './pages/Home';
 import { PopisTrgovina } from './pages/PopisTrgovina';
 import { PonudeiPromocije } from './pages/PonudeiPromocije';
 import { Dogadaji } from './pages/Dogadaji';
+import Shop from './pages/Shop'
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/home/kvart" element={<Home />} ></Route>
         <Route path="/home/popisTrgovina" element={<PopisTrgovina />} ></Route>
         <Route path="/home/ponude" element={<PonudeiPromocije />} ></Route>
+        <Route path="/home/popistrgovina/:id" element={<Shop />}></Route>
         <Route path="/home/dogadaji" element={<Dogadaji />} ></Route>
 
         <Route path="*" element={<NotFound />} /> 
