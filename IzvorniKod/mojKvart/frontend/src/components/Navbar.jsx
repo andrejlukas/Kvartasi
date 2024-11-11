@@ -31,16 +31,16 @@ export function Navbar() {
                     <div className="container-fluid d-flex justify-content-between w-100 flex-nowrap" id="drugiNavUnut">
                         <ul className="navbar-nav d-flex justify-content-around w-100 flex-nowrap" id="drugiNavLista">
                             <li className="nav-item">
-                                <Link to="#" className="nav-link active">Kvart</Link>
+                                <Link to="/home/kvart" className="nav-link active">Kvart</Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="#" className="nav-link">Popis trgovina</Link>
+                                <Link to="/home/popisTrgovina" className="nav-link">Popis trgovina</Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="#" className="nav-link">Ponude i promocije</Link>
+                                <Link to="/home/ponude" className="nav-link">Ponude i promocije</Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="#" className="nav-link">Događaji</Link>
+                                <Link to="/home/dogadaji" className="nav-link">Događaji</Link>
                             </li>
                         </ul>
                     </div>
