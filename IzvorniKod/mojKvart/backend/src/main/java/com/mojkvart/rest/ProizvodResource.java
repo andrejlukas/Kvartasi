@@ -40,6 +40,12 @@ public class ProizvodResource {
         return ResponseEntity.ok(proizvodService.get(proizvodId));
     }
 
+    // za dohvacanje svih proizvoda jedne trgovine
+    @GetMapping("/fromTrgovina/{trgovinaId}")
+    public ResponseEntity<List<ProizvodDTO>> getTrgovinaProizvods(@PathVariable(name = "trgovinaId") Integer trgovinaId) {
+        return ResponseEntity.ok(proizvodService.findByTrgovina(trgovinaId));
+    }
+
     //UC11, koristite api/proizvods te pošaljite JSON objekt za kriranje novog proizvoda od strane trgovine
     @PostMapping
     public ResponseEntity<Integer> createProizvod(

@@ -2,7 +2,7 @@ package com.mojkvart.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -50,6 +50,6 @@ public class TrgovinaDTO {
     private String trgovinaSifra;
 
 
-    private List<Integer> imaAtributeAtributs;
+    private Set<Integer> imaAtributeAtributs;
 
 }

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class jwtUtil {
 
     // Tajni ključ - ovo treba sklonit negdje
-    private static final String SECRET_KEY = Base64.getEncoder().encodeToString("YourSuperSecretKeyThatIsAtLeast32Chars".getBytes());
+    private static final String SECRET_KEY = Base64.getEncoder().encodeToString("SuperSecretKeyThatIsAtLeast32Chars".getBytes());
 
     // Generiranje JWT tokena
     public static String generateToken(String email, String role, Integer id) {
