@@ -1,3 +1,5 @@
+//stranica koja se otvori u slucaju krive putanje 
+
 export function NotFound() {
    return ( 
       <div>
