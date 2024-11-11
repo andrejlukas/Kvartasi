@@ -12,7 +12,7 @@ export function Signup() {
    const [password, setPassword] = useState('')
    const [emailExists, setEmailExists] = useState(false); // Dodato stanje za provjeru emaila
 
-   useEffect(() => {
+   /* useEffect(() => {
       if (emailAddress.length > 0) {
         fetch('/api/kupacs')
             .then((response) => response.json())
@@ -58,51 +58,68 @@ export function Signup() {
                setEmailExists(duplikat);
             });
       }
-   }, [emailAddress]);
+   }, [emailAddress]); */
 
 
    function saveNoviClan(e){
       
       e.preventDefault();
 
-      if (emailExists) {
-         return;
-      }
+      Promise.all([
+         fetch('/api/kupacs').then(res => res.json()),
+         fetch('/api/moderators').then(res => res.json()),
+         fetch('/api/trgovinas').then(res => res.json()),
+         fetch('/api/administrators').then(res => res.json())
+      ])
+      .then(([kupacs, moderators, trgovinas, administrators]) => {
+         // Provjeri postoji li e-mail u bilo kojoj kolekciji
+         const emailExistsInAnyRole = 
+            kupacs.some(user => user.kupacEmail === emailAddress) ||
+            moderators.some(user => user.moderatorEmail === emailAddress) ||
+            trgovinas.some(user => user.trgovinaEmail === emailAddress) ||
+            administrators.some(user => user.administratorEmail === emailAddress);
 
-      const data = {
-        kupacEmail: emailAddress,
-        kupacIme: firstName,
-        kupacPrezime: lastName,
-        kupacAdresa : homeAddress,
-        kupacSifra : password
-      };
-      const options = {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json'
-         },
-         body: JSON.stringify(data)
-      };
-  
-      return fetch('/api/kupacs', options)
-         .then(response => {
-            if (response.ok) {
-               return response.json();
-            }
-         }).then(data => {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem("id", data.id);
-            localStorage.setItem('role', data.role);
-            navigate('/home');
-            alert("Uspješna registracija!");
-         })  
+         if (emailExistsInAnyRole) {
+            setEmailExists(true); // Ako e-mail postoji, postavi na true
+            return; // Prekini funkciju ako e-mail već postoji
+         }
+
+         // Ako e-mail nije zauzet, nastavi s registracijom
+         const data = {
+            kupacEmail: emailAddress,
+            kupacIme: firstName,
+            kupacPrezime: lastName,
+            kupacAdresa: homeAddress,
+            kupacSifra: password
+         };
+         const options = {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+         };
+
+         return fetch('/api/kupacs', options)
+            .then(response => {
+               if (response.ok) {
+                  navigate('/home');
+                  alert("Uspješna registracija!");
+               }
+            });
+      })
+      .catch(error => {
+         console.error("Greška prilikom provjere e-maila:", error);
+      });
+
+       
    }
 
-   function isValid() {
+  /*  function isValid() {
       //vec koristena adresa
       return firstName.length > 0 && lastName.length > 0 && emailAddress.length > 0
       && password.length > 0 && homeAddress.length > 0 && !emailExists ;
-   }
+   } */
 
    
    return (
@@ -129,7 +146,7 @@ export function Signup() {
                            This e-mail address is already in use!
                         </p>
                         )}
-                  <button type="submit" className="signup-buttons" disabled={ !isValid() }>Sign up</button>
+                  <button type="submit" className="signup-buttons" >Sign up</button>
                   <Link to="/login">
                      <button id="Back" type="submit" className="signup-buttons">Back to Sign in</button>
                   </Link>
