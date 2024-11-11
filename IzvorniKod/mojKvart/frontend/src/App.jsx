@@ -5,6 +5,9 @@ import { Login } from "./pages/Login"
 import { Signup } from './pages/Signup';
 import {NotFound} from "./pages/NotFound"
 import { Home } from './pages/Home';
+import { PopisTrgovina } from './pages/PopisTrgovina';
+import { PonudeiPromocije } from './pages/PonudeiPromocije';
+import { Dogadaji } from './pages/Dogadaji';
 
 function App() {
 
@@ -15,6 +18,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/home/kvart" element={<Home />} ></Route>
+        <Route path="/home/popisTrgovina" element={<PopisTrgovina />} ></Route>
+        <Route path="/home/ponude" element={<PonudeiPromocije />} ></Route>
+        <Route path="/home/dogadaji" element={<Dogadaji />} ></Route>
+
         <Route path="*" element={<NotFound />} /> 
       </Routes>
       

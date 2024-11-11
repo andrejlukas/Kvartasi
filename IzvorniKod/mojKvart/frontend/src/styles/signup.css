@@ -4,7 +4,8 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-image: url('../assets/vege.avif');  
+    background-image: url('../assets/grocery_v1.png');
+    background-blend-mode: overlay;
     background-size: cover;
     background-position: center;
     width: 100%;
@@ -20,9 +21,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 500px;
+    max-width: 600px;
     padding: 20px;
-    background: rgba(255, 255, 255);
+    background-color: #EDEDED;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
