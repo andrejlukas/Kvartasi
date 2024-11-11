@@ -1,32 +1,21 @@
 package com.mojkvart.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthenticationResponse {
     private String token;
+    private Integer id;
     private String role;
-
-    public AuthenticationResponse(String token, String role) {
-        this.token = token;
-        this.role = role;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     @Override
     public String toString() {
-        return "{'token': " + token + ", 'role': " + role + "}";
+        return "{'token': " + token + ", 'id': " + id + ", 'role': " + role + "}";
     }
 }
