@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -98,9 +99,10 @@ public class TrgovinaService {
         trgovinaDTO.setTrgovinaSlika(trgovina.getTrgovinaSlika());
         trgovinaDTO.setTrgovinaRadnoVrijemeOd(trgovina.getTrgovinaRadnoVrijemeOd());
         trgovinaDTO.setTrgovinaRadnoVrijemeDo(trgovina.getTrgovinaRadnoVrijemeDo());
+        trgovinaDTO.setTrgovinaSifra(trgovina.getTrgovinaSifra());
         trgovinaDTO.setImaAtributeAtributs(trgovina.getImaAtributeAtributs().stream()
                 .map(Atribut::getAtributId)
-                .toList());
+                .collect(Collectors.toSet()));
         return trgovinaDTO;
     }
 
@@ -113,6 +115,7 @@ public class TrgovinaService {
         trgovina.setTrgovinaSlika(trgovinaDTO.getTrgovinaSlika());
         trgovina.setTrgovinaRadnoVrijemeOd(trgovinaDTO.getTrgovinaRadnoVrijemeOd());
         trgovina.setTrgovinaRadnoVrijemeDo(trgovinaDTO.getTrgovinaRadnoVrijemeDo());
+        trgovina.setTrgovinaSifra(trgovinaDTO.getTrgovinaSifra());
         final List<Atribut> imaAtributeAtributs = atributRepository.findAllById(
                 trgovinaDTO.getImaAtributeAtributs() == null ? Collections.emptyList() : trgovinaDTO.getImaAtributeAtributs());
         if (imaAtributeAtributs.size() != (trgovinaDTO.getImaAtributeAtributs() == null ? 0 : trgovinaDTO.getImaAtributeAtributs().size())) {

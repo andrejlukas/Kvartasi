@@ -1,14 +1,19 @@
 package com.mojkvart.rest;
 
+import com.mojkvart.model.ProizvodDTO;
 import com.mojkvart.model.TrgovinaDTO;
+import com.mojkvart.service.ProizvodService;
 import com.mojkvart.service.TrgovinaService;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,11 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/trgovinas", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TrgovinaResource {
 
-    private final TrgovinaService trgovinaService;
+    @Autowired
+    private TrgovinaService trgovinaService;
 
-    public TrgovinaResource(final TrgovinaService trgovinaService) {
-        this.trgovinaService = trgovinaService;
-    }
+    @Autowired
+    private ProizvodService proizvodService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @GetMapping
     public ResponseEntity<List<TrgovinaDTO>> getAllTrgovinas() {
@@ -45,6 +54,7 @@ public class TrgovinaResource {
     @PostMapping
     public ResponseEntity<Integer> createTrgovina(
             @RequestBody @Valid final TrgovinaDTO trgovinaDTO) {
+        trgovinaDTO.setTrgovinaSifra(passwordEncoder.encode(trgovinaDTO.getTrgovinaSifra()));
         final Integer createdTrgovinaId = trgovinaService.create(trgovinaDTO);
         return new ResponseEntity<>(createdTrgovinaId, HttpStatus.CREATED);
     }

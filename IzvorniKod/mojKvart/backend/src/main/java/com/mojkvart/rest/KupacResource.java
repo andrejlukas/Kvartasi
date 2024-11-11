@@ -2,7 +2,7 @@ package com.mojkvart.rest;
 
 import com.mojkvart.model.KupacDTO;
 import com.mojkvart.model.LoginDTO;
-import com.mojkvart.model.AutentificationResponse;
+import com.mojkvart.model.AuthenticationResponse;
 import com.mojkvart.service.AdministratorService;
 import com.mojkvart.service.KupacService;
 import com.mojkvart.service.ModeratorService;
@@ -68,7 +68,7 @@ public class KupacResource {
         Integer kupacId = kupacService.create(kupacDTO);
 
         String token = jwtUtil.generateToken(kupacDTO.getKupacEmail(), "kupac", kupacId);
-        AutentificationResponse resp = new AutentificationResponse(token, "kupac");
+        AuthenticationResponse resp = new AuthenticationResponse(token, "kupac");
         return ResponseEntity.ok().body(resp);
     }
 
@@ -100,7 +100,7 @@ public class KupacResource {
 
         if (passwordEncoder.matches(sifra, sifraIzBaze)){
             String token = jwtUtil.generateToken(email, role, id);
-            AutentificationResponse resp = new AutentificationResponse(token, role);
+            AuthenticationResponse resp = new AuthenticationResponse(token, role);
             return ResponseEntity.ok().body(resp);
         }
         else

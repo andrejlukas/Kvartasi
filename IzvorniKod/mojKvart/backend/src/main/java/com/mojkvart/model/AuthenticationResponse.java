@@ -1,10 +1,10 @@
 package com.mojkvart.model;
 
-public class AutentificationResponse {
+public class AuthenticationResponse {
     private String token;
     private String role;
 
-    public AutentificationResponse(String token, String role) {
+    public AuthenticationResponse(String token, String role) {
         this.token = token;
         this.role = role;
     }
