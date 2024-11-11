@@ -84,6 +84,11 @@ export function Signup() {
             return; // Prekini funkciju ako e-mail već postoji
          }
 
+         if(!isValid())
+            return;
+
+
+
          // Ako e-mail nije zauzet, nastavi s registracijom
          const data = {
             kupacEmail: emailAddress,
@@ -120,11 +125,11 @@ export function Signup() {
        
    }
 
-  /*  function isValid() {
+   function isValid() {
       //vec koristena adresa
       return firstName.length > 0 && lastName.length > 0 && emailAddress.length > 0
-      && password.length > 0 && homeAddress.length > 0 && !emailExists ;
-   } */
+      && password.length > 7 && homeAddress.length > 0 && !emailExists ;
+   }
 
    
    return (
@@ -148,11 +153,11 @@ export function Signup() {
                      onChange={(e) => setPassword(e.target.value)}/>
                      {emailExists && (
                         <p style={{ color: "red", marginTop: "4px" ,  marginBottom: "4px", fontWeight: "bold" }}>
-                           This e-mail address is already in use!
+                           Invalid name, surname, email or password!
                         </p>
                         )}
                   <button type="submit" className="signup-buttons" >Sign up</button>
-                  <Link to="/login">
+                  <Link to="/">
                      <button id="Back" type="submit" className="signup-buttons">Back to Sign in</button>
                   </Link>
                </form>
