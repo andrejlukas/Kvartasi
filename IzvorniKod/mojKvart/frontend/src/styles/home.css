@@ -1,198 +1,79 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
-.navbar-nav {
-    white-space: nowrap;  
-  }
 
-  #najvanjski{
-    background-color: #EDEDED;
-    border-radius: 0;
-   
-  }
+body{
+    background-color: #ededed;
+}
 
-  form .form-control {
-    width: 80%;
-    height: 3em;
-    flex-shrink: 0;
+.price{
+    font-size: 18px;
+    color: #2c8c2c;
+    font-weight: bold;
+  }
+  #products {
+    flex: 2;
+    background-color: #ededed;
+    border-radius: 8px;
+  }
+  
+  .card-title{
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .product-card img {
+    padding-top: 10px;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    align-self: center;
+  }
+  
+  .product-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
     border-radius: 20px;
-    background: #EDEDED;
+    overflow: hidden;
+    text-align: left;
     font-family: Raleway, sans-serif;
-    padding-left: 3%;
+    display: flex;
+    flex-direction: column; 
+    padding: 20px;
+    height: 100%;
   }
-
-  form .btn {
-    background-color: rgba(50, 49, 49, 0.70); 
-    color: white; 
-    padding: 10px 20px; 
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1; 
+  }
+  
+  #gumbcijena {
+    display: flex;
+    justify-content: space-between; 
+    align-items: baseline; 
     font-family: Raleway, sans-serif;
-    border-radius: 20px; 
-  }
-
-  
-
-  form .btn:hover {
-    background-color:rgba(62, 152, 30, 0.80); 
-    border-color: rgba(59, 145, 28, 0.8); 
   }
   
-  form .btn:focus {
-    outline: none; 
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
-  }
-
-  #Vanjski{
-    background-color: #fff;
-    border-radius: 0 !important;
-  }
-
-
-  #unutarnji{
-    margin-top:20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 5px;
-    border-radius: 0; 
-
-  }
-
-  #searchdiv{
-    width: 50%;
-    justify-content: center;
-  }
-
-  #MojRacun{
-    padding-right: 15px;
-    font-family: Raleway,sans-serif;
-    text-align: center;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    outline: none;
-    color: #323131;
-    text-decoration: none;
-    border-right: 2px solid rgba(50, 49, 49, 0.50);
-
-  }
-
-  #MojRacun:focus, #MojRacun:active {
-    text-decoration: none;
-    outline: none;
-  }
-
-  #MojRacun:hover {
-    transform: scale(1.05); 
-    outline: none;
-    color: #323131; 
-}
-
-  #kosarica{
-    width: 35px;
-    height: 35px;
-  }
-
-  #drugiNav {
-    background-color: #fff;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-    outline: none;
-    
-  }
- 
-  #drugiNavLista{
-    color: #323131;
-    font-family: Raleway;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: normal;
-    text-decoration: none;
-    outline: none;
-    padding-bottom: 10px;
-  }
-
-
-.nav-link:hover {
-    transform: scale(1.05); 
-    outline: none;
-    color: #323131; 
-}
-
-.nav-item .nav-link.active {
-  color: #323131e3;  
-  font-weight: 300; 
-  outline: none; 
-}
-
-
-.nav-item .nav-link.active:hover {
-  font-weight: 700; 
-  transform: none; 
-}
-
-@media (max-width: 830px) {
- 
-  #unutarnji {
-      flex-direction: column;
-      align-items: flex-start;
-  }
-
-  #searchdiv {
-    margin-top: 10px;
-    width: 100%;
-    margin-bottom: 15px;
-  }
-
-
-#obruc{
-    width: 100%;
-    justify-content: flex-start; /* Ensure the items are aligned to the left */
-    margin-left: 0; /* Remove any left margin */
-    padding-left: 0; /* Remove any left padding */
-  }
-
-  #MojRacun, #kosarica {
-    margin-left: 0; /* Remove any left margin */
-    padding-left: 0px; /* Remove any left padding */
-  }
-
-  #MojRacun {
-    font-weight: 400; /* Regular weight */
-    padding-left: 0;
-    margin-left: 0;
-  }
-
   
-  #MojRacun:hover, #kosarica:hover {
-      font-weight: 700; 
-      transform: none; 
+  
+  .add-to-cart-btn {
+    background-color: rgba(62, 152, 30, 0.674); 
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
   }
-
- 
-  #drugiNavLista {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      text-align: left;
-      padding-left: 20px;
-      padding-right: 0;
+  
+  .add-to-cart-btn:hover {
+    background-color: rgba(62, 152, 30);
   }
+  
+  @media (max-width: 768px) {
+    .shop-product-row {
+        flex-direction: column;
+    }
 
-  .nav-item {
-      width: 100%;
-      text-align: left;
   }
-
-
-  .nav-link {
-      width: 100%;
-      padding: 10px 0;
-      text-align: left;
-      font-weight: 300; 
-  }
-
-
-  .nav-link:hover {
-      font-weight: 700; 
-      transform: none;
-  }
-}
+  
