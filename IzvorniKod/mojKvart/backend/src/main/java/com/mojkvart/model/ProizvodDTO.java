@@ -20,7 +20,7 @@ public class ProizvodDTO {
     private String proizvodOpis;
 
     @NotNull
-    private Integer proizvodCijena;
+    private Double proizvodCijena;
 
     @NotNull
     @Size(max = 50)
