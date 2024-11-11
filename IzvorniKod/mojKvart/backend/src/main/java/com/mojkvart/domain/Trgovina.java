@@ -71,7 +71,7 @@ public class Trgovina {
     private Set<PonudaPopust> trgovinaPonudaPopusts;
 
     @OneToMany(mappedBy = "trgovina")
-    private Set<KupacTrgovinaRecenzija> trgovinaKupacTrgovinaRecenzijas;
+    private Set<Recenzija> trgovinaTrgovinaRecenzijas;
 
     @OneToMany(mappedBy = "trgovina")
     private Set<Racun> trgovinaRacuns;

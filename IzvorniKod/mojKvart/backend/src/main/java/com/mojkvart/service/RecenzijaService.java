@@ -1,27 +1,31 @@
 package com.mojkvart.service;
 
-import com.mojkvart.domain.KupacTrgovinaRecenzija;
+import com.mojkvart.domain.Kupac;
+import com.mojkvart.domain.Trgovina;
 import com.mojkvart.domain.Recenzija;
 import com.mojkvart.model.RecenzijaDTO;
-import com.mojkvart.repos.KupacTrgovinaRecenzijaRepository;
+import com.mojkvart.repos.KupacRepository;
+import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.repos.RecenzijaRepository;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
-import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 
 @Service
 public class RecenzijaService {
 
     private final RecenzijaRepository recenzijaRepository;
-    private final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository;
+    private final KupacRepository kupacRepository;
+    private final TrgovinaRepository trgovinaRepository;
 
     public RecenzijaService(final RecenzijaRepository recenzijaRepository,
-            final KupacTrgovinaRecenzijaRepository kupacTrgovinaRecenzijaRepository) {
+                            final KupacRepository kupacRepository,
+                            final TrgovinaRepository trgovinaRepository) {
         this.recenzijaRepository = recenzijaRepository;
-        this.kupacTrgovinaRecenzijaRepository = kupacTrgovinaRecenzijaRepository;
+        this.kupacRepository = kupacRepository;
+        this.trgovinaRepository = trgovinaRepository;
     }
 
     public List<RecenzijaDTO> findAll() {
@@ -59,6 +63,9 @@ public class RecenzijaService {
         recenzijaDTO.setRecenzijaOpis(recenzija.getRecenzijaOpis());
         recenzijaDTO.setRecenzijaZvjezdice(recenzija.getRecenzijaZvjezdice());
         recenzijaDTO.setRecenzijaOdgovor(recenzija.getRecenzijaOdgovor());
+        recenzijaDTO.setVrijemeKreiranja(recenzija.getVrijemeKreiranja());
+        recenzijaDTO.setKupacId(recenzija.getKupac().getKupacId());
+        recenzijaDTO.setTrgovinaId(recenzija.getTrgovina().getTrgovinaId());
         return recenzijaDTO;
     }
 
@@ -66,6 +73,17 @@ public class RecenzijaService {
         recenzija.setRecenzijaOpis(recenzijaDTO.getRecenzijaOpis());
         recenzija.setRecenzijaZvjezdice(recenzijaDTO.getRecenzijaZvjezdice());
         recenzija.setRecenzijaOdgovor(recenzijaDTO.getRecenzijaOdgovor());
+        recenzija.setVrijemeKreiranja(recenzijaDTO.getVrijemeKreiranja());
+
+        // Postavljanje entiteta Kupac i Trgovina
+        Kupac kupac = kupacRepository.findById(recenzijaDTO.getKupacId())
+                .orElseThrow(() -> new NotFoundException("Kupac not found"));
+        recenzija.setKupac(kupac);
+
+        Trgovina trgovina = trgovinaRepository.findById(recenzijaDTO.getTrgovinaId())
+                .orElseThrow(() -> new NotFoundException("Trgovina not found"));
+        recenzija.setTrgovina(trgovina);
+
         return recenzija;
     }
 
@@ -73,13 +91,6 @@ public class RecenzijaService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Recenzija recenzija = recenzijaRepository.findById(recenzijaId)
                 .orElseThrow(NotFoundException::new);
-        final KupacTrgovinaRecenzija recenzijaKupacTrgovinaRecenzija = kupacTrgovinaRecenzijaRepository.findFirstByRecenzija(recenzija);
-        if (recenzijaKupacTrgovinaRecenzija != null) {
-            referencedWarning.setKey("recenzija.kupacTrgovinaRecenzija.recenzija.referenced");
-            referencedWarning.addParam(recenzijaKupacTrgovinaRecenzija.getId());
-            return referencedWarning;
-        }
         return null;
     }
-
 }

@@ -41,7 +41,7 @@ public class JwtUtil {
             return expirationDate.after(new Date());
         } catch (Exception e) {
             return false;
-        }
+        } 
     }
 
 }
