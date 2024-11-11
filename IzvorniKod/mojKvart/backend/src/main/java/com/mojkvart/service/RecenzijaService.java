@@ -12,6 +12,7 @@ import com.mojkvart.util.ReferencedWarning;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RecenzijaService {
@@ -58,6 +59,16 @@ public class RecenzijaService {
         recenzijaRepository.deleteById(recenzijaId);
     }
 
+    public List<RecenzijaDTO> getTrgovinasRecenzijas(Integer id) {
+        List<Recenzija> listaRecenzija = recenzijaRepository.findByTrgovina_TrgovinaId(id);
+        return listaRecenzija.stream()
+                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))  // mapiraš recenziju u DTO
+                .collect(Collectors.toList());  // vraćaš listu DTO objekata
+    }
+    
+
+
+
     private RecenzijaDTO mapToDTO(final Recenzija recenzija, final RecenzijaDTO recenzijaDTO) {
         recenzijaDTO.setRecenzijaId(recenzija.getRecenzijaId());
         recenzijaDTO.setRecenzijaOpis(recenzija.getRecenzijaOpis());
@@ -66,6 +77,7 @@ public class RecenzijaService {
         recenzijaDTO.setVrijemeKreiranja(recenzija.getVrijemeKreiranja());
         recenzijaDTO.setKupacId(recenzija.getKupac().getKupacId());
         recenzijaDTO.setTrgovinaId(recenzija.getTrgovina().getTrgovinaId());
+        recenzijaDTO.setOdobrioModerator(recenzija.getOdobrioModerator());
         return recenzijaDTO;
     }
 
@@ -74,6 +86,8 @@ public class RecenzijaService {
         recenzija.setRecenzijaZvjezdice(recenzijaDTO.getRecenzijaZvjezdice());
         recenzija.setRecenzijaOdgovor(recenzijaDTO.getRecenzijaOdgovor());
         recenzija.setVrijemeKreiranja(recenzijaDTO.getVrijemeKreiranja());
+        recenzija.setRecenzijaId(recenzijaDTO.getRecenzijaId());
+        recenzija.setOdobrioModerator(recenzijaDTO.getOdobrioModerator());
 
         // Postavljanje entiteta Kupac i Trgovina
         Kupac kupac = kupacRepository.findById(recenzijaDTO.getKupacId())

@@ -1,6 +1,7 @@
 package com.mojkvart.rest;
 
 import com.mojkvart.model.ProizvodDTO;
+import com.mojkvart.model.RecenzijaDTO;
 import com.mojkvart.model.TrgovinaDTO;
 import com.mojkvart.service.ProizvodService;
 import com.mojkvart.service.TrgovinaService;
