@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import logo from '../assets/MojKvart.png'
 import kosarica from '../assets/kosarica.png'
+import '../styles/Navbar.css'
 
 export function Navbar() {
    
@@ -10,17 +11,14 @@ export function Navbar() {
          <div id='najvanjski'>
                 <nav className="navbar navbar-expand-lg  w-100" id="Vanjski">
                     <div className="container-fluid d-flex justify-content-between w-100" id="unutarnji">
-                        {/* Logo on the right */}
                         <img className="navbar-brand" src={logo} alt="Logo" style={{ width: '150px' }} />
 
-                        {/* Search bar in the center */}
                         <form className="d-flex mx-auto" role="search" id="searchdiv">
                             <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
                             <button className="btn btn-outline-success" type="submit">Search</button>
                         </form>
 
-                        {/* Account link and shopping cart icon on the right */}
-                        <div className="d-flex align-items-center ms-auto">
+                        <div id="obruc" className="d-flex align-items-center ms-auto">
                             <a href="/KorisnickiRacun" className="me-3" id="MojRacun">Moj račun</a>
                             <img  id='kosarica' className="img-fluid" src={kosarica} alt="Shopping Cart" />
                         </div>

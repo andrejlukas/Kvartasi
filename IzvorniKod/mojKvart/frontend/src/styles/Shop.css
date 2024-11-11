@@ -1,3 +1,10 @@
+body {
+  background-color: #ededed;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 .content-wrapper {
   background-color: #ededed;
   padding: 20px 0;
@@ -93,6 +100,7 @@
   display: flex;
   justify-content: space-between; 
   align-items: baseline; 
+  font-family: Raleway, sans-serif;
 }
 
 
