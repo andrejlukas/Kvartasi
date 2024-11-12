@@ -1,22 +1,19 @@
 package com.mojkvart.rest;
 
+import com.mojkvart.domain.Kupac;
 import com.mojkvart.model.KupacDTO;
 import com.mojkvart.model.LoginDTO;
-import com.mojkvart.model.AuthenticationResponse;
-import com.mojkvart.model.TokenDTO;
-import com.mojkvart.service.AdministratorService;
-import com.mojkvart.service.KupacService;
-import com.mojkvart.service.ModeratorService;
-import com.mojkvart.service.TrgovinaService;
+import com.mojkvart.util.AuthenticationResponse;
+import com.mojkvart.service.*;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
-import com.mojkvart.util.JwtUtil;
 import jakarta.validation.Valid;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +37,10 @@ public class KupacResource {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtService jwtService;
+
+
     private static final String NAME_SURNAME_FORMAT = "^[A-ZČĆŽĐŠÁÉÍÓÚÑÇÀÈÌÒÙÄËÏÖÜÝŸÆŒ][a-zčćžđšáéíóúñçàèìòùäëïöüýÿæœ' -]{1,}$";
     private static final String EMAIL_FORMAT = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static final String PASSWORD_STRENGTH = "(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}";
@@ -57,7 +58,7 @@ public class KupacResource {
     }
 
     //UC1, koristite api/kupacs i pošaljite JSON objekt za registraciju
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<Object> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
         if(administratorService.findByAdministratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
            moderatorService.findByModeratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
@@ -68,40 +69,35 @@ public class KupacResource {
         kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
         Integer kupacId = kupacService.create(kupacDTO);
 
-        String token = JwtUtil.generateToken(kupacDTO.getKupacEmail(), "kupac", kupacId);
-        AuthenticationResponse resp = new AuthenticationResponse(token, kupacId, "kupac");
+        AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(kupacDTO.getKupacEmail()), kupacId, "KUPAC");
         return ResponseEntity.ok().body(resp);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> loginKupac(@RequestBody @Valid LoginDTO loginDTO) {
+    public ResponseEntity<Object> loginUser(@RequestBody @Valid LoginDTO loginDTO) {
         Integer id = -1;
         String email = loginDTO.getEmail();
         String sifra = loginDTO.getSifra();
-        String sifraIzBaze, role = "";
+        String sifraIzBaze = "";
 
         if (administratorService.findByAdministratorEmail(email).isPresent()) {
-            role = "admin";
             id = administratorService.findByAdministratorEmail(email).get().getAdministratorId();
             sifraIzBaze = administratorService.findByAdministratorEmail(email).get().getAdministratorSifra();
         } else if (moderatorService.findByModeratorEmail(email).isPresent()) {
-            role = "moderator";
             id = moderatorService.findByModeratorEmail(email).get().getModeratorId();
             sifraIzBaze = moderatorService.findByModeratorEmail(email).get().getModeratorSifra();
         } else if (trgovinaService.findByTrgovinaEmail(email).isPresent()) {
-            role = "trgovina";
             id = trgovinaService.findByTrgovinaEmail(email).get().getTrgovinaId();
             sifraIzBaze = trgovinaService.findByTrgovinaEmail(email).get().getTrgovinaSifra();
         } else if (kupacService.findByKupacEmail(email).isPresent()) {
-            role = "kupac";
             id = kupacService.findByKupacEmail(email).get().getKupacId();
             sifraIzBaze = kupacService.findByKupacEmail(email).get().getKupacSifra();
         } else
             return ResponseEntity.badRequest().body("Nepostojeći e-mail!");
 
+
         if (passwordEncoder.matches(sifra, sifraIzBaze)){
-            String token = JwtUtil.generateToken(email, role, id);
-            AuthenticationResponse resp = new AuthenticationResponse(token, id, role);
+            AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(email), id, "KUPAC");
             return ResponseEntity.ok().body(resp);
         }
         else

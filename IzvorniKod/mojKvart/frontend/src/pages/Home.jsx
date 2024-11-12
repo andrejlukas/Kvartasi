@@ -8,7 +8,15 @@ export function Home() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('/api/proizvods')
+    const token = localStorage.getItem('token');
+    const options = {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
+    fetch('/api/proizvods', options)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch products.");

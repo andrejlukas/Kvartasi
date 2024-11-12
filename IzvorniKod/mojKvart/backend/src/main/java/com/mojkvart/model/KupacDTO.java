@@ -1,5 +1,6 @@
 package com.mojkvart.model;
 
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -32,4 +33,6 @@ public class KupacDTO {
     @Size(max = 200)
     private String kupacSifra;
 
+    @Size(max = 15)
+    private String role;
 }

@@ -1,6 +1,6 @@
 import "../styles/login.css"
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/MojKvart.png"
 
@@ -9,31 +9,10 @@ export function Login() {
    const navigate = useNavigate();
    const [emailAddress, setEmailAddress] = useState('');
    const [password, setPassword] = useState('');
-   const [emailExists, setEmailExists] = useState(false); // Dodato stanje za provjeru emaila
-   const [logInTrigger, setTrigger] = useState(true); // Za obavijest o krivom pokušaju prijave
-
-   useEffect(() => {
-      if(!logInTrigger && !emailExists) 
-         setTrigger(true);
-      if (emailAddress.length > 0) {
-         fetch('/api/kupacs')
-            .then((response) => response.json())
-            .then((registriraniKorisnici) => {
-               const duplikat = registriraniKorisnici.some(
-                  (korisnik) => korisnik.kupacEmail === emailAddress );
-               setEmailExists(duplikat);
-            });
-      }
-   }, [emailAddress]);
 
    function checkCorrectPassword(e){
       
       e.preventDefault();
-
-      if (!emailExists) {
-         setTrigger(false);
-         return;
-      }
 
       // ovo inicijaliziras prije options: const token = localStorage.getItem('token');
       // ovo dodajes u headers zahtjevau options: 'Authorization': `Bearer ${token}`,
@@ -51,17 +30,6 @@ export function Login() {
          body: JSON.stringify(data)
       };
   
-      /*return fetch('/api/kupacs/login', options) 
-         .then(response => {
-            if (response.ok) {
-               localStorage.setItem('token', data.token);
-               localStorage.setItem('role', data.role);
-               navigate("/home");
-               alert("Uspješna prijava!");
-            } else {
-               navigate('/');
-            }
-      });*/
       return fetch('/api/kupacs/login', options) 
          .then(response => {
             if (response.ok) {
@@ -79,9 +47,8 @@ export function Login() {
          })
          .catch( error => {
             navigate('/');
-            setTrigger(false);
+            alert("Kriva lozinka ili e-mail adresa!");
          });
-
    }
 
    return (
@@ -114,12 +81,6 @@ export function Login() {
                {/* <span className="show-hide">Hide</span> */}
                </div>
                <input type="password" id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
-
-               {!logInTrigger && (
-                        <p style={{ color: "red", marginTop: "4px" ,  marginBottom: "4px", fontWeight: "bold" }}>
-                           Wrong username or password!
-                        </p>
-               )}
 
                <button type="submit">Log in</button>
 
