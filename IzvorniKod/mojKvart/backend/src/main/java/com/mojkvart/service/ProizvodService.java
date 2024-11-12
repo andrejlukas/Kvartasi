@@ -12,9 +12,9 @@ import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
 import java.util.List;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class ProizvodService {
@@ -42,7 +42,16 @@ public class ProizvodService {
     }
 
     public List<ProizvodDTO> findByTrgovina(Integer trgovinaId) {
-        return proizvodRepository.findByTrgovinaId(trgovinaId).stream().map(p -> mapToDTO(p, new ProizvodDTO())).toList();
+        return proizvodRepository.findByTrgovinaId(trgovinaId).stream().map(p -> mapToDTO(p, new ProizvodDTO()))
+                .toList();
+    }
+
+    public List<ProizvodDTO> findAllApproved() {
+        return proizvodRepository.findAllApproved().stream().map(p -> mapToDTO(p, new ProizvodDTO())).toList();
+    }
+
+    public List<ProizvodDTO> findAllNotApproved() {
+        return proizvodRepository.findAllNotApproved().stream().map(p -> mapToDTO(p, new ProizvodDTO())).toList();
     }
 
     public ProizvodDTO get(final Integer proizvodId) {
@@ -87,8 +96,9 @@ public class ProizvodService {
         proizvod.setProizvodKategorija(proizvodDTO.getProizvodKategorija());
         proizvod.setProizvodSlika(proizvodDTO.getProizvodSlika());
         proizvod.setProizvodFlag(proizvodDTO.getProizvodFlag());
-        final Trgovina trgovina = proizvodDTO.getTrgovina() == null ? null : trgovinaRepository.findById(proizvodDTO.getTrgovina())
-                .orElseThrow(() -> new NotFoundException("trgovina not found"));
+        final Trgovina trgovina = proizvodDTO.getTrgovina() == null ? null
+                : trgovinaRepository.findById(proizvodDTO.getTrgovina())
+                        .orElseThrow(() -> new NotFoundException("trgovina not found"));
         proizvod.setTrgovina(trgovina);
         return proizvod;
     }
@@ -97,13 +107,15 @@ public class ProizvodService {
         final ReferencedWarning referencedWarning = new ReferencedWarning();
         final Proizvod proizvod = proizvodRepository.findById(proizvodId)
                 .orElseThrow(NotFoundException::new);
-        final OcjenaProizvodKupac proizvodOcjenaProizvodKupac = ocjenaProizvodKupacRepository.findFirstByProizvod(proizvod);
+        final OcjenaProizvodKupac proizvodOcjenaProizvodKupac = ocjenaProizvodKupacRepository
+                .findFirstByProizvod(proizvod);
         if (proizvodOcjenaProizvodKupac != null) {
             referencedWarning.setKey("proizvod.ocjenaProizvodKupac.proizvod.referenced");
             referencedWarning.addParam(proizvodOcjenaProizvodKupac.getId());
             return referencedWarning;
         }
-        final KupacProizvod proizvodKupacProizvodTrgovina = kupacProizvodTrgovinaRepository.findFirstByProizvod(proizvod);
+        final KupacProizvod proizvodKupacProizvodTrgovina = kupacProizvodTrgovinaRepository
+                .findFirstByProizvod(proizvod);
         if (proizvodKupacProizvodTrgovina != null) {
             referencedWarning.setKey("proizvod.kupacProizvodTrgovina.proizvod.referenced");
             referencedWarning.addParam(proizvodKupacProizvodTrgovina.getId());
