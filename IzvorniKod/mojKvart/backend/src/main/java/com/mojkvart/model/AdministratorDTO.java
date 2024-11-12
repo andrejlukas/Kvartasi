@@ -24,7 +24,6 @@ public class AdministratorDTO {
     @Size(max = 50)
     private String administratorEmail;
 
-    @NotNull
     @Size(max = 200)
     private String administratorSifra;
 

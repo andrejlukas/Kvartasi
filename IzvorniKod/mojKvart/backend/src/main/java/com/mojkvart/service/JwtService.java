@@ -25,7 +25,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private Claims getClaims(String token) {
+    public Claims getAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getKey())
@@ -35,7 +35,7 @@ public class JwtService {
     }
 
     public <T> T getClaim(String token, Function<Claims, T> claimsTFunction) {
-        return claimsTFunction.apply(getClaims(token));
+        return claimsTFunction.apply(getAllClaims(token));
     }
 
     public String getEmailFromToken(String token) {
@@ -61,6 +61,7 @@ public class JwtService {
 
     public Boolean isTokenValid(String token, UserDetails userDetails) {
         String email = getEmailFromToken(token);
+
         return email.equals(userDetails.getUsername()) && getClaim(token, Claims::getExpiration).after(new Date());
     }
 }
