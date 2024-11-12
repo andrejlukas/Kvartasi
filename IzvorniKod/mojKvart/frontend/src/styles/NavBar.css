@@ -74,15 +74,14 @@
 
   }
 
-  #MojRacun:focus, #MojRacun:active {
+  #MojRacun:focus{
     text-decoration: none;
     outline: none;
   }
 
   #MojRacun:hover {
-    transform: scale(1.05); 
-    outline: none;
-    color: #323131; 
+    transform: none; 
+  text-shadow: 0 0 1px #4d4d4d;
 }
 
   #kosarica{
@@ -99,7 +98,7 @@
   }
  
   #drugiNavLista{
-    color: #323131;
+    color: #323131d3;
     font-family: Raleway;
     font-size: 24px;
     font-style: normal;
@@ -111,22 +110,9 @@
   }
 
 
-.nav-link:hover {
-    transform: scale(1.05); 
-    outline: none;
-    color: #323131; 
-}
-
-.nav-item .nav-link.active {
-  color: #323131e3;  
-  font-weight: 300; 
-  outline: none; 
-}
-
-
-.nav-item .nav-link.active:hover {
-  font-weight: 700; 
+.nav-item .nav-link:hover {
   transform: none; 
+  text-shadow: 0 0 1px #4d4d4d;
 }
 
 @media (max-width: 830px) {
@@ -162,10 +148,7 @@
   }
 
   
-  #MojRacun:hover, #kosarica:hover {
-      font-weight: 700; 
-      transform: none; 
-  }
+
 
  
   #drugiNavLista {
@@ -191,8 +174,5 @@
   }
 
 
-  .nav-link:hover {
-      font-weight: 700; 
-      transform: none;
-  }
+ 
 }

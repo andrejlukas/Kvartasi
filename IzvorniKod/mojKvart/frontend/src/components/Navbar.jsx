@@ -14,8 +14,8 @@ export function Navbar() {
                         <img className="navbar-brand" src={logo} alt="Logo" style={{ width: '150px' }} />
 
                         <form className="d-flex mx-auto" role="search" id="searchdiv">
-                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                            <button className="btn btn-outline-success" type="submit">Search</button>
+                            <input className="form-control me-2" type="search" placeholder="Pretraži" aria-label="Pretraži" />
+                            <button className="btn btn-outline-success" type="submit">Pretraži</button>
                         </form>
 
                         <div id="obruc" className="d-flex align-items-center ms-auto">
@@ -29,7 +29,7 @@ export function Navbar() {
                     <div className="container-fluid d-flex justify-content-between w-100 flex-nowrap" id="drugiNavUnut">
                         <ul className="navbar-nav d-flex justify-content-around w-100 flex-nowrap" id="drugiNavLista">
                             <li className="nav-item">
-                                <Link to="/home/kvart" className="nav-link active">Kvart</Link>
+                                <Link to="/home/kvart" className="nav-link">Kvart</Link>
                             </li>
                             <li className="nav-item">
                                 <Link to="/home/popisTrgovina" className="nav-link">Popis trgovina</Link>

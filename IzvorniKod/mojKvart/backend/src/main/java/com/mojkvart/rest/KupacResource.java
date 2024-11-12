@@ -1,6 +1,5 @@
 package com.mojkvart.rest;
 
-import com.mojkvart.domain.Kupac;
 import com.mojkvart.model.KupacDTO;
 import com.mojkvart.model.LoginDTO;
 import com.mojkvart.util.AuthenticationResponse;
@@ -8,12 +7,14 @@ import com.mojkvart.service.*;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,6 +70,10 @@ public class KupacResource {
         kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
         Integer kupacId = kupacService.create(kupacDTO);
 
+        // trebam kasnije kao i u loginu provjerit sva 4 slucaja
+        Map<String, Object> claims = new HashMap<>(); // u iducoj verziji staviti u generateToken
+        claims.put("id", kupacId);
+        claims.put("role", "KUPAC");
         AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(kupacDTO.getKupacEmail()), kupacId, "KUPAC");
         return ResponseEntity.ok().body(resp);
     }
@@ -78,26 +83,33 @@ public class KupacResource {
         Integer id = -1;
         String email = loginDTO.getEmail();
         String sifra = loginDTO.getSifra();
-        String sifraIzBaze = "";
+        String sifraIzBaze, role = "";
 
         if (administratorService.findByAdministratorEmail(email).isPresent()) {
             id = administratorService.findByAdministratorEmail(email).get().getAdministratorId();
+            role = "ADMINISTRATOR";
             sifraIzBaze = administratorService.findByAdministratorEmail(email).get().getAdministratorSifra();
         } else if (moderatorService.findByModeratorEmail(email).isPresent()) {
             id = moderatorService.findByModeratorEmail(email).get().getModeratorId();
+            role = "MODERATOR";
             sifraIzBaze = moderatorService.findByModeratorEmail(email).get().getModeratorSifra();
         } else if (trgovinaService.findByTrgovinaEmail(email).isPresent()) {
             id = trgovinaService.findByTrgovinaEmail(email).get().getTrgovinaId();
+            role = "TRGOVINA";
             sifraIzBaze = trgovinaService.findByTrgovinaEmail(email).get().getTrgovinaSifra();
         } else if (kupacService.findByKupacEmail(email).isPresent()) {
             id = kupacService.findByKupacEmail(email).get().getKupacId();
+            role = "KUPAC";
             sifraIzBaze = kupacService.findByKupacEmail(email).get().getKupacSifra();
         } else
             return ResponseEntity.badRequest().body("Nepostojeći e-mail!");
 
 
+        Map<String, Object> claims = new HashMap<>(); // ovo u iducoj verziji staviti u generate token
+        claims.put("id", id);
+        claims.put("role", role);
         if (passwordEncoder.matches(sifra, sifraIzBaze)){
-            AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(email), id, "KUPAC");
+            AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(email), id, role);
             return ResponseEntity.ok().body(resp);
         }
         else

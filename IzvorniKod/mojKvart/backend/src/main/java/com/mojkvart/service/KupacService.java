@@ -75,7 +75,6 @@ public class KupacService {
         kupacDTO.setKupacPrezime(kupac.getKupacPrezime());
         kupacDTO.setKupacAdresa(kupac.getKupacAdresa());
         kupacDTO.setKupacSifra(kupac.getKupacSifra());
-        kupacDTO.setRole("KUPAC");
         return kupacDTO;
     }
 
@@ -85,7 +84,6 @@ public class KupacService {
         kupac.setKupacPrezime(kupacDTO.getKupacPrezime());
         kupac.setKupacAdresa(kupacDTO.getKupacAdresa());
         kupac.setKupacSifra(kupacDTO.getKupacSifra());
-        kupac.setRole("KUPAC");
         return kupac;
     }
 

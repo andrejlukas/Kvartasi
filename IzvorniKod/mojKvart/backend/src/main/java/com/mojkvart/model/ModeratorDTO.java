@@ -24,8 +24,6 @@ public class ModeratorDTO {
     @Size(max = 50)
     private String moderatorEmail;
 
-    @NotNull
     @Size(max = 200)
     private String moderatorSifra;
-
 }
