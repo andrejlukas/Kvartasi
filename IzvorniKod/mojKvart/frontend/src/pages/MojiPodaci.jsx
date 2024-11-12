@@ -13,6 +13,7 @@ export function MojiPodaci(){
    const [sifra, setSifra] = useState('')
     const [losunos,setlosunos] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [hasChanges, setHasChanges] = useState(false);
    //console.log(localStorage);
    
     //dohvacanje ID-a
@@ -91,6 +92,7 @@ export function MojiPodaci(){
         .then(response => response.ok ? response.json() : Promise.reject('Failed to save changes'))
         .then(updatedId => {
             console.log('Uspješno ažurirano za kupac ID:', updatedId);
+            setHasChanges(false);
             alert("Promjene unesene!")
         })
         .catch(error => console.error('Error updating data:', error));
@@ -99,6 +101,11 @@ export function MojiPodaci(){
    function handleClose(){
         navigate('/korisnickiracun');
         return;
+   }
+
+   function handleInputChange(setter, value){
+    setter(value);
+    setHasChanges(true); 
    }
 
     return(
@@ -111,25 +118,25 @@ export function MojiPodaci(){
                             <div className="form-group">
                                 <label >Ime:</label>
                                 <input type="text"  placeholder={firstName} className="signup-inputs" name="firstName" value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)} />
+                                onChange={(e) => handleInputChange(setFirstName,e.target.value)} />
                             </div>
                             
                             <div className="form-group">
                                 <label >Prezime:</label>
                                 <input type="text"  placeholder={lastName} className="signup-inputs" name="lastname" value={lastName}
-                                onChange={(e) => setLastName(e.target.value)} />
+                                onChange={(e) => handleInputChange(setLastName, e.target.value)} />
                             </div>
                             
                             <div className="form-group">
                                 <label >Email:</label>
                                 <input type="text"  placeholder={emailAddress} className="signup-inputs" name="emailAddress" value={emailAddress}
-                                onChange={(e) => setEmailAddress(e.target.value) } readOnly />
+                                 readOnly />
                             </div>
                             
                             <div className="form-group">
                                 <label >Adresa:</label>
                                 <input type="text"  placeholder={homeAddress} className="signup-inputs" name="homeAddress" value={homeAddress}
-                                onChange={(e) => setHomeAddress(e.target.value)} />
+                                onChange={(e) => handleInputChange(setHomeAddress,e.target.value)} />
                             </div>
                             {/* Prikaz poruke o grešci ako postoji */}
                             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
@@ -138,7 +145,7 @@ export function MojiPodaci(){
                             <button 
                                 type="button" 
                                 onClick={handleClose} 
-                                disabled={!!errorMessage}  // Ako errorMessage postoji, gumb je disabled
+                                disabled={!!errorMessage || hasChanges }  // Ako errorMessage postoji, gumb je disabled
                             >
                                 Zatvori
                             </button>
