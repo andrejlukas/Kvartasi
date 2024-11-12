@@ -6,14 +6,22 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 
 @Entity
+@Builder
 @Getter
 @Setter
-public class Administrator {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Administrator implements UserDetails {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -38,7 +46,41 @@ public class Administrator {
     @Column(nullable = false, length = 50)
     private String administratorPrezime;
 
-    @Column(nullable = false, length = 200)
+    @Column(length = 200)
     private String administratorSifra;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ADMINISTRATOR"));
+    }
+
+    @Override
+    public String getPassword() {
+        return administratorSifra;
+    }
+
+    @Override
+    public String getUsername() {
+        return administratorEmail;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

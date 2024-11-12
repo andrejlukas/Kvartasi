@@ -43,10 +43,10 @@ public class Kupac implements UserDetails {
     @Column(nullable = false, length = 20)
     private String kupacPrezime;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String kupacAdresa;
 
-    @Column(nullable = false, length = 200)
+    @Column(length = 200)
     private String kupacSifra;
 
     @OneToMany(mappedBy = "kupac")
@@ -67,12 +67,9 @@ public class Kupac implements UserDetails {
     @OneToMany(mappedBy = "kupac")
     private Set<Racun> kupacRacuns;
 
-    @Column(length = 50)
-    private String role;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
+        return List.of(new SimpleGrantedAuthority("KUPAC"));
     }
 
     @Override
