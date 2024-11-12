@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping(value = "/api/proizvods", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProizvodResource {
@@ -40,13 +39,27 @@ public class ProizvodResource {
         return ResponseEntity.ok(proizvodService.get(proizvodId));
     }
 
+    // za dohvacanje svih proizvoda potvrdenih od strane moderatora, koristi se kada kupac nije izabrao nikakve filtre
+    @GetMapping("/approved")
+    public ResponseEntity<List<ProizvodDTO>> getApprovedProizvods() {
+        return ResponseEntity.ok(proizvodService.findAllApproved());
+    }
+
+    // za dohvacanje svih proizvoda koji jos nisu potvrdeni od strane moderatora
+    @GetMapping("/notApproved")
+    public ResponseEntity<List<ProizvodDTO>> getNotApprovedProizvods() {
+        return ResponseEntity.ok(proizvodService.findAllNotApproved());
+    }
+
     // za dohvacanje svih proizvoda jedne trgovine
     @GetMapping("/fromTrgovina/{trgovinaId}")
-    public ResponseEntity<List<ProizvodDTO>> getTrgovinaProizvods(@PathVariable(name = "trgovinaId") Integer trgovinaId) {
+    public ResponseEntity<List<ProizvodDTO>> getTrgovinaProizvods(
+            @PathVariable(name = "trgovinaId") Integer trgovinaId) {
         return ResponseEntity.ok(proizvodService.findByTrgovina(trgovinaId));
     }
 
-    //UC11, koristite api/proizvods te pošaljite JSON objekt za kriranje novog proizvoda od strane trgovine
+    // UC11, koristite api/proizvods te pošaljite JSON objekt za kriranje novog
+    // proizvoda od strane trgovine
     @PostMapping
     public ResponseEntity<Integer> createProizvod(
             @RequestBody @Valid final ProizvodDTO proizvodDTO) {
@@ -54,7 +67,8 @@ public class ProizvodResource {
         return new ResponseEntity<>(createdProizvodId, HttpStatus.CREATED);
     }
 
-    //UC7, koristite api/proizvods/{proizvodId} za mijenjanje atributa iz F u T ako je odobren
+    // UC7, koristite api/proizvods/{proizvodId} za mijenjanje atributa iz F u T ako
+    // je odobren
     @PutMapping("/{proizvodId}")
     public ResponseEntity<Integer> updateProizvod(
             @PathVariable(name = "proizvodId") final Integer proizvodId,

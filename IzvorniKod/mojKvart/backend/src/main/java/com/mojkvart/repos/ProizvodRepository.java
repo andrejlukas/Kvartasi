@@ -16,4 +16,10 @@ public interface ProizvodRepository extends JpaRepository<Proizvod, Integer> {
     @Query("SELECT p FROM Proizvod p WHERE p.trgovina.trgovinaId = :trgovinaId")
     List<Proizvod> findByTrgovinaId(@Param("trgovinaId") Integer trgovinaId);
 
+    @Query("SELECT p FROM Proizvod p WHERE p.proizvodFlag = true")
+    List<Proizvod> findAllApproved();
+
+    @Query("SELECT p FROM Proizvod p WHERE p.proizvodFlag = false")
+    List<Proizvod> findAllNotApproved();
+
 }
