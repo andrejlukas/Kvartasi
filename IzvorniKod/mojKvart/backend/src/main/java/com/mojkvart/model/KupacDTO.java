@@ -25,14 +25,9 @@ public class KupacDTO {
     @Size(max = 20)
     private String kupacPrezime;
 
-    @NotNull
     @Size(max = 50)
     private String kupacAdresa;
 
-    @NotNull
     @Size(max = 200)
     private String kupacSifra;
-
-    @Size(max = 15)
-    private String role;
 }
