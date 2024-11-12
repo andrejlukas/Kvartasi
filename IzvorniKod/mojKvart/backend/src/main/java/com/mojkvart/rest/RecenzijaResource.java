@@ -75,5 +75,12 @@ public ResponseEntity<List<RecenzijaDTO>> getTrgovinasRecenzijas(@PathVariable(n
     return ResponseEntity.ok(recenzijaService.getTrgovinasRecenzijas(id));
 }
 
+//kada zelite dobiti sve recenzije nekog korisnika koristite ovu rutu
+
+@GetMapping("/kupacs/{kupacId}")
+public ResponseEntity<List<RecenzijaDTO>> getKupacRecenzijas(@PathVariable(name = "kupacId") final Integer id) {
+    return ResponseEntity.ok(recenzijaService.getKupacsRecenzijas(id));
+}
+
 
 }

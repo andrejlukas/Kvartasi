@@ -3,6 +3,7 @@ package com.mojkvart.service;
 import com.mojkvart.domain.Kupac;
 import com.mojkvart.domain.Trgovina;
 import com.mojkvart.domain.Recenzija;
+import com.mojkvart.model.KupacDTO;
 import com.mojkvart.model.RecenzijaDTO;
 import com.mojkvart.repos.KupacRepository;
 import com.mojkvart.repos.TrgovinaRepository;
@@ -60,11 +61,27 @@ public class RecenzijaService {
     }
 
     public List<RecenzijaDTO> getTrgovinasRecenzijas(Integer id) {
+        // Provera postojanja trgovine
+    if (!trgovinaRepository.existsById(id)) {
+        throw new NotFoundException("Trgovina sa ID " + id + " nije pronađena");
+    }
         List<Recenzija> listaRecenzija = recenzijaRepository.findByTrgovina_TrgovinaId(id);
         return listaRecenzija.stream()
                 .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))  // mapiraš recenziju u DTO
                 .collect(Collectors.toList());  // vraćaš listu DTO objekata
     }
+
+    public List<RecenzijaDTO> getKupacsRecenzijas(Integer id) {
+        // Provera postojanja trgovine
+    if (!kupacRepository.existsById(id)) {
+        throw new NotFoundException("Kupac sa ID " + id + " nije pronađen");
+    }
+        List<Recenzija> listaRecenzija = recenzijaRepository.findByKupac_KupacId(id);
+        return listaRecenzija.stream()
+                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))  // mapiraš recenziju u DTO
+                .collect(Collectors.toList());  // vraćaš listu DTO objekata
+    }
+    
     
 
 
