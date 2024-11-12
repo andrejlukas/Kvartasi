@@ -10,9 +10,17 @@ export default function Shop() {
   const [products, setProducts] = useState([]); 
   const [error, setError] = useState(null);
 
+  const options = {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
+
   useEffect(() => {
     if (id) {
-      fetch(`/api/trgovinas/${id}`)
+      fetch(`/api/trgovinas/${id}`, options)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Failed to fetch shop details.");
@@ -30,7 +38,8 @@ export default function Shop() {
 
   useEffect(() => {
     if (id) {
-      fetch(`/api/proizvods/fromTrgovina/${id}`)
+      const token = localStorage.getItem('token');
+      fetch(`/api/proizvods/fromTrgovina/${id}`, options)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Failed to fetch products.");

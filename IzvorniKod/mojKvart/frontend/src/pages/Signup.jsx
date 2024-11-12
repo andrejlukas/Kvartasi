@@ -1,6 +1,6 @@
 import "../styles/signup.css"
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function Signup() {
@@ -12,123 +12,43 @@ export function Signup() {
    const [password, setPassword] = useState('')
    const [emailExists, setEmailExists] = useState(false); // Dodato stanje za provjeru emaila
 
-   /* useEffect(() => {
-      if (emailAddress.length > 0) {
-        fetch('/api/kupacs')
-            .then((response) => response.json())
-            .then((registriraniKorisnici) => {
-               const duplikat = registriraniKorisnici.some(
-                  (korisnik) => korisnik.kupacEmail === emailAddress );
-               setEmailExists(duplikat);
-            });
-      }
-   }, [emailAddress]);
-
-   useEffect(() => {
-      if (emailAddress.length > 0) {
-        fetch('/api/moderators')
-            .then((response) => response.json())
-            .then((registriraniModeratori) => {
-               const duplikat = registriraniModeratori.some(
-                  (moderator) => moderator.moderatorEmail === emailAddress );
-               setEmailExists(duplikat);
-            });
-      }
-   }, [emailAddress]);
-
-   useEffect(() => {
-      if (emailAddress.length > 0) {
-        fetch('/api/trgovinas')
-            .then((response) => response.json())
-            .then((registriranaTrgovina) => {
-               const duplikat = registriranaTrgovina.some(
-                  (trgovina) => trgovina.trgovinaEmail === emailAddress );
-               setEmailExists(duplikat);
-            });
-      }
-   }, [emailAddress]);
-
-   useEffect(() => {
-      if (emailAddress.length > 0) {
-        fetch('/api/administrators')
-            .then((response) => response.json())
-            .then((registriraniAdministratori) => {
-               const duplikat = registriraniAdministratori.some(
-                  (administrator) => administrator.administratorEmail === emailAddress );
-               setEmailExists(duplikat);
-            });
-      }
-   }, [emailAddress]); */
-
-
    function saveNoviClan(e){
       
       e.preventDefault();
+      
+      const data = {
+         kupacEmail: emailAddress,
+         kupacIme: firstName,
+         kupacPrezime: lastName,
+         kupacAdresa: homeAddress,
+         kupacSifra: password
+      };
+      const options = {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(data)
+      };
 
-      Promise.all([
-         fetch('/api/kupacs').then(res => res.json()),
-         fetch('/api/moderators').then(res => res.json()),
-         fetch('/api/trgovinas').then(res => res.json()),
-         fetch('/api/administrators').then(res => res.json())
-      ])
-      .then(([kupacs, moderators, trgovinas, administrators]) => {
-         // Provjeri postoji li e-mail u bilo kojoj kolekciji
-         const emailExistsInAnyRole = 
-            kupacs.some(user => user.kupacEmail === emailAddress) ||
-            moderators.some(user => user.moderatorEmail === emailAddress) ||
-            trgovinas.some(user => user.trgovinaEmail === emailAddress) ||
-            administrators.some(user => user.administratorEmail === emailAddress);
-
-         if (emailExistsInAnyRole) {
-            setEmailExists(true); // Ako e-mail postoji, postavi na true
-            return; // Prekini funkciju ako e-mail već postoji
-         }
-
-         if(!isValid())
-            return;
-
-
-
-         // Ako e-mail nije zauzet, nastavi s registracijom
-         const data = {
-            kupacEmail: emailAddress,
-            kupacIme: firstName,
-            kupacPrezime: lastName,
-            kupacAdresa: homeAddress,
-            kupacSifra: password
-         };
-         const options = {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-         };
-
-         return fetch('/api/kupacs', options)
-            .then(response => {
-               if (response.ok) {
-                  return response.json();
-               }
-            }).then(data => {
-               localStorage.setItem('token', data.token);
-               localStorage.setItem("id", data.id);
-               localStorage.setItem('role', data.role);
-               navigate('/home');
-                  alert("Uspješna registracija!");
-            });
-      })
+      return fetch('/api/kupacs/signup', options)
+         .then(response => {
+            if (response.ok) {
+               return response.json();
+            }
+         }).then(data => {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem("id", data.id);
+            localStorage.setItem('role', data.role);
+            navigate('/home');
+               alert("Uspješna registracija!");
+         })
       .catch(error => {
+         setEmailExists(true);
          console.error("Greška prilikom provjere e-maila:", error);
       });
 
        
-   }
-
-   function isValid() {
-      //vec koristena adresa
-      return firstName.length > 0 && lastName.length > 0 && emailAddress.length > 0
-      && password.length > 7 && homeAddress.length > 0 && !emailExists ;
    }
 
    
