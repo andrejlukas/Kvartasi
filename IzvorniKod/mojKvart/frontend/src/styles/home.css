@@ -1,80 +1,88 @@
-body {
-    background-color: #ededed;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-.price{
-    font-size: 18px;
-    color: #2c8c2c;
-    font-weight: bold;
-  }
-  #products {
-    flex: 2;
-    background-color: #ededed;
-    border-radius: 8px;
-  }
-  
-  .card-title{
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .product-card img {
-    padding-top: 10px;
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    align-self: center;
-  }
-  
-  .product-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    overflow: hidden;
-    text-align: left;
-    font-family: Raleway, sans-serif;
-    display: flex;
-    flex-direction: column; 
-    padding: 20px;
-    height: 100%;
-  }
-  
-  .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex-grow: 1; 
-  }
-  
-  #gumbcijena {
-    display: flex;
-    justify-content: space-between; 
-    align-items: baseline; 
-    font-family: Raleway, sans-serif;
-  }
-  
-  
-  
-  .add-to-cart-btn {
-    background-color: rgba(62, 152, 30, 0.674); 
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .add-to-cart-btn:hover {
-    background-color: rgba(62, 152, 30);
-  }
-  
-  @media (max-width: 768px) {
-    .shop-product-row {
-        flex-direction: column;
-    }
 
+
+body {
+  background-color: #ededed;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.price-alt {
+  font-size: 18px;
+  color: #2c8c2c;
+  font-weight: bold;
+}
+
+#products-alt {
+  flex: 2;
+  background-color: #ededed;
+  border-radius: 8px;
+  margin: 30px;
+}
+
+.card-title-alt {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#productsbox{
+  margin-bottom: 20px;
+}
+
+.product-card-alt img {
+  padding-top: 10px;
+  margin-bottom: 10px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  align-self: center;
+}
+
+.product-card-alt {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+  text-align: left;
+  font-family: Raleway, sans-serif;
+  display: flex;
+  flex-direction: column; 
+  padding: 20px;
+  height: 100%;
+}
+
+.card-body-alt {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1; 
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+#gumbcijena-alt {
+  display: flex;
+  justify-content: space-between; 
+  align-items: baseline; 
+  font-family: Raleway, sans-serif;
+}
+
+.add-to-cart-btn-alt {
+  background-color: rgba(62, 152, 30, 0.674); 
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-to-cart-btn-alt:hover {
+  background-color: rgba(62, 152, 30);
+}
+
+@media (max-width: 768px) {
+  .shop-product-row-alt {
+      flex-direction: column;
   }
-  
+}
