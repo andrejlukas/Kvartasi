@@ -7,13 +7,14 @@
 }
 
 .mojracun-container {
+    margin: 20px;
     width: 1359px;  
-    height: 498px; 
     text-align: left; 
     padding: 20px;
     background-color: #ffffff; 
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    transform: translateY(-100px); /* Podiže komponentu prema gore */
 }
 
 /* Stilizacija za naslov */
@@ -47,7 +48,12 @@
     font-weight: 500;
     line-height: normal;
 }
-.link {
+.korisnicki-racun-link {
     color: inherit;          /* Nasleđuje boju od roditeljskog elementa */
     text-decoration: none;   /* Uklanja podcrtavanje */
+}
+
+.korisnicki-racun-link:hover {
+    transform: none; 
+    text-shadow: 0 0 1px #4d4d4d;
 }

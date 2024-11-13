@@ -1,7 +1,7 @@
 import { Navbar } from "../components/Navbar";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "../styles/MojiPodaci.css"
 
 export function MojiPodaci(){
     const navigate = useNavigate();
@@ -114,41 +114,45 @@ export function MojiPodaci(){
             <div className="main-container">
                     <div className="osobni-podaci-container">
                         <h1 className="naslov">Osobni podaci:</h1>
-                        <form id="profile-form" onSubmit = {savePromjene}>
-                            <div className="form-group">
+                        <form id="moji-podaci-profile-form" onSubmit = {savePromjene}>
+                            <div className="moji-podaci-form-group">
                                 <label >Ime:</label>
-                                <input type="text"  placeholder={firstName} className="signup-inputs" name="firstName" value={firstName}
+                                <input type="text"  placeholder={firstName} className="moji-podaci-inputs" name="firstName" value={firstName}
                                 onChange={(e) => handleInputChange(setFirstName,e.target.value)} />
                             </div>
                             
-                            <div className="form-group">
+                            <div className="moji-podaci-form-group">
                                 <label >Prezime:</label>
-                                <input type="text"  placeholder={lastName} className="signup-inputs" name="lastname" value={lastName}
+                                <input type="text"  placeholder={lastName} className="moji-podaci-inputs" name="lastname" value={lastName}
                                 onChange={(e) => handleInputChange(setLastName, e.target.value)} />
                             </div>
                             
-                            <div className="form-group">
+                            <div className="moji-podaci-form-group">
                                 <label >Email:</label>
-                                <input type="text"  placeholder={emailAddress} className="signup-inputs" name="emailAddress" value={emailAddress}
+                                <input type="text"  placeholder={emailAddress} className="moji-podaci-inputs" name="emailAddress" value={emailAddress}
                                  readOnly />
                             </div>
                             
-                            <div className="form-group">
+                            <div className="moji-podaci-form-group">
                                 <label >Adresa:</label>
-                                <input type="text"  placeholder={homeAddress} className="signup-inputs" name="homeAddress" value={homeAddress}
+                                <input type="text"  placeholder={homeAddress} className="moji-podaci-inputs" name="homeAddress" value={homeAddress}
                                 onChange={(e) => handleInputChange(setHomeAddress,e.target.value)} />
                             </div>
                             {/* Prikaz poruke o grešci ako postoji */}
                             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                            <div className="moji-podaci-gumbovi-container">
+                                <button type="submit" id="spremi-promjene-button">Spremi promjene</button> 
+                                <button 
+                                    type="button" 
+                                    id = "zatvori-button"
+                                    onClick={handleClose} 
+                                    disabled={!!errorMessage || hasChanges }  // Ako errorMessage postoji, gumb je disabled
+                                >
+                                    Zatvori
+                                </button>
+                            </div>
                             
-                            <button type="submit" id="submit-button">Spremi promjene</button> 
-                            <button 
-                                type="button" 
-                                onClick={handleClose} 
-                                disabled={!!errorMessage || hasChanges }  // Ako errorMessage postoji, gumb je disabled
-                            >
-                                Zatvori
-                            </button>
+                           
                         </form>
 
                     </div>

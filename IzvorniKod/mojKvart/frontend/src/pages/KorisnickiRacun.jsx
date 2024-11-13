@@ -14,13 +14,13 @@ export function KorisnickiRacun(){
                     <h1 className="mojracun-naslov">Moj račun:</h1>
                     <ul>
                         <li>
-                            <Link to="/mojipodaci" className="link">Moji podaci</Link>
+                            <Link to="/mojipodaci" className="korisnicki-racun-link">Moji podaci</Link>
                         </li>
                         <li>
-                            <Link to="/mojiracuni" className="link">Moji računi</Link> {/* koristila sam link */}
+                            <Link to="/mojiracuni" className="korisnicki-racun-link">Moji računi</Link> {/* koristila sam link */}
                         </li>
                         <li>
-                            <Link to="/mojerecenzije" className="link">Moje recenzije</Link>
+                            <Link to="/mojerecenzije" className="korisnicki-racun-link">Moje recenzije</Link>
                         </li>
                     </ul>
 
