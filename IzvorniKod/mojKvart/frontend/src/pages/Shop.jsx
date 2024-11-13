@@ -10,20 +10,20 @@ export default function Shop() {
   const [products, setProducts] = useState([]); 
   const [error, setError] = useState(null);
 
-  const options = {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }
-  }
-
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    const options = {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
     if (id) {
       fetch(`/api/trgovinas/${id}`, options)
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Failed to fetch shop details.");
+            throw new Error("Neuspjesno dohvacanje trgovine.");
           }
           return response.json();
         })
@@ -39,10 +39,17 @@ export default function Shop() {
   useEffect(() => {
     if (id) {
       const token = localStorage.getItem('token');
+      const options = {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
       fetch(`/api/proizvods/fromTrgovina/${id}`, options)
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Failed to fetch products.");
+            throw new Error("Neuspjesno dohvacanje proizvoda.");
           }
           return response.json();
         })
