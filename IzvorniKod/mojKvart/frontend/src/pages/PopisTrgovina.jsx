@@ -5,11 +5,7 @@ import "../styles/popisTrgovina.css";
 import { Link } from "react-router-dom";
 
 
-
 export function PopisTrgovina() {
-   
-  //const { id } = useParams();
-  //const [shop, setShop] = useState(null);
   const [shops, setShops] = useState([]); 
   const [error, setError] = useState(null);
   
@@ -25,7 +21,7 @@ export function PopisTrgovina() {
       fetch(`/api/trgovinas`, options)
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Failed to fetch shops.");
+            throw new Error("Neuspjesno dohvacanje trgovina.");
           }
           return response.json();
         })
@@ -37,7 +33,7 @@ export function PopisTrgovina() {
         });
   }, []);//samo se jednom dohvate sve trgovine
 
-    const isShopOpen = (openingTime, closingTime) => {
+    const isShopOpen = (openingTime, closingTime) => { //funkcija koja vraca true ili false ovisno o tome radi li 
       const now = new Date(); 
       const [openHour, openMinute] = openingTime.split(':').map(Number);
       const [closeHour, closeMinute] = closingTime.split(':').map(Number);
@@ -72,11 +68,11 @@ export function PopisTrgovina() {
                     {shops.length > 0 ? (
                       shops.map((shop) => (
                         <div key={shop.trgovinaId} className="col-md-6 mb-3">
-                          <Link to={`/home/popistrgovina/:${shop.trgovinaId}`} className="nav-link">
+                          <Link to={`/home/popistrgovina/${shop.trgovinaId}`} className="nav-link">
                             <div className="card shop-card">
                               <img 
                                 src={shop.trgovinaSlika} 
-                                className="card-img-top" 
+                                className="card-img-top-shop" 
                                 alt={shop.trgovinaNaziv} 
                               />
                               <div className="card-body-shop">
