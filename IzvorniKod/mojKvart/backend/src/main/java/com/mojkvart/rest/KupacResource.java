@@ -4,6 +4,7 @@ import com.mojkvart.model.KupacDTO;
 import com.mojkvart.model.LoginDTO;
 import com.mojkvart.util.AuthenticationResponse;
 import com.mojkvart.service.*;
+import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,10 +54,12 @@ public class KupacResource {
         return ResponseEntity.ok(kupacService.findAll());
     }
 
-    //UC3, koristite api/kupacs/{kupacId} za dohvaćanje osobnih podataka
-    @GetMapping("/{kupacId}")
-    public ResponseEntity<KupacDTO> getKupac(@PathVariable(name = "kupacId") final Integer kupacId) {
-        return ResponseEntity.ok(kupacService.get(kupacId));
+    //UC3, koristite api/kupacs/{kupacEmail} za dohvaćanje osobnih podataka
+    @GetMapping("/{kupacEmail}")
+    public ResponseEntity<KupacDTO> getKupac(@PathVariable(name = "kupacEmail") final String kupacEmail) {
+        if(kupacService.findByKupacEmail(kupacEmail).isEmpty())
+            throw new NotFoundException("Nepostojeći kupac!");
+        return ResponseEntity.ok(kupacService.findByKupacEmail(kupacEmail).get());
     }
 
     //UC1, koristite api/kupacs i pošaljite JSON objekt za registraciju
@@ -65,55 +69,50 @@ public class KupacResource {
            moderatorService.findByModeratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
            trgovinaService.findByTrgovinaEmail(kupacDTO.getKupacEmail()).isPresent() ||
            kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Već postojeći email!");
+            return ResponseEntity.badRequest().body("Unesen već postojeći email!");
         }
         kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
-        Integer kupacId = kupacService.create(kupacDTO);
+        kupacService.create(kupacDTO);
 
-        // trebam kasnije kao i u loginu provjerit sva 4 slucaja
-        Map<String, Object> claims = new HashMap<>(); // u iducoj verziji staviti u generateToken
-        claims.put("id", kupacId);
+        Map<String, Object> claims = new HashMap<>();
         claims.put("role", "KUPAC");
-        AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(kupacDTO.getKupacEmail()), kupacId, "KUPAC");
+        AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(claims, kupacDTO.getKupacEmail()));
         return ResponseEntity.ok().body(resp);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> loginUser(@RequestBody @Valid LoginDTO loginDTO) {
-        Integer id = -1;
+    public ResponseEntity<Object> loginKupac(@RequestBody @Valid LoginDTO loginDTO) {
         String email = loginDTO.getEmail();
         String sifra = loginDTO.getSifra();
         String sifraIzBaze, role = "";
 
         if (administratorService.findByAdministratorEmail(email).isPresent()) {
-            id = administratorService.findByAdministratorEmail(email).get().getAdministratorId();
             role = "ADMINISTRATOR";
             sifraIzBaze = administratorService.findByAdministratorEmail(email).get().getAdministratorSifra();
         } else if (moderatorService.findByModeratorEmail(email).isPresent()) {
-            id = moderatorService.findByModeratorEmail(email).get().getModeratorId();
             role = "MODERATOR";
             sifraIzBaze = moderatorService.findByModeratorEmail(email).get().getModeratorSifra();
         } else if (trgovinaService.findByTrgovinaEmail(email).isPresent()) {
-            id = trgovinaService.findByTrgovinaEmail(email).get().getTrgovinaId();
             role = "TRGOVINA";
             sifraIzBaze = trgovinaService.findByTrgovinaEmail(email).get().getTrgovinaSifra();
         } else if (kupacService.findByKupacEmail(email).isPresent()) {
-            id = kupacService.findByKupacEmail(email).get().getKupacId();
             role = "KUPAC";
             sifraIzBaze = kupacService.findByKupacEmail(email).get().getKupacSifra();
         } else
-            return ResponseEntity.badRequest().body("Nepostojeći e-mail!");
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body("Unesen nepostojeći e-mail!");
+
+        if(sifraIzBaze == null)
+            return ResponseEntity.badRequest().body("Korisnik registriran s Google-om!");
 
 
-        Map<String, Object> claims = new HashMap<>(); // ovo u iducoj verziji staviti u generate token
-        claims.put("id", id);
-        claims.put("role", role);
         if (passwordEncoder.matches(sifra, sifraIzBaze)){
-            AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(email), id, role);
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("role", role);
+            AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(claims, email));
             return ResponseEntity.ok().body(resp);
         }
         else
-            return ResponseEntity.badRequest().body("Kriva lozinka!");
+            return ResponseEntity.badRequest().body("Unesena kriva lozinka!");
     }
 
     //UC3, koristite api/kupacs/{kupacId} za uređivanje osobnih podataka
