@@ -37,11 +37,8 @@ export function Signup() {
                return response.json();
             }
          }).then(data => {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem("id", data.id);
-            localStorage.setItem('role', data.role);
-            navigate('/home');
-               alert("Uspješna registracija!");
+            navigate('/home?token=' + data.token);
+            alert("Uspješna registracija!");
          })
       .catch(error => {
          setEmailExists(true);
@@ -73,7 +70,7 @@ export function Signup() {
                      onChange={(e) => setPassword(e.target.value)}/>
                      {emailExists && (
                         <p style={{ color: "red", marginTop: "4px" ,  marginBottom: "4px", fontWeight: "bold" }}>
-                           Invalid name, surname, email or password!
+                           This email is occupied!
                         </p>
                         )}
                   <button type="submit" className="signup-buttons" >Sign up</button>
@@ -81,6 +78,10 @@ export function Signup() {
                      <button id="Back" type="submit" className="signup-buttons">Back to Sign in</button>
                   </Link>
                </form>
+
+               <a href="http://localhost:8080/oauth2/authorization/google">
+                  Sign in with Google
+               </a>
             </div>
          </div>
       </div>

@@ -14,10 +14,6 @@ export function Login() {
       
       e.preventDefault();
 
-      // ovo inicijaliziras prije options: const token = localStorage.getItem('token');
-      // ovo dodajes u headers zahtjevau options: 'Authorization': `Bearer ${token}`,
-      // ovdje to jasno ne treba jer tek ides u login
-
       const data = {
         email: emailAddress,
         sifra : password
@@ -39,10 +35,7 @@ export function Login() {
             }
          })
          .then(data => {
-               localStorage.setItem('token', data.token);
-               localStorage.setItem("id", data.id);
-               localStorage.setItem('role', data.role);
-               navigate("/home");
+               navigate('/home?token=' + data.token);
                alert("Uspješna prijava!");
          })
          .catch( error => {
@@ -78,7 +71,6 @@ export function Login() {
 
                <div className="password-container">
                <label id="label" htmlFor="password">Your password</label>
-               {/* <span className="show-hide">Hide</span> */}
                </div>
                <input type="password" id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
 
@@ -90,6 +82,10 @@ export function Login() {
                <Link to="/signup">
                   <button type="button">Sign up</button>
                </Link>
+
+               <a href="http://localhost:8080/oauth2/authorization/google">
+                  Log in with Google
+               </a>
             </form>
          </div>
       </div>

@@ -6,38 +6,27 @@ import "../styles/MojiPodaci.css"
 export function MojiPodaci(){
     const navigate = useNavigate();
     const [firstName, setFirstName] = useState('')
-   const [lastName, setLastName] = useState('')
-   const [homeAddress, setHomeAddress] = useState('')
-   const [emailAddress, setEmailAddress] = useState('')
-   const [id,setId] = useState(null)
-   const [sifra, setSifra] = useState('')
-    const [losunos,setlosunos] = useState(false);
+    const [lastName, setLastName] = useState('')
+    const [homeAddress, setHomeAddress] = useState('')
+    const [emailAddress, setEmailAddress] = useState('')
+    const [id, setId] = useState(null)
+    const [sifra, setSifra] = useState('')
     const [errorMessage, setErrorMessage] = useState('');
     const [hasChanges, setHasChanges] = useState(false);
-   //console.log(localStorage);
    
-    //dohvacanje ID-a
+    //dohvacanje email-a
     useEffect(() => {
-        const storedId = localStorage.getItem('id');
-        if (storedId) {
-            setId(storedId);
-            console.log(id)
-        }
-    }, []); //ovdje mislim da prazno jer se ovo radi samo jednom na pocetku
-
-    //dohvcanje podataka preko id-a
-    useEffect(() =>{
         const token = localStorage.getItem('token');
-        const options = {
-            method: 'GET',
+        var options = {
+            method: 'POST',
             headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ token: token })
         }
-        
-        if(id){
-            fetch(`/api/kupacs/${id}`,options)
+
+        fetch('/api/tokens', options)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -45,25 +34,49 @@ export function MojiPodaci(){
                 return response.json();
             })
             .then(data => {
-                setFirstName(data.kupacIme);
-                setLastName(data.kupacPrezime);
-                setHomeAddress(data.kupacAdresa);
-                setEmailAddress(data.kupacEmail);
-                setSifra(data.kupacSifra)
+                setEmailAddress(data.email);
             })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
-        }
-    }, [id] //ovdje mislim da treba id
+            .catch(error => console.error('There was a problem with the fetch operation: ', error));
+    }, []); //prazno, radi se na pocetku samo
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const options = {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        };
     
-    )
+        // Dohvaćanje korisničkih podataka ako postoji email
+        if (emailAddress) {
+            fetch(`/api/kupacs/${emailAddress}`, options)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    setFirstName(data.kupacIme);
+                    setLastName(data.kupacPrezime);
+                    setHomeAddress(data.kupacAdresa == null ? "" : data.kupacAdresa);
+                    setSifra(data.kupacSifra);
+                    setId(data.kupacId);
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation: ', error);
+                });
+        }
+    }, [emailAddress]);
 
    //spremanje promjena -> slanje promjena na backend
    function savePromjene(e){
-    e.preventDefault();
-         // Provjera praznih polja
-         if (!firstName || !lastName || !homeAddress || !emailAddress) {
+        e.preventDefault();
+
+        // Provjera praznih polja
+        if (!firstName || !lastName || !homeAddress || !emailAddress) {
             setErrorMessage("Sva polja moraju biti popunjena.");
             return; // Zaustavlja submit ako neka polja nisu popunjena
         }
@@ -83,19 +96,23 @@ export function MojiPodaci(){
                 kupacPrezime: lastName,
                 kupacAdresa: homeAddress,
                 kupacEmail: emailAddress,
-                kupacid : id,
+                kupacId : id,
                 kupacSifra:sifra
 
             })
         }
         fetch(`/api/kupacs/${id}`, options)
         .then(response => response.ok ? response.json() : Promise.reject('Failed to save changes'))
-        .then(updatedId => {
-            console.log('Uspješno ažurirano za kupac ID:', updatedId);
+        .then(updated => {
             setHasChanges(false);
-            alert("Promjene unesene!")
+            alert("Promjene unesene!");
         })
-        .catch(error => console.error('Error updating data:', error));
+        .catch(error => {
+            alert("Google Oauth ne dopušta promjenu imena i prezimena!");
+            console.error('Error updating data:', error);
+        })
+
+        navigate('/korisnickiracun');
    }
 
    function handleClose(){
@@ -146,10 +163,7 @@ export function MojiPodaci(){
                                     type="button" 
                                     id = "zatvori-button"
                                     onClick={handleClose} 
-                                    disabled={!!errorMessage || hasChanges }  // Ako errorMessage postoji, gumb je disabled
-                                >
-                                    Zatvori
-                                </button>
+                                    disabled={!!errorMessage || hasChanges }>Zatvori</button>
                             </div>
                             
                            

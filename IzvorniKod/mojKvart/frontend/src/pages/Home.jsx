@@ -8,6 +8,14 @@ export function Home() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const url = window.location.search;
+    if(url) {
+      const urlParams = new URLSearchParams(url);
+      const token = urlParams.get('token');
+      if(token)
+        localStorage.setItem('token', token);
+    }
+
     const token = localStorage.getItem('token');
     const options = {
       method: 'GET',
