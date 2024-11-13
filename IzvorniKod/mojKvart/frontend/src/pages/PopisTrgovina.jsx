@@ -67,7 +67,7 @@ export function PopisTrgovina() {
                   <div className="row-shops">
                     {shops.length > 0 ? (
                       shops.map((shop) => (
-                        <div key={shop.trgovinaId} className="col-md-6 mb-3">
+                        <div key={shop.trgovinaId} className="col-md-6 mb-3 ">
                           <Link to={`/home/popistrgovina/${shop.trgovinaId}`} className="nav-link">
                             <div className="card shop-card">
                               <img 
@@ -80,9 +80,9 @@ export function PopisTrgovina() {
                                   <h5 className="card-title-shop">{shop.trgovinaNaziv}</h5>
                                   <span 
                                     className={`status-indicator ${isShopOpen(shop.trgovinaRadnoVrijemeOd, shop.trgovinaRadnoVrijemeDo) ? 'otvoreno' : 'zatvoreno'}`}
-                                    style={{ color: isShopOpen(shop.trgovinaRadnoVrijemeOd, shop.trgovinaRadnoVrijemeDo) ? 'green' : 'red' }}
+                                    style={{ color: isShopOpen(shop.trgovinaRadnoVrijemeOd, shop.trgovinaRadnoVrijemeDo) ? 'green' : 'red', fontSize: "18px" }}
                                   >
-                                    {isShopOpen(shop.trgovinaRadnoVrijemeOd, shop.trgovinaRadnoVrijemeDo) ? 'otvoreno' : 'zatvoreno'}
+                                    {isShopOpen(shop.trgovinaRadnoVrijemeOd, shop.trgovinaRadnoVrijemeDo) ? 'OTVORENO' : 'ZATVORENO'}
                                   </span>
                                 </div>
                                 <p className="card-text location-text">{shop.trgovinaLokacija}</p>
