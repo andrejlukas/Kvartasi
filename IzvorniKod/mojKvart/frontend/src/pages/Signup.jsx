@@ -38,6 +38,7 @@ export function Signup() {
             }
          }).then(data => {
             navigate('/home?token=' + data.token);
+            window.location.reload();
             alert("Uspješna registracija!");
          })
       .catch(error => {
@@ -64,7 +65,7 @@ export function Signup() {
                   <input type="text" placeholder="Home address" id="home" className="signup-inputs"  name="homeAddress" value={homeAddress}
                      onChange={(e) => setHomeAddress(e.target.value)}/>
                   <input type="email" placeholder="Email address" id = "email" className="signup-inputs"  name="emailAddress" value={emailAddress}
-                     onChange={(e) => setEmailAddress(e.target.value)}/>
+                     onChange={(e) => setEmailAddress(e.target.value)} required />
                       
                   <input type="password" placeholder="Password" id="pass" className="signup-inputs"  name="password" value={password}
                      onChange={(e) => setPassword(e.target.value)}/>

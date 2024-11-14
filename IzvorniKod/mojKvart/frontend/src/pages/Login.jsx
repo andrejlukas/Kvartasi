@@ -35,6 +35,7 @@ export function Login() {
          })
          .then(data => {
                navigate('/home?token=' + data.token);
+               window.location.reload();
                alert("Uspješna prijava!");
          })
          .catch( error => {
