@@ -101,6 +101,7 @@ body {
   justify-content: space-between; 
   align-items: baseline; 
   font-family: Raleway, sans-serif;
+  margin-top: 10px;
 }
 
 
@@ -119,7 +120,7 @@ body {
   background-color: rgba(62, 152, 30);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
   .shop-product-row {
       flex-direction: column;
   }
