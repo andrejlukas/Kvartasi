@@ -118,4 +118,19 @@
     margin-bottom: 15px;
 }
 
-
+.toggle-password-button-signup{
+    flex: 0 1 15%;
+    margin-bottom: 15px;
+    font-size: 12px;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #b3b3b3;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    font-family: Raleway, sans-serif;
+  }

@@ -18,6 +18,21 @@
 }
 
 
+.password-input-container{
+  display: flex;
+  gap: 10px;
+}
+
+.password-input-container .inputs {
+  flex: 1 1 90%;
+  
+}
+
+.toggle-password-button {
+  width: 15%;
+  margin-bottom: 15px;
+  font-size: 12px;
+}
 
 .image-container {
   background-image: url("../assets/grocery_v1_cut.png");
@@ -230,6 +245,11 @@ button:hover{
 
 #google-btn:hover {
     background-color: #f1f1f1;
+}
+
+.toggle-password-button {
+  flex: 0 1 10%;
+  margin-bottom: 15px;
 }
 
 /* treba popraviti responzivnost */
