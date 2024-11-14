@@ -131,10 +131,17 @@
 
 
 @media (max-width: 1050px) {
+
+  #vanjski{
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+  }
  
   #unutarnji {
       flex-direction: column;
       align-items: flex-start;
+      padding-bottom: 0px;
+      margin-bottom: 0px;
   }
 
   #searchdiv {
@@ -143,15 +150,22 @@
     margin-bottom: 15px;
   }
 
+  #drugiNav{
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+
 
 #obruc{
     width: 100%;
     justify-content: flex-start; 
     margin-left: 0; 
     padding-left: 0; 
+    padding-bottom: 0px;
+    margin-bottom: 0px;
   }
 
-  #MojRacun, #kosarica {
+  #MojRacun, #kosarica, #OdjaviSe{
     margin-left: 0; 
     padding-left: 0px; 
   }
@@ -162,17 +176,22 @@
     margin-left: 0;
   }
 
-  #searchdiv{
-    align-self: flex-start;
-  }
+  #searchdiv {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+}
 
   #drugiNavLista {
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
       width: 100%;
       text-align: left;
       padding-left: 20px;
       padding-right: 0;
+      margin-top: 0px;
+      padding-top: 0px;
   }
 
   .nav-item {
