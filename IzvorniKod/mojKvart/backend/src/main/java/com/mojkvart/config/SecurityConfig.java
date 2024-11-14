@@ -36,6 +36,7 @@ public class SecurityConfig{
                 .authorizeHttpRequests(registry -> { registry
                         .requestMatchers("/api/kupacs/signup").permitAll()
                         .requestMatchers("/api/kupacs/login").permitAll()
+                        .requestMatchers("/api/tokens/expiration").permitAll()
                         .anyRequest().authenticated(); })
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

@@ -1,7 +1,4 @@
 import { Navbar } from "../components/Navbar";
-import { Link } from "react-router-dom";
-
-
 import '../styles/KorisnickiRacun.css'
 
 
@@ -14,13 +11,13 @@ export function KorisnickiRacun(){
                     <h1 className="mojracun-naslov">Moj račun:</h1>
                     <ul>
                         <li>
-                            <Link to="/mojipodaci" className="korisnicki-racun-link">Moji podaci</Link>
+                            <a href="/mojipodaci" className="korisnicki-racun-link">Moji podaci</a>
                         </li>
                         <li>
-                            <Link to="/mojiracuni" className="korisnicki-racun-link">Moji računi</Link> {/* koristila sam link */}
+                            <a href="/mojiracuni" className="korisnicki-racun-link">Moji računi</a>
                         </li>
                         <li>
-                            <Link to="/mojerecenzije" className="korisnicki-racun-link">Moje recenzije</Link>
+                            <a href="/mojerecenzije" className="korisnicki-racun-link">Moje recenzije</a>
                         </li>
                     </ul>
 
