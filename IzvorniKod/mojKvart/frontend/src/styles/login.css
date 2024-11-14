@@ -206,7 +206,31 @@ button:hover{
   margin-bottom: 10px;
 }
 
+#google-btn {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border: 1px solid #dfdfdf;
+    border-radius: 11px;
+    color: #333333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    width: 100%;
+}
 
+#google-btn img {
+    width: 30px;
+    margin-right: 10px;
+}
+
+#google-btn:hover {
+    background-color: #f1f1f1;
+}
 
 /* treba popraviti responzivnost */
 @media (max-width: 1000px) {
