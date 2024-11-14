@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/MojKvart.png"
-
+import googleLogo from "../assets/google-logo.png"
 
 export function Login() {
    const navigate = useNavigate();
@@ -83,8 +83,12 @@ export function Login() {
                   <button type="button">Sign up</button>
                </Link>
 
-               <a href="http://localhost:8080/oauth2/authorization/google">
+               {/* <a href="http://localhost:8080/oauth2/authorization/google">
                   Log in with Google
+               </a> */}
+               <a href="http://localhost:8080/oauth2/authorization/google" role="button" id="google-btn">
+                  <img src={googleLogo} alt="Google Logo"/>
+                  <span>Google prijava</span>
                </a>
             </form>
          </div>
