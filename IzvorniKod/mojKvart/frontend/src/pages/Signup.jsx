@@ -2,6 +2,7 @@ import "../styles/signup.css"
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import googleLogo from "../assets/google-logo.png"
 
 export function Signup() {
    const navigate = useNavigate();
@@ -77,11 +78,13 @@ export function Signup() {
                   <Link to="/">
                      <button id="Back" type="submit" className="signup-buttons">Back to Sign in</button>
                   </Link>
+               <a href="http://localhost:8080/oauth2/authorization/google" role="button" id="google-btn">
+                  <img src={googleLogo} alt="Google Logo"/>
+                  <span>Google registracija</span>
+               </a>
                </form>
 
-               <a href="http://localhost:8080/oauth2/authorization/google">
-                  Sign in with Google
-               </a>
+               
             </div>
          </div>
       </div>
