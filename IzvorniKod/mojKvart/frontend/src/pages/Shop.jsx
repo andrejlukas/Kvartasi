@@ -9,7 +9,6 @@ export default function Shop() {
   const [shop, setShop] = useState(null);
   const [products, setProducts] = useState([]); 
   const [error, setError] = useState(null);
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     const options = {

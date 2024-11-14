@@ -126,7 +126,7 @@ export function MojiPodaci(){
    }
 
     return(
-        <div>
+        <div className="moji-podaci-wrapper">
             <Navbar/>
             <div className="main-container">
                     <div className="osobni-podaci-container">
