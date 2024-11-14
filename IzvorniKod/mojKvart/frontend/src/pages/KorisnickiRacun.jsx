@@ -7,7 +7,7 @@ import '../styles/KorisnickiRacun.css'
 
 export function KorisnickiRacun(){
     return(
-        <div>
+        <div className="korisnicki-racun-wrappper">
             <Navbar/>
             <div className="main-container">
                 <div className="mojracun-container">
