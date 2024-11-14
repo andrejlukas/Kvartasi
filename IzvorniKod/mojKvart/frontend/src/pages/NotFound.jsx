@@ -3,7 +3,8 @@
 export function NotFound() {
    return ( 
       <div>
-         <h1>Error</h1>
+         <h1>Stranica koju tražite ne postoji ili niste prijavljeni da vidite njen sadržaj!</h1>
+         <a href="/">Nazad na prijavu?</a>
       </div>
    );
 }

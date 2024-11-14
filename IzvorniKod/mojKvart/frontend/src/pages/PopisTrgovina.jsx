@@ -2,7 +2,6 @@ import { Navbar } from "../components/Navbar";
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/popisTrgovina.css";
-import { Link } from "react-router-dom";
 
 
 export function PopisTrgovina() {
@@ -10,13 +9,6 @@ export function PopisTrgovina() {
   const [error, setError] = useState(null);
   
   useEffect(() => {
-    const url = window.location.search;
-    if(url) {
-      const urlParams = new URLSearchParams(url);
-      const token = urlParams.get('token');
-      if(token)
-        localStorage.setItem('token', token);
-    }
     const token = localStorage.getItem('token');
     const options = {
       method: 'GET',
@@ -25,19 +17,19 @@ export function PopisTrgovina() {
         'Content-Type': 'application/json'
       }
     }
-      fetch(`/api/trgovinas`, options)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Neuspjesno dohvacanje trgovina.");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setShops(data);
-        })
-        .catch((error) => {
-          setError(error.message);
-        });
+    fetch(`/api/trgovinas`, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Neuspjesno dohvacanje trgovina.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setShops(data);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
   }, []);//samo se jednom dohvate sve trgovine
 
     const isShopOpen = (openingTime, closingTime) => { //funkcija koja vraca true ili false ovisno o tome radi li 
@@ -75,7 +67,7 @@ export function PopisTrgovina() {
                     {shops.length > 0 ? (
                       shops.map((shop) => (
                         <div key={shop.trgovinaId} className="my-card-wrapper">
-                          <Link to={`/home/popistrgovina/${shop.trgovinaId}`} className="nav-link">
+                          <a href={`/home/popistrgovina/${shop.trgovinaId}`} className="nav-link">
                             <div className="cards shop-card">
                               <img 
                                 src={shop.trgovinaSlika} 
@@ -99,7 +91,7 @@ export function PopisTrgovina() {
                                 </p>
                               </div>
                             </div>
-                          </Link>
+                          </a>
                         </div>
                       ))
                     ) : (
