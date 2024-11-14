@@ -3,8 +3,8 @@ COPY . .
 RUN mvn clean package -DSkipTests
 
 FROM openjdk:17.0.1-jdk-slim 
-COPY --from=build target/demo-0.0.1-SNAPSHOT.jar mojKvart.jar
+COPY --from=build target/MojKvart-0.0.1-SNAPSHOT.jar MojKvart.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "mojKvart.jar"]
+ENTRYPOINT ["java", "-jar", "MojKvart.jar"]
 
 
