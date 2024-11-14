@@ -71,7 +71,21 @@
     color: #323131;
     text-decoration: none;
     border-right: 2px solid rgba(50, 49, 49, 0.50);
+  }
 
+
+  #OdjaviSe{
+    padding-right: 15px;
+    font-family: Raleway,sans-serif;
+    text-align: center;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    outline: none;
+    color: #323131;
+    text-decoration: none;
+    border-right: 2px solid rgba(50, 49, 49, 0.50);
   }
 
   #MojRacun:focus{
@@ -79,7 +93,7 @@
     outline: none;
   }
 
-  #MojRacun:hover {
+  #MojRacun:hover, #OdjaviSe:hover {
     transform: none; 
   text-shadow: 0 0 1px #4d4d4d;
 }
@@ -115,7 +129,8 @@
   text-shadow: 0 0 1px #4d4d4d;
 }
 
-@media (max-width: 830px) {
+
+@media (max-width: 1050px) {
  
   #unutarnji {
       flex-direction: column;
@@ -147,10 +162,10 @@
     margin-left: 0;
   }
 
-  
+  #searchdiv{
+    align-self: flex-start;
+  }
 
-
- 
   #drugiNavLista {
       display: flex;
       flex-direction: column;
