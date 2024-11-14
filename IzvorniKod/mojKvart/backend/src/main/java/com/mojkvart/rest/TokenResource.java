@@ -28,4 +28,9 @@ public class TokenResource {
         TokenResponse tokenResponse = new TokenResponse(email, role);
         return ResponseEntity.ok(tokenResponse);
     }
+
+    @PostMapping("/expiration")
+    public ResponseEntity<Boolean> checkTokenExpiration(@RequestBody @Valid TokenDTO tokenDTO) {
+        return ResponseEntity.ok(jwtService.isTokenExpired(tokenDTO.getToken()));
+    }
 }

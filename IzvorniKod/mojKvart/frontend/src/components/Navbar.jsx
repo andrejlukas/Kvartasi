@@ -24,7 +24,7 @@ export function Navbar() {
                         </form>
 
                         <div id="obruc" className="d-flex align-items-center ms-auto">
-                            <a href="/KorisnickiRacun" className="me-3" id="MojRacun">Moj račun</a>
+                            <a href="/korisnickiRacun" className="me-3" id="MojRacun">Moj račun</a>
                             <a href="#" onClick={handleLogout} className="me-3" id="OdjaviSe">Odjava</a>
                             <img  id='kosarica' className="img-fluid" src={kosarica} alt="Shopping Cart" />
                         </div>
@@ -35,16 +35,16 @@ export function Navbar() {
                     <div className="container-fluid d-flex justify-content-between w-100 flex-nowrap" id="drugiNavUnut">
                         <ul className="navbar-nav d-flex justify-content-around w-100 flex-nowrap" id="drugiNavLista">
                             <li className="nav-item">
-                                <Link to="/home/kvart" className="nav-link">Kvart</Link>
+                                <a href="/home/kvart" className="nav-link">Kvart</a>
                             </li>
                             <li className="nav-item">
-                                <Link to="/home/popisTrgovina" className="nav-link">Popis trgovina</Link>
+                                <a href="/home/popisTrgovina" className="nav-link">Popis trgovina</a>
                             </li>
                             <li className="nav-item">
-                                <Link to="/home/ponude" className="nav-link">Ponude i promocije</Link>
+                                <a href="/home/ponude" className="nav-link">Ponude i promocije</a>
                             </li>
                             <li className="nav-item">
-                                <Link to="/home/dogadaji" className="nav-link">Događaji</Link>
+                                <a href="/home/dogadaji" className="nav-link">Događaji</a>
                             </li>
                         </ul>
                     </div>
