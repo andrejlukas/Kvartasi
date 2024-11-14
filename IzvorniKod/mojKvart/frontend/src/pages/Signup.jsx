@@ -12,6 +12,13 @@ export function Signup() {
    const [password, setPassword] = useState('')
    const [emailExists, setEmailExists] = useState(false); // Dodato stanje za provjeru emaila
 
+   const [showPassword, setShowPassword] = useState(false);
+
+   const togglePasswordVisibility = () => {
+      setShowPassword((prevShowPassword) => !prevShowPassword);
+   };
+
+
    function saveNoviClan(e){
       
       e.preventDefault();
@@ -67,13 +74,17 @@ export function Signup() {
                   <input type="email" placeholder="Email address" id = "email" className="signup-inputs"  name="emailAddress" value={emailAddress}
                      onChange={(e) => setEmailAddress(e.target.value)} required />
                       
-                  <input type="password" placeholder="Password" id="pass" className="signup-inputs"  name="password" value={password}
-                     onChange={(e) => setPassword(e.target.value)}/>
-                     {emailExists && (
-                        <p style={{ color: "red", marginTop: "4px" ,  marginBottom: "4px", fontWeight: "bold" }}>
-                           This email is occupied!
-                        </p>
-                        )}
+                  
+                  <div className="password-input-container">
+                  <input type={showPassword ? "text" : "password"} id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
+                  <button
+                           type="button"
+                           onClick={togglePasswordVisibility} // Dodaj funkciju za prikazivanje/sakrivanje
+                           className="toggle-password-button-signup"
+                        >
+                           {showPassword ? "Hide" : "Show"}
+                        </button>
+                  </div>
                   <button type="submit" className="signup-buttons" >Sign up</button>
                   <a href="/">
                      <button id="Back" type="button" className="signup-buttons">Back to Sign in</button>
