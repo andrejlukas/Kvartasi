@@ -29,9 +29,10 @@
 }
 
 .toggle-password-button {
-  width: 15%;
-  margin-bottom: 15px;
-  font-size: 12px;
+  min-width: 40px !important;
+  margin-bottom: 15px !important;
+  font-size: 12px !important;
+  padding: 5px !important;
 }
 
 .image-container {
