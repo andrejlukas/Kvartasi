@@ -2,17 +2,25 @@
   background-color: #ededed;
   padding: 20px 0;
   display: flex;
-  justify-content: center;
+  justify-content: start;
+}
+
+.container-shops{
+  width: 100%;
 }
 
 .shop-shop-row {
   display: flex;
   flex-direction: row;
+  width: 100%;
   gap: 20px;
   align-items: flex-start; 
+  justify-content: flex-start; 
 }
 
 .filters {
+  flex: 0 0 20%; 
+  margin-left: 20px; 
   width: 20%; 
   padding: 20px;
   border-radius: 20px;
@@ -24,10 +32,17 @@
 }
 
 .shop-section {
+
   width: 85%; 
   display: flex;
   flex-wrap: wrap; 
   gap: 20px;
+}
+
+.my-card-wrapper{
+  flex: 0 0 calc(50% - 20px);
+  width:100%;
+  border-bottom: 50px;
 }
 
 .shop-card {
@@ -82,8 +97,11 @@
 }
 
 .row-shops {
+  width:100%;
   display: flex;
   flex-wrap: wrap;
+  flex-direction: row;
+  gap: 30px;
 }
 
 
@@ -112,7 +130,7 @@
   right:5px
 }
 
-@media (max-width: 768px) {
+@media (max-width: 868px) {
   .shop-shop-row {
     flex-direction: column;
     align-items: center; 
@@ -132,6 +150,14 @@
     flex-direction: column;
     align-items: center; 
     gap: 20px;
+  }
+  .row-shops{
+    flex-direction: column;
+    align-items: center;
+  }
+  .my-card-wrapper {
+    width: 90%; 
+    margin-bottom: 20px; 
   }
   
   .shop-card {
