@@ -253,6 +253,12 @@ button:hover{
   margin-bottom: 15px;
 }
 
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
 /* treba popraviti responzivnost */
 @media (max-width: 1000px) {
   .login-container {

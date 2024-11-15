@@ -8,7 +8,7 @@ export function Login() {
    const navigate = useNavigate();
    const [emailAddress, setEmailAddress] = useState('');
    const [password, setPassword] = useState('');
-
+   const [errorMessage, setErrorMessage] = useState('');
 
    const [showPassword, setShowPassword] = useState(false);
 
@@ -37,17 +37,18 @@ export function Login() {
             if (response.ok) {
                return response.json();
             } else {
-               throw new Error("Krivi podatci!");
+               return response.text().then(text => {
+                  setErrorMessage(text);
+                  throw new Error('Request failed');
+              });
             }
          })
          .then(data => {
-               navigate('/home?token=' + data.token);
-               window.location.reload();
-               alert("Uspješna prijava!");
+            navigate('/home?token=' + data.token);
+            window.location.reload();
          })
          .catch( error => {
             navigate('/');
-            alert("Kriva lozinka ili e-mail adresa!");
          });
    }
 
@@ -71,13 +72,13 @@ export function Login() {
          <div className="big-container ">
                
             <form className="login-form" onSubmit={ checkCorrectPassword }>
-               <h2 className="naslov">Log in</h2>
+               <h2 className="naslov">Prijava</h2>
 
-               <label id="label" htmlFor="email">Email address</label>
+               <label id="label" htmlFor="email">E-mail adresa</label>
                <input type="email" id="email" name="email"  className="inputs" onChange={(e) => setEmailAddress(e.target.value)}/>
 
                <div className="password-container">
-               <label id="label" htmlFor="password">Your password</label>
+               <label id="label" htmlFor="password">Lozinka</label>
                </div>
                <div className="password-input-container">
                <input type={showPassword ? "text" : "password"} id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
@@ -86,18 +87,20 @@ export function Login() {
                         onClick={togglePasswordVisibility} // Dodaj funkciju za prikazivanje/sakrivanje
                         className="toggle-password-button"
                      >
-                        {showPassword ? "Hide" : "Show"}
+                        {showPassword ? "Sakrij" : "Otkrij"}
                      </button>
                </div>
               
 
-               <button type="submit">Log in</button>
+               <button type="submit">Prijavi se</button>
+
+               {errorMessage && <p className="error-message">{errorMessage}</p>}
 
                <div className="divider"></div>
 
-               <p className="signup-text">Don't have an account?</p>
+               <p className="signup-text">Niste još stvorili vaš korisnički račun?</p>
                <a href="/signup">
-                  <button type="button">Sign up</button>
+                  <button type="button">Kreiraj novi korisnički račun</button>
                </a>
 
                <a href="http://localhost:8080/oauth2/authorization/google" role="button" id="google-btn">

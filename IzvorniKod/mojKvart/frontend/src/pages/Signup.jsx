@@ -10,7 +10,8 @@ export function Signup() {
    const [homeAddress, setHomeAddress] = useState('')
    const [emailAddress, setEmailAddress] = useState('')
    const [password, setPassword] = useState('')
-   const [emailExists, setEmailExists] = useState(false); // Dodato stanje za provjeru emaila
+
+   const [errorMessage, setErrorMessage] = useState('');
 
    const [showPassword, setShowPassword] = useState(false);
 
@@ -42,18 +43,17 @@ export function Signup() {
          .then(response => {
             if (response.ok) {
                return response.json();
+            } else {
+               return response.text().then(text => {
+                  setErrorMessage(text);
+                  throw new Error('Request failed');
+              });
             }
          }).then(data => {
             navigate('/home?token=' + data.token);
             window.location.reload();
-            alert("Uspješna registracija!");
          })
-      .catch(error => {
-         setEmailExists(true);
-         console.error("Greška prilikom provjere e-maila:", error);
-      });
-
-       
+         .catch( error => navigate('/signup') );
    }
 
    
@@ -61,38 +61,39 @@ export function Signup() {
       <div className="signup-container">
          <div className="container">
             <div className="form-box">
-               <h2>Sign up</h2>
+               <h2>Registracija</h2>
                <form onSubmit={saveNoviClan}>
                   <div className="form-group">
-                     <input type="text" placeholder="First name" className="signup-inputs" name="firstName" value={firstName}
+                     <input type="text" placeholder="Ime" className="signup-inputs" name="firstName" value={firstName}
                      onChange={(e) => setFirstName(e.target.value)}/>
-                     <input type="text" placeholder="Last name" className="signup-inputs" name="lastName" value={lastName}
+                     <input type="text" placeholder="Prezime" className="signup-inputs" name="lastName" value={lastName}
                      onChange={(e) => setLastName(e.target.value)}/>
                   </div>
-                  <input type="text" placeholder="Home address" id="home" className="signup-inputs"  name="homeAddress" value={homeAddress}
+                  <input type="text" placeholder="Kućna adresa" id="home" className="signup-inputs"  name="homeAddress" value={homeAddress}
                      onChange={(e) => setHomeAddress(e.target.value)}/>
-                  <input type="email" placeholder="Email address" id = "email" className="signup-inputs"  name="emailAddress" value={emailAddress}
+                  <input type="email" placeholder="E-mail adresa" id = "email" className="signup-inputs"  name="emailAddress" value={emailAddress}
                      onChange={(e) => setEmailAddress(e.target.value)} required />
                       
                   
                   <div className="password-input-container">
-                  <input type={showPassword ? "text" : "password"} id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
+                  <input type={showPassword ? "text" : "password"} placeholder="Lozinka" id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
                   <button
                            type="button"
                            onClick={togglePasswordVisibility} // Dodaj funkciju za prikazivanje/sakrivanje
                            className="toggle-password-button-signup"
                         >
-                           {showPassword ? "Hide" : "Show"}
+                           {showPassword ? "Sakrij" : "Otkrij"}
                         </button>
                   </div>
-                  <button type="submit" className="signup-buttons" >Sign up</button>
+                  <button type="submit" className="signup-buttons" >Registriraj se</button>
+                  {errorMessage && <p className="error-message">{errorMessage}</p>}
                   <a href="/">
-                     <button id="Back" type="button" className="signup-buttons">Back to Sign in</button>
+                     <button id="Back" type="button" className="signup-buttons">Natrag na prijavu</button>
                   </a>
-               <a href="http://localhost:8080/oauth2/authorization/google" role="button" id="google-btn">
-                  <img src={googleLogo} alt="Google Logo"/>
-                  <span>Google registracija</span>
-               </a>
+                  <a href="http://localhost:8080/oauth2/authorization/google" role="button" id="google-btn">
+                     <img src={googleLogo} alt="Google Logo"/>
+                     <span>Google registracija</span>
+                  </a>
                </form>
 
                
