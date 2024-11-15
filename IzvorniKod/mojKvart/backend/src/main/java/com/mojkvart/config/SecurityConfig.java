@@ -33,6 +33,7 @@ public class SecurityConfig{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> { registry
                         .requestMatchers("/api/kupacs/signup").permitAll()
                         .requestMatchers("/api/kupacs/login").permitAll()
