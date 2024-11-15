@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @Configuration
-@EntityScan("com.mojkvart.entities")
+@EntityScan("com.mojkvart.domain")
 @EnableJpaRepositories("com.mojkvart.repos")
 @EnableTransactionManagement
 public class DomainConfig {
