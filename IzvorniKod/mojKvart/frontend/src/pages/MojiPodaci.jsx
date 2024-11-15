@@ -105,10 +105,8 @@ export function MojiPodaci(){
         .then(response => response.ok ? response.json() : Promise.reject('Failed to save changes'))
         .then(updated => {
             setHasChanges(false);
-            alert("Promjene unesene!");
         })
         .catch(error => {
-            alert("Google Oauth ne dopušta promjenu imena i prezimena!");
             console.error('Error updating data:', error);
         })
 

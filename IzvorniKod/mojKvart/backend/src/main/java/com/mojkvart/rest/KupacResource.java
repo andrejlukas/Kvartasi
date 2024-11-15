@@ -12,6 +12,8 @@ import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -43,12 +45,9 @@ public class KupacResource {
     @Autowired
     private JwtService jwtService;
 
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9šđčćžŠĐČĆŽ._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
-    private static final String NAME_SURNAME_FORMAT = "^[A-ZČĆŽĐŠÁÉÍÓÚÑÇÀÈÌÒÙÄËÏÖÜÝŸÆŒ][a-zčćžđšáéíóúñçàèìòùäëïöüýÿæœ' -]{1,}$";
-    private static final String EMAIL_FORMAT = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-    private static final String PASSWORD_STRENGTH = "(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}";
 
-   
     @GetMapping
     public ResponseEntity<List<KupacDTO>> getAllKupacs() {
         return ResponseEntity.ok(kupacService.findAll());
@@ -65,12 +64,25 @@ public class KupacResource {
     //UC1, koristite api/kupacs i pošaljite JSON objekt za registraciju
     @PostMapping("/signup")
     public ResponseEntity<Object> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
+        if(kupacDTO.getKupacIme().length() < 2)
+            return ResponseEntity.badRequest().body("Ime mora biti minimalno duljine 2 znaka!");
+        if(kupacDTO.getKupacPrezime().length() < 2)
+            return ResponseEntity.badRequest().body("Prezime mora biti minimalno duljine 2 znaka!");
+        if(kupacDTO.getKupacSifra().isEmpty())
+            return ResponseEntity.badRequest().body("Popunite polje 'Kućna adresa'!");
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(kupacDTO.getKupacEmail());
+        if(!matcher.matches())
+            return ResponseEntity.badRequest().body("Upisan nevažeći oblik e-mail adrese!");
+        if(kupacDTO.getKupacSifra().length() < 8)
+            return ResponseEntity.badRequest().body("Vaša lozinka mora biti minimalno duljine 8 znakova!");
         if(administratorService.findByAdministratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
-           moderatorService.findByModeratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
-           trgovinaService.findByTrgovinaEmail(kupacDTO.getKupacEmail()).isPresent() ||
-           kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Unesen već postojeći email!");
+                moderatorService.findByModeratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
+                trgovinaService.findByTrgovinaEmail(kupacDTO.getKupacEmail()).isPresent() ||
+                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isPresent()) {
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body("Imate već postojeći korisnički račun?");
         }
+
         kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
         kupacService.create(kupacDTO);
 
@@ -86,6 +98,13 @@ public class KupacResource {
         String sifra = loginDTO.getSifra();
         String sifraIzBaze, role = "";
 
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(email);
+        if(!matcher.matches())
+            return ResponseEntity.badRequest().body("Upisan nevažeći oblik e-mail adrese!");
+        if(sifra.length() < 8)
+            return ResponseEntity.badRequest().body("Vaša lozinka mora biti minimalno duljine 8 znakova!");
+
         if (administratorService.findByAdministratorEmail(email).isPresent()) {
             role = "ADMINISTRATOR";
             sifraIzBaze = administratorService.findByAdministratorEmail(email).get().getAdministratorSifra();
@@ -99,10 +118,10 @@ public class KupacResource {
             role = "KUPAC";
             sifraIzBaze = kupacService.findByKupacEmail(email).get().getKupacSifra();
         } else
-            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body("Unesen nepostojeći e-mail!");
+            return ResponseEntity.badRequest().body("Unesena kriva lozinka ili e-mail adresa!");
 
         if(sifraIzBaze == null)
-            return ResponseEntity.badRequest().body("Korisnik registriran s Google-om!");
+            return ResponseEntity.badRequest().body("Registrirani ste s Google računom!");
 
 
         if (passwordEncoder.matches(sifra, sifraIzBaze)){
@@ -112,7 +131,7 @@ public class KupacResource {
             return ResponseEntity.ok().body(resp);
         }
         else
-            return ResponseEntity.badRequest().body("Unesena kriva lozinka!");
+            return ResponseEntity.badRequest().body("Unesena kriva lozinka ili e-mail adresa!");
     }
 
     //UC3, koristite api/kupacs/{kupacId} za uređivanje osobnih podataka
