@@ -1,9 +1,16 @@
 package com.mojkvart.repos;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.mojkvart.domain.Recenzija;
 
-import com.mojkvart.entities.Recenzija;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface RecenzijaRepository extends JpaRepository<Recenzija, Integer> {
+
+    // Metoda koja vraća sve recenzije za određeni trgovinaId
+    List<Recenzija> findByTrgovina_TrgovinaId(Integer trgovinaId);
+
+    List<Recenzija> findByKupac_KupacId(Integer kupacId);
 }

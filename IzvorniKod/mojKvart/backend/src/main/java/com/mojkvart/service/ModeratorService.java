@@ -1,10 +1,13 @@
 package com.mojkvart.service;
 
-import com.mojkvart.dtos.ModeratorDTO;
-import com.mojkvart.entities.Moderator;
+import com.mojkvart.domain.Moderator;
+import com.mojkvart.model.AdministratorDTO;
+import com.mojkvart.model.ModeratorDTO;
 import com.mojkvart.repos.ModeratorRepository;
 import com.mojkvart.util.NotFoundException;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,11 @@ public class ModeratorService {
         return moderators.stream()
                 .map(moderator -> mapToDTO(moderator, new ModeratorDTO()))
                 .toList();
+    }
+
+    public Optional<ModeratorDTO> findByModeratorEmail(String email) {
+        return moderatorRepository.findByModeratorEmail(email)
+                .map(moderator -> mapToDTO(moderator, new ModeratorDTO()));
     }
 
     public ModeratorDTO get(final Integer moderatorId) {

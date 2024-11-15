@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+.navbar-nav {
+    white-space: nowrap;  
+  }
+
+  #najvanjski{
+    background-color: #EDEDED;
+    border-radius: 0;
+   
+  }
+
+  form .form-control {
+    width: 80%;
+    height: 3em;
+    flex-shrink: 0;
+    border-radius: 20px;
+    background: #EDEDED;
+    font-family: Raleway, sans-serif;
+    padding-left: 3%;
+  }
+
+  form .btn {
+    background-color: rgba(50, 49, 49, 0.70); 
+    color: white; 
+    padding: 10px 20px; 
+    font-family: Raleway, sans-serif;
+    border-radius: 20px; 
+  }
+
+  
+
+  form .btn:hover {
+    background-color:rgba(62, 152, 30, 0.80); 
+    border-color: rgba(59, 145, 28, 0.8); 
+  }
+  
+  form .btn:focus {
+    outline: none; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+  }
+
+  #Vanjski{
+    background-color: #fff;
+    border-radius: 0 !important;
+  }
+
+
+  #unutarnji{
+    margin-top:20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 5px;
+    border-radius: 0; 
+
+  }
+
+  #searchdiv{
+    width: 50%;
+    justify-content: center;
+  }
+
+  #MojRacun{
+    padding-right: 15px;
+    font-family: Raleway,sans-serif;
+    text-align: center;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    outline: none;
+    color: #323131;
+    text-decoration: none;
+    border-right: 2px solid rgba(50, 49, 49, 0.50);
+  }
+
+
+  #OdjaviSe{
+    padding-right: 15px;
+    font-family: Raleway,sans-serif;
+    text-align: center;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    outline: none;
+    color: #323131;
+    text-decoration: none;
+    border-right: 2px solid rgba(50, 49, 49, 0.50);
+  }
+
+  #MojRacun:focus{
+    text-decoration: none;
+    outline: none;
+  }
+
+  #MojRacun:hover, #OdjaviSe:hover {
+    transform: none; 
+  text-shadow: 0 0 1px #4d4d4d;
+}
+
+  #kosarica{
+    width: 35px;
+    height: 35px;
+  }
+
+  #drugiNav {
+    background-color: #fff;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    outline: none;
+    
+  }
+ 
+  #drugiNavLista{
+    color: #323131d3;
+    font-family: Raleway;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    text-decoration: none;
+    outline: none;
+    padding-bottom: 10px;
+  }
+
+
+.nav-item .nav-link:hover {
+  transform: none; 
+  text-shadow: 0 0 1px #4d4d4d;
+}
+
+
+@media (max-width: 1050px) {
+
+  #vanjski{
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+  }
+ 
+  #unutarnji {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-bottom: 0px;
+      margin-bottom: 0px;
+  }
+
+  #searchdiv {
+    margin-top: 10px;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  #drugiNav{
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+
+
+#obruc{
+    width: 100%;
+    justify-content: flex-start; 
+    margin-left: 0; 
+    padding-left: 0; 
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+  }
+
+  #MojRacun, #kosarica, #OdjaviSe{
+    margin-left: 0; 
+    padding-left: 0px; 
+  }
+
+  #MojRacun {
+    font-weight: 400; 
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+  #searchdiv {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+}
+
+  #drugiNavLista {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      text-align: left;
+      padding-left: 20px;
+      padding-right: 0;
+      margin-top: 0px;
+      padding-top: 0px;
+  }
+
+  .nav-item {
+      width: 100%;
+      text-align: left;
+  }
+
+
+  .nav-link {
+      width: 100%;
+      padding: 10px 0;
+      text-align: left;
+      font-weight: 300; 
+  }
+
+
+ 
+}

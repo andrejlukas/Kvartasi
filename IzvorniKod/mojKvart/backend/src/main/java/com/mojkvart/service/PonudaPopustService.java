@@ -1,14 +1,16 @@
 package com.mojkvart.service;
 
-import com.mojkvart.dtos.PonudaPopustDTO;
-import com.mojkvart.entities.KorisnikTrgovinaPonuda;
-import com.mojkvart.entities.Ponuda;
-import com.mojkvart.entities.PonudaPopust;
-import com.mojkvart.entities.Popust;
-import com.mojkvart.repos.KorisnikTrgovinaPonudaRepository;
+import com.mojkvart.domain.KupacPonudaPopust;
+import com.mojkvart.domain.Ponuda;
+import com.mojkvart.domain.PonudaPopust;
+import com.mojkvart.domain.Popust;
+import com.mojkvart.domain.Trgovina;
+import com.mojkvart.model.PonudaPopustDTO;
+import com.mojkvart.repos.KupacPonudaPopustRepository;
 import com.mojkvart.repos.PonudaPopustRepository;
 import com.mojkvart.repos.PonudaRepository;
 import com.mojkvart.repos.PopustRepository;
+import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
 import java.util.List;
@@ -20,17 +22,20 @@ import org.springframework.stereotype.Service;
 public class PonudaPopustService {
 
     private final PonudaPopustRepository ponudaPopustRepository;
+    private final TrgovinaRepository trgovinaRepository;
     private final PonudaRepository ponudaRepository;
     private final PopustRepository popustRepository;
-    private final KorisnikTrgovinaPonudaRepository korisnikTrgovinaPonudaRepository;
+    private final KupacPonudaPopustRepository kupacTrgovinaPonudaPopustRepository;
 
     public PonudaPopustService(final PonudaPopustRepository ponudaPopustRepository,
-            final PonudaRepository ponudaRepository, final PopustRepository popustRepository,
-            final KorisnikTrgovinaPonudaRepository korisnikTrgovinaPonudaRepository) {
+            final TrgovinaRepository trgovinaRepository, final PonudaRepository ponudaRepository,
+            final PopustRepository popustRepository,
+            final KupacPonudaPopustRepository kupacTrgovinaPonudaPopustRepository) {
         this.ponudaPopustRepository = ponudaPopustRepository;
+        this.trgovinaRepository = trgovinaRepository;
         this.ponudaRepository = ponudaRepository;
         this.popustRepository = popustRepository;
-        this.korisnikTrgovinaPonudaRepository = korisnikTrgovinaPonudaRepository;
+        this.kupacTrgovinaPonudaPopustRepository = kupacTrgovinaPonudaPopustRepository;
     }
 
     public List<PonudaPopustDTO> findAll() {
@@ -66,11 +71,17 @@ public class PonudaPopustService {
     private PonudaPopustDTO mapToDTO(final PonudaPopust ponudaPopust,
             final PonudaPopustDTO ponudaPopustDTO) {
         ponudaPopustDTO.setPonudaPopustId(ponudaPopust.getPonudaPopustId());
+        ponudaPopustDTO.setPonudaPopustFlag(ponudaPopust.getPonudaPopustFlag());
+        ponudaPopustDTO.setTrgovina(ponudaPopust.getTrgovina() == null ? null : ponudaPopust.getTrgovina().getTrgovinaId());
         return ponudaPopustDTO;
     }
 
     private PonudaPopust mapToEntity(final PonudaPopustDTO ponudaPopustDTO,
             final PonudaPopust ponudaPopust) {
+        ponudaPopust.setPonudaPopustFlag(ponudaPopustDTO.getPonudaPopustFlag());
+        final Trgovina trgovina = ponudaPopustDTO.getTrgovina() == null ? null : trgovinaRepository.findById(ponudaPopustDTO.getTrgovina())
+                .orElseThrow(() -> new NotFoundException("trgovina not found"));
+        ponudaPopust.setTrgovina(trgovina);
         return ponudaPopust;
     }
 
@@ -90,10 +101,10 @@ public class PonudaPopustService {
             referencedWarning.addParam(ponudaPopustPopust.getPopustId());
             return referencedWarning;
         }
-        final KorisnikTrgovinaPonuda ponudaPopustKorisnikTrgovinaPonuda = korisnikTrgovinaPonudaRepository.findFirstByPonudaPopust(ponudaPopust);
-        if (ponudaPopustKorisnikTrgovinaPonuda != null) {
-            referencedWarning.setKey("ponudaPopust.korisnikTrgovinaPonuda.ponudaPopust.referenced");
-            referencedWarning.addParam(ponudaPopustKorisnikTrgovinaPonuda.getId());
+        final KupacPonudaPopust ponudaPopustKupacTrgovinaPonudaPopust = kupacTrgovinaPonudaPopustRepository.findFirstByPonudaPopust(ponudaPopust);
+        if (ponudaPopustKupacTrgovinaPonudaPopust != null) {
+            referencedWarning.setKey("ponudaPopust.kupacTrgovinaPonudaPopust.ponudaPopust.referenced");
+            referencedWarning.addParam(ponudaPopustKupacTrgovinaPonudaPopust.getId());
             return referencedWarning;
         }
         return null;

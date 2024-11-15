@@ -1,9 +1,12 @@
 package com.mojkvart.repos;
 
+import com.mojkvart.domain.Administrator;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.mojkvart.entities.Administrator;
+import java.util.Optional;
 
 
 public interface AdministratorRepository extends JpaRepository<Administrator, Integer> {
+
+    Optional<Administrator> findByAdministratorEmail(String email);
 }

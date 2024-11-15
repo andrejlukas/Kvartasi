@@ -1,0 +1,131 @@
+body {
+  background-color: #ededed;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.content-wrapper {
+  background-color: #ededed;
+  padding: 20px 0;
+}
+
+.shop-product-row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-start; 
+}
+
+#nazivTrgovine{
+
+  padding-top: 10px;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.divider {
+  height: 1px;
+  background-color: #ddd;
+}
+
+#opis{
+  font-size: 20px;
+}
+.shop-info {
+  flex: 1;
+  padding: 20px;
+  padding-bottom: 10px;
+  border-radius: 20px;
+  font-family: Raleway, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  height: auto; 
+}
+
+.shop-image {
+  width: 100%;
+  border-radius: 8px;
+}
+
+
+
+.price{
+  font-size: 18px;
+  color: #2c8c2c;
+  font-weight: bold;
+}
+#products {
+  flex: 2;
+  background-color: #ededed;
+  border-radius: 8px;
+}
+
+.card-title{
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.product-card img {
+  padding-top: 10px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  align-self: center;
+}
+
+.product-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+  text-align: left;
+  font-family: Raleway, sans-serif;
+  display: flex;
+  flex-direction: column; 
+  padding: 20px;
+  height: 100%;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1; 
+}
+
+#gumbcijena {
+  display: flex;
+  justify-content: space-between; 
+  align-items: baseline; 
+  font-family: Raleway, sans-serif;
+  margin-top: 10px;
+}
+
+
+
+.add-to-cart-btn {
+  background-color: rgba(62, 152, 30, 0.674); 
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-to-cart-btn:hover {
+  background-color: rgba(62, 152, 30);
+}
+
+@media (max-width: 1000px) {
+  .shop-product-row {
+      flex-direction: column;
+  }
+
+  .shop-info {
+      margin-bottom: 20px;
+  }
+}

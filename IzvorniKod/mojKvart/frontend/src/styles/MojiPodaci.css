@@ -1,0 +1,130 @@
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.osobni-podaci-container {
+    width: 100%;
+    max-width: 800px;
+    text-align: left;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.osobni-podaci-container h1 {
+    margin: 0;
+    padding-bottom: 10px;
+    color: #323131;
+    font-family: Raleway;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.moji-podaci-form-group {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: rgba(50, 49, 49, 0.70);
+    font-family: Raleway;
+    font-size: 24px;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+}
+
+.moji-podaci-inputs {
+    border-radius: 30px;
+    background: rgba(40, 134, 33, 0.30);
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: background-color 0.3s ease, width 0.3s ease;
+    min-width: 100%;
+}
+
+.moji-podaci-inputs:focus {
+    background: rgba(40, 134, 33, 0.10);
+    outline: none;
+    border-color: rgba(40, 134, 33, 0.6);
+}
+
+.moji-podaci-inputs::placeholder {
+    color: rgba(40, 134, 33, 0.6);
+}
+
+.moji-podaci-form-group label {
+    margin-bottom: 5px;
+}
+
+/* #moji-podaci-profile-form {
+    margin-top: 20px;
+} */
+
+#spremi-promjene-button, #zatvori-button {
+    border-radius: 30px;
+    background: rgba(196, 196, 196, 0.80);
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    margin-right: 10px;
+}
+
+#spremi-promjene-button:hover, #zatvori-button:hover {
+    background: rgba(100, 100, 100, 0.8);
+}
+
+#zatvori-button:disabled {
+    background: rgba(230, 230, 230, 0.8);
+    cursor: not-allowed;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.moji-podaci-gumbovi-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        padding: 10px;
+    }
+
+    .osobni-podaci-container {
+        width: 100%;
+        transform: none;
+        padding: 15px;
+    }
+
+    .osobni-podaci-container h1 {
+        font-size: 28px;
+    }
+
+    .moji-podaci-form-group {
+        font-size: 18px;
+    }
+
+    #spremi-promjene-button, #zatvori-button {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .moji-podaci-gumbovi-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
