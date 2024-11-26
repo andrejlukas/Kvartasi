@@ -49,7 +49,7 @@ public class SecurityConfig{
                             oauth2KorisnikService.authenticateKorisnik(oauth2User);
                             HashMap<String, Object> claims = oauth2KorisnikService.getClaims(oauth2User);
                             String token = jwtService.generateToken(claims, oauth2User.getAttribute("email"));
-                            response.sendRedirect("https://kvartfrontend4.vercel.app/home?token=" + token);
+                            response.sendRedirect("http://localhost:3000/home?token=" + token);
                         }))
                 .logout(LogoutConfigurer::permitAll);
         return http.build();
