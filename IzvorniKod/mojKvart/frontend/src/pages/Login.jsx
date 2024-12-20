@@ -103,7 +103,7 @@ export function Login() {
                   <button type="button">Kreiraj novi korisnički račun</button>
                </a>
 
-               <a href="http://localhost:8080/oauth2/authorization/google" role="button" id="google-btn">
+               <a href={`${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`} role="button" id="google-btn">
                   <img src={googleLogo} alt="Google Logo"/>
                   <span>Google prijava</span>
                </a>

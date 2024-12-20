@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
 import logo from '../assets/MojKvart.png'
 import kosarica from '../assets/kosarica.png'
-import '../styles/Navbar.css'
+import '../styles/NavBar.css'
 
 export function Navbar() {
 

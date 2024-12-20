@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import './styles/App.css';
 import { Routes, Route } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Signup } from './pages/Signup';
@@ -10,7 +9,7 @@ import { PonudeiPromocije } from './pages/PonudeiPromocije';
 import { Dogadaji } from './pages/Dogadaji';
 import { KorisnickiRacun } from './pages/KorisnickiRacun';
 import Shop from './pages/Shop';
-import { MojiPodaci } from './pages/mojiPodaci';
+import { MojiPodaci } from './pages/MojiPodaci';
 import { MojiRacuni } from './pages/MojiRacuni';
 import { MojeRecenzije } from './pages/MojeRecenzije';
 

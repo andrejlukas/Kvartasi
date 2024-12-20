@@ -72,14 +72,14 @@ export function Signup() {
                   <input type="text" placeholder="Kućna adresa" id="home" className="signup-inputs"  name="homeAddress" value={homeAddress}
                      onChange={(e) => setHomeAddress(e.target.value)}/>
                   <input type="email" placeholder="E-mail adresa" id = "email" className="signup-inputs"  name="emailAddress" value={emailAddress}
-                     onChange={(e) => setEmailAddress(e.target.value)} required />
+                     onChange={(e) => setEmailAddress(e.target.value)}/>
                       
                   
                   <div className="password-input-container">
                   <input type={showPassword ? "text" : "password"} placeholder="Lozinka" id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
                   <button
                            type="button"
-                           onClick={togglePasswordVisibility} // Dodaj funkciju za prikazivanje/sakrivanje
+                           onClick={togglePasswordVisibility}
                            className="toggle-password-button-signup"
                         >
                            {showPassword ? "Sakrij" : "Otkrij"}
@@ -90,7 +90,7 @@ export function Signup() {
                   <a href="/">
                      <button id="Back" type="button" className="signup-buttons">Natrag na prijavu</button>
                   </a>
-                  <a href="http://localhost:8080/oauth2/authorization/google" role="button" id="google-btn">
+                  <a href={`${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`} role="button" id="google-btn">
                      <img src={googleLogo} alt="Google Logo"/>
                      <span>Google registracija</span>
                   </a>
