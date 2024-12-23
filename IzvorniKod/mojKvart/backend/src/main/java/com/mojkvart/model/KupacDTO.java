@@ -1,10 +1,13 @@
 package com.mojkvart.model;
 
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -30,4 +33,12 @@ public class KupacDTO {
 
     @Size(max = 200)
     private String kupacSifra;
+
+    @Size(max = 200)
+    private String verifikacijskiKod;
+
+    private LocalDateTime kodValidanDo;
+
+    @NotNull
+    private Boolean verificiranKupac;
 }

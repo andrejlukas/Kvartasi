@@ -9,6 +9,7 @@ import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,7 +45,24 @@ public class KupacResource {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private MailService mailService;
+
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9šđčćžŠĐČĆŽ._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+    private String generateCode() {
+        StringBuilder code = new StringBuilder();
+        for(int i = 0; i < 6; i++) code.append(Double.toString(Math.floor(Math.random() * 10)).charAt(0));
+        return code.toString();
+    }
+
+    private void verificationRoutine(KupacDTO kupacDTO) {
+        String verificationCode = generateCode();
+        mailService.sendVerificationMail(kupacDTO.getKupacEmail(), verificationCode);
+        kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
+        kupacDTO.setVerifikacijskiKod(passwordEncoder.encode(verificationCode));
+        kupacDTO.setKodValidanDo(LocalDateTime.now().plusMinutes(5)); // verifikacijski kod traje 5 minuta
+    }
 
 
     @GetMapping
@@ -61,9 +78,8 @@ public class KupacResource {
         return ResponseEntity.ok(kupacService.findByKupacEmail(kupacEmail).get());
     }
 
-    //UC1, koristite api/kupacs i pošaljite JSON objekt za registraciju
-    @PostMapping("/signup")
-    public ResponseEntity<Object> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
+    @PostMapping("/verification")
+    public ResponseEntity<String> verifyKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
         if(kupacDTO.getKupacIme().length() < 2)
             return ResponseEntity.badRequest().body("Ime mora biti minimalno duljine 2 znaka!");
         if(kupacDTO.getKupacPrezime().length() < 2)
@@ -79,12 +95,36 @@ public class KupacResource {
         if(administratorService.findByAdministratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
                 moderatorService.findByModeratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
                 trgovinaService.findByTrgovinaEmail(kupacDTO.getKupacEmail()).isPresent() ||
-                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isPresent()) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body("Imate već postojeći korisnički račun?");
+                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isPresent() &&
+                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).get().getVerificiranKupac()) {
+            return ResponseEntity.badRequest().body("Imate već postojeći korisnički račun?");
         }
 
+        if(kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isEmpty()) {
+            verificationRoutine(kupacDTO);
+            kupacService.create(kupacDTO);
+        } else {
+            Integer kupacId = kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).get().getKupacId();
+            verificationRoutine(kupacDTO);
+            kupacService.update(kupacId, kupacDTO);
+        }
+        return ResponseEntity.ok("Verifikacijski kod poslan!");
+    }
+
+    //UC1, koristite api/kupacs i pošaljite JSON objekt za registraciju
+    @PostMapping("/signup")
+    public ResponseEntity<Object> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
+        Integer kupacId = kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).get().getKupacId();
+
+        if(kupacService.get(kupacId).getKodValidanDo().isBefore(LocalDateTime.now()))
+            ResponseEntity.badRequest().body("Vrijeme za verifikaciju je isteklo.\nPokušajte se ponovno registrirati!");
+        if(!passwordEncoder.matches(kupacDTO.getVerifikacijskiKod(), kupacService.get(kupacId).getVerifikacijskiKod()))
+            return ResponseEntity.badRequest().body("Unesen neispravan verifikacijski kod.\nPokušajte ga ponovno upisati!");
+
         kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
-        kupacService.create(kupacDTO);
+        kupacDTO.setVerifikacijskiKod(passwordEncoder.encode(kupacDTO.getVerifikacijskiKod()));
+        kupacDTO.setVerificiranKupac(true);
+        updateKupac(kupacId, kupacDTO);
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", "KUPAC");
@@ -114,7 +154,8 @@ public class KupacResource {
         } else if (trgovinaService.findByTrgovinaEmail(email).isPresent()) {
             role = "TRGOVINA";
             sifraIzBaze = trgovinaService.findByTrgovinaEmail(email).get().getTrgovinaSifra();
-        } else if (kupacService.findByKupacEmail(email).isPresent()) {
+        } else if (kupacService.findByKupacEmail(email).isPresent() &&
+                   kupacService.findByKupacEmail(email).get().getVerificiranKupac()) {
             role = "KUPAC";
             sifraIzBaze = kupacService.findByKupacEmail(email).get().getKupacSifra();
         } else
@@ -153,5 +194,4 @@ public class KupacResource {
         kupacService.delete(kupacId);
         return ResponseEntity.noContent().build();
     }
-
 }

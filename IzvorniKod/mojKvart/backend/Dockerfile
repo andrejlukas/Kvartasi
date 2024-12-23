@@ -6,5 +6,3 @@ FROM openjdk:17.0.1-jdk-slim
 COPY --from=build target/moj-kvart-0.0.1-SNAPSHOT.jar MojKvart.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "MojKvart.jar"]
-
-

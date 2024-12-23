@@ -75,6 +75,9 @@ public class KupacService {
         kupacDTO.setKupacPrezime(kupac.getKupacPrezime());
         kupacDTO.setKupacAdresa(kupac.getKupacAdresa());
         kupacDTO.setKupacSifra(kupac.getKupacSifra());
+        kupacDTO.setVerifikacijskiKod(kupac.getVerifikacijskiKod());
+        kupacDTO.setKodValidanDo(kupac.getKodValidanDo());
+        kupacDTO.setVerificiranKupac(kupac.getVerificiranKupac());
         return kupacDTO;
     }
 
@@ -84,6 +87,9 @@ public class KupacService {
         kupac.setKupacPrezime(kupacDTO.getKupacPrezime());
         kupac.setKupacAdresa(kupacDTO.getKupacAdresa());
         kupac.setKupacSifra(kupacDTO.getKupacSifra());
+        kupac.setVerifikacijskiKod(kupacDTO.getVerifikacijskiKod());
+        kupac.setKodValidanDo(kupacDTO.getKodValidanDo());
+        kupac.setVerificiranKupac(kupacDTO.getVerificiranKupac());
         return kupac;
     }
 

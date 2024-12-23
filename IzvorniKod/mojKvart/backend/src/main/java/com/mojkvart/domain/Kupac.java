@@ -2,6 +2,7 @@ package com.mojkvart.domain;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +49,15 @@ public class Kupac implements UserDetails {
 
     @Column(length = 200)
     private String kupacSifra;
+
+    @Column(length = 200)
+    private String verifikacijskiKod;
+
+    @Column(updatable = true)
+    private LocalDateTime kodValidanDo;
+
+    @Column(nullable = false)
+    private Boolean verificiranKupac;
 
     @OneToMany(mappedBy = "kupac")
     private Set<KupacDogadaj> kupacKupacDogadajs;

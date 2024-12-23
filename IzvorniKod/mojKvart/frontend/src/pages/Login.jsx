@@ -9,7 +9,6 @@ export function Login() {
    const [emailAddress, setEmailAddress] = useState('');
    const [password, setPassword] = useState('');
    const [errorMessage, setErrorMessage] = useState('');
-
    const [showPassword, setShowPassword] = useState(false);
 
    const togglePasswordVisibility = () => {
@@ -84,7 +83,7 @@ export function Login() {
                <input type={showPassword ? "text" : "password"} id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
                <button
                         type="button"
-                        onClick={togglePasswordVisibility} // Dodaj funkciju za prikazivanje/sakrivanje
+                        onClick={togglePasswordVisibility}
                         className="toggle-password-button"
                      >
                         {showPassword ? "Sakrij" : "Otkrij"}

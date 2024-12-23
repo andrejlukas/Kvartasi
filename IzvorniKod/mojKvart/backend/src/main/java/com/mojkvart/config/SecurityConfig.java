@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,7 +22,6 @@ import java.util.HashMap;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig{
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
     private final JwtService jwtService;
@@ -35,6 +33,7 @@ public class SecurityConfig{
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> { registry
+                        .requestMatchers("/api/kupacs/verification").permitAll()
                         .requestMatchers("/api/kupacs/signup").permitAll()
                         .requestMatchers("/api/kupacs/login").permitAll()
                         .requestMatchers("/api/tokens/expiration").permitAll()
@@ -50,8 +49,7 @@ public class SecurityConfig{
                             HashMap<String, Object> claims = oauth2KorisnikService.getClaims(oauth2User);
                             String token = jwtService.generateToken(claims, oauth2User.getAttribute("email"));
                             response.sendRedirect("http://localhost:3000/home?token=" + token);
-                        }))
-                .logout(LogoutConfigurer::permitAll);
+                        }));
         return http.build();
     }
 }
