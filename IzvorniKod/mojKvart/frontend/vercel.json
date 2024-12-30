@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://skatom2.onrender.com/api/$1"
+      "destination": "backend_url/api/$1"
     },
     {
       "source": "/(.*)",

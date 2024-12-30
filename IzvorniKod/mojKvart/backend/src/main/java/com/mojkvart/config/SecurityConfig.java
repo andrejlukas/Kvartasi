@@ -4,6 +4,7 @@ import com.mojkvart.service.JwtService;
 import com.mojkvart.service.Oauth2KorisnikService;
 import com.mojkvart.util.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -27,6 +28,9 @@ public class SecurityConfig{
     private final JwtService jwtService;
     private final Oauth2KorisnikService oauth2KorisnikService;
 
+    @Value("${frontend.uri}")
+    private String frontendUri;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -48,7 +52,7 @@ public class SecurityConfig{
                             oauth2KorisnikService.authenticateKorisnik(oauth2User);
                             HashMap<String, Object> claims = oauth2KorisnikService.getClaims(oauth2User);
                             String token = jwtService.generateToken(claims, oauth2User.getAttribute("email"));
-                            response.sendRedirect("http://localhost:3000/home?token=" + token);
+                            response.sendRedirect(frontendUri +"/home?token=" + token);
                         }));
         return http.build();
     }
