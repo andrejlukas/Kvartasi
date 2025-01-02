@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from '../components/Navbar';
-import "../styles/home.css";
+import "../styles/Home.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export function Home() {
   const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const url = window.location.search;

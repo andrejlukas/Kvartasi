@@ -1,7 +1,7 @@
 import { Navbar } from "../components/Navbar";
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/popisTrgovina.css";
+import "../styles/PopisTrgovina.css";
 
 
 export function PopisTrgovina() {

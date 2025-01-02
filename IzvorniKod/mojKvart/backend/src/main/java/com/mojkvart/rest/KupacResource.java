@@ -117,7 +117,7 @@ public class KupacResource {
         Integer kupacId = kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).get().getKupacId();
 
         if(kupacService.get(kupacId).getKodValidanDo().isBefore(LocalDateTime.now()))
-            ResponseEntity.badRequest().body("Vrijeme za verifikaciju je isteklo.\nPokušajte se ponovno registrirati!");
+            return ResponseEntity.badRequest().body("Vrijeme za verifikaciju je isteklo.\nPokušajte se ponovno registrirati!");
         if(!passwordEncoder.matches(kupacDTO.getVerifikacijskiKod(), kupacService.get(kupacId).getVerifikacijskiKod()))
             return ResponseEntity.badRequest().body("Unesen neispravan verifikacijski kod.\nPokušajte ga ponovno upisati!");
 

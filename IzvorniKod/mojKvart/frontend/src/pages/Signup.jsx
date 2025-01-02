@@ -1,4 +1,4 @@
-import "../styles/signup.css"
+import "../styles/Signup.css"
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import googleLogo from "../assets/google-logo.png"
@@ -12,7 +12,6 @@ export function Signup() {
    const [password, setPassword] = useState('')
 
    const [showPassword, setShowPassword] = useState(false);
-   const [verificationPhase, setVerificationPhase] = useState(false);
    const [verificationCode, setVerificationCode] = useState('');
    const [errorMessage, setErrorMessage] = useState('');
 
@@ -46,7 +45,9 @@ export function Signup() {
          .then(response => {
             if (response.ok) {
                setErrorMessage('');
-               setVerificationPhase(true);
+               const verificationData = { "data": data, "tries": 0 };
+               localStorage.setItem("verificationData", JSON.stringify(verificationData));
+               window.location.reload();
             } else {
                return response.text().then(text => {
                   setErrorMessage(text);
@@ -60,16 +61,10 @@ export function Signup() {
    function checkVerificationCode(e) {
       e.preventDefault();
    
-      const data = {
-         kupacEmail: emailAddress,
-         kupacIme: firstName,
-         kupacPrezime: lastName,
-         kupacAdresa: homeAddress,
-         kupacSifra: password,
-         verifikacijskiKod: verificationCode,
-         kodValidanDo: null,
-         verificiranKupac: false
-      };
+      let data = JSON.parse(localStorage.getItem("verificationData")).data;
+      let tries  = JSON.parse(localStorage.getItem("verificationData")).tries;
+
+      data.verifikacijskiKod = verificationCode;
    
       const options = {
          method: 'POST',
@@ -83,34 +78,44 @@ export function Signup() {
          .then((response) => {
             if (!response.ok) {
                return response.text().then((text) => {
-                  setErrorMessage(text);
-                  throw new Error('Verification failed');
+                  localStorage.setItem("verificationData", JSON.stringify({ "data": data, "tries": tries + 1 }));
+                  throw new Error(text);
                });
             }
             return response.json();
          })
          .then((data) => {
+            localStorage.removeItem("verificationData");
             navigate('/home?token=' + data.token);
             window.location.reload();
          })
-         .catch(() => {
-            setVerificationPhase(true);
+         .catch(error => {
+            if(error.message.startsWith("Vrijeme")){
+               alert("Nemate više pravo upisivati verifikacijski kod nakon 5 minuta. Pokušajte se registrirati opet te pažljivo upišite svoje podatke.");
+               localStorage.removeItem("verificationData");
+               setErrorMessage('');
+            } else if(tries == 2) {
+               alert("Nemate više pravo upisivati verifikacijski kod nakon 3 pokušaja. Pokušajte se registrirati opet te pažljivo upišite svoje podatke.");
+               localStorage.removeItem("verificationData");
+               setErrorMessage('');
+            } else {
+               setErrorMessage(`Netočan verifikacijski kod!<br/>Broj preostalih pokušaja verifikacije: ${ 2 - tries }`);
+            }
          });
    }
    
    
-   if(verificationPhase) {
+   if(localStorage.getItem("verificationData") != null) {
       return (
          <div>
-            <h3>Verifikacijski kod je poslan na email adresu {emailAddress}</h3>
-            <h2>Imate pet minuta da unesete kod nakon čega verifikacija više neće biti moguća.</h2>
-            <h2>U tom slučaju te u slučaju da osvježite stranicu, morat ćete ponovno popunjavati formu za registraciju.</h2>
+            <h3>Verifikacijski kod je poslan na email adresu {JSON.parse(localStorage.getItem("verificationData")).data.kupacEmail}</h3>
+            <h2>Imate pet minuta i/ili 3 pokušaja da unesete kod nakon čega verifikacija više neće biti moguća.</h2>
             <form onSubmit={checkVerificationCode}>
                <input type="text" placeholder="Verifikacijski kod" name="verificationCode" value={verificationCode} 
                onChange={(e) => setVerificationCode(e.target.value)}/>
                <button type="submit">Verificiraj</button>
             </form>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {errorMessage && <p className="error-message" dangerouslySetInnerHTML={{ __html: errorMessage }}/>}
          </div>
       );
    } else 
