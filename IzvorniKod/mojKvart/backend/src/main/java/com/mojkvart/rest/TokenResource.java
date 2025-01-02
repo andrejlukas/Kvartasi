@@ -1,6 +1,6 @@
 package com.mojkvart.rest;
 
-import com.mojkvart.model.TokenDTO;
+import com.mojkvart.model.OneLineDTO;
 import com.mojkvart.service.JwtService;
 import com.mojkvart.util.TokenResponse;
 import io.jsonwebtoken.Claims;
@@ -21,16 +21,16 @@ public class TokenResource {
     private final JwtService jwtService;
 
     @PostMapping
-    public ResponseEntity<TokenResponse> extractInfoFromToken(@RequestBody @Valid TokenDTO tokenDTO) {
-        String email = jwtService.getEmailFromToken(tokenDTO.getToken());
-        Claims claims = jwtService.getAllClaims(tokenDTO.getToken());
+    public ResponseEntity<TokenResponse> extractInfoFromToken(@RequestBody @Valid OneLineDTO oneLineDTO) {
+        String email = jwtService.getEmailFromToken(oneLineDTO.getOneLiner());
+        Claims claims = jwtService.getAllClaims(oneLineDTO.getOneLiner());
         String role = (String) claims.get("role");
         TokenResponse tokenResponse = new TokenResponse(email, role);
         return ResponseEntity.ok(tokenResponse);
     }
 
     @PostMapping("/expiration")
-    public ResponseEntity<Boolean> checkTokenExpiration(@RequestBody @Valid TokenDTO tokenDTO) {
-        return ResponseEntity.ok(jwtService.isTokenExpired(tokenDTO.getToken()));
+    public ResponseEntity<Boolean> checkTokenExpiration(@RequestBody @Valid OneLineDTO oneLineDTO) {
+        return ResponseEntity.ok(jwtService.isTokenExpired(oneLineDTO.getOneLiner()));
     }
 }

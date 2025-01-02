@@ -58,7 +58,8 @@ export function PopisTrgovina() {
               <div className="shop-shop-row">
                 <div className="filters">
                     <strong><p>FILTRIRAJ</p></strong>
-                    <p>filter po cijeni</p><p>filter po kategorijama</p>
+                    <button type="click" onClick={filterByDistance}>filtriraj po udaljenosti</button>
+                    <button type="click" onClick={filterByCategories}>filtriraj po kategorijama</button>
                     {/* jos nema funkcionalnosti filtera */}
                 </div>
 

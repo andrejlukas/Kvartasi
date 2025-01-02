@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TokenDTO {
+public class OneLineDTO {
     @NotNull
-    private String token;
+    private String oneLiner;
 }

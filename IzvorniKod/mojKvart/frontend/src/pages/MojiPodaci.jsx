@@ -23,7 +23,7 @@ export function MojiPodaci(){
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ token: token })
+            body: JSON.stringify({ oneLiner: token })
         }
 
         fetch('/api/tokens', options)
@@ -97,8 +97,8 @@ export function MojiPodaci(){
                 kupacAdresa: homeAddress,
                 kupacEmail: emailAddress,
                 kupacId : id,
-                kupacSifra:sifra
-
+                kupacSifra:sifra,
+                verificiranKupac: true
             })
         }
         fetch(`/api/kupacs/${id}`, options)

@@ -2,6 +2,8 @@ package com.mojkvart.rest;
 
 import com.mojkvart.model.KupacDTO;
 import com.mojkvart.model.LoginDTO;
+import com.mojkvart.model.OneLineDTO;
+import com.mojkvart.model.VerificationDTO;
 import com.mojkvart.util.AuthenticationResponse;
 import com.mojkvart.service.*;
 import com.mojkvart.util.NotFoundException;
@@ -58,10 +60,10 @@ public class KupacResource {
 
     private void verificationRoutine(KupacDTO kupacDTO) {
         String verificationCode = generateCode();
-        mailService.sendVerificationMail(kupacDTO.getKupacEmail(), verificationCode);
         kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
-        kupacDTO.setVerifikacijskiKod(passwordEncoder.encode(verificationCode));
+        kupacDTO.setVerifikacijskiKod(verificationCode);
         kupacDTO.setKodValidanDo(LocalDateTime.now().plusMinutes(5)); // verifikacijski kod traje 5 minuta
+        kupacDTO.setVerificiranKupac(false);
     }
 
 
@@ -70,7 +72,6 @@ public class KupacResource {
         return ResponseEntity.ok(kupacService.findAll());
     }
 
-    //UC3, koristite api/kupacs/{kupacEmail} za dohvaćanje osobnih podataka
     @GetMapping("/{kupacEmail}")
     public ResponseEntity<KupacDTO> getKupac(@PathVariable(name = "kupacEmail") final String kupacEmail) {
         if(kupacService.findByKupacEmail(kupacEmail).isEmpty())
@@ -78,8 +79,8 @@ public class KupacResource {
         return ResponseEntity.ok(kupacService.findByKupacEmail(kupacEmail).get());
     }
 
-    @PostMapping("/verification")
-    public ResponseEntity<String> verifyKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
+    @PostMapping("/signup")
+    public ResponseEntity<String> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
         if(kupacDTO.getKupacIme().length() < 2)
             return ResponseEntity.badRequest().body("Ime mora biti minimalno duljine 2 znaka!");
         if(kupacDTO.getKupacPrezime().length() < 2)
@@ -108,23 +109,31 @@ public class KupacResource {
             verificationRoutine(kupacDTO);
             kupacService.update(kupacId, kupacDTO);
         }
-        return ResponseEntity.ok("Verifikacijski kod poslan!");
+        return ResponseEntity.ok("Stvoren kupac!");
     }
 
-    //UC1, koristite api/kupacs i pošaljite JSON objekt za registraciju
-    @PostMapping("/signup")
-    public ResponseEntity<Object> createKupac(@RequestBody @Valid final KupacDTO kupacDTO) {
-        Integer kupacId = kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).get().getKupacId();
+    @PostMapping("/sendVerificationMail")
+    public ResponseEntity<String> sendVerificationMail(@RequestBody final OneLineDTO oneLineDTO) {
+        KupacDTO kupacDTO = kupacService.findByKupacEmail(oneLineDTO.getOneLiner()).get();
+        mailService.sendVerificationMail(oneLineDTO.getOneLiner(), kupacDTO.getVerifikacijskiKod());
+        kupacDTO.setVerifikacijskiKod(passwordEncoder.encode(kupacDTO.getVerifikacijskiKod()));
+        kupacService.update(kupacDTO.getKupacId(), kupacDTO);
+        return ResponseEntity.ok("Verifikacijski mail poslan!");
+    }
 
-        if(kupacService.get(kupacId).getKodValidanDo().isBefore(LocalDateTime.now()))
+    @PostMapping("/verification")
+    public ResponseEntity<Object> verifyKupac(@RequestBody @Valid final VerificationDTO verificationDTO) {
+        KupacDTO kupacDTO = kupacService.findByKupacEmail(verificationDTO.getEmail()).get();
+
+        if(kupacDTO.getKodValidanDo().isBefore(LocalDateTime.now()))
             return ResponseEntity.badRequest().body("Vrijeme za verifikaciju je isteklo.\nPokušajte se ponovno registrirati!");
-        if(!passwordEncoder.matches(kupacDTO.getVerifikacijskiKod(), kupacService.get(kupacId).getVerifikacijskiKod()))
+        if(!passwordEncoder.matches(verificationDTO.getVerificationCode(), kupacService.get(kupacDTO.getKupacId()).getVerifikacijskiKod()))
             return ResponseEntity.badRequest().body("Unesen neispravan verifikacijski kod.\nPokušajte ga ponovno upisati!");
 
-        kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
-        kupacDTO.setVerifikacijskiKod(passwordEncoder.encode(kupacDTO.getVerifikacijskiKod()));
+        kupacDTO.setVerifikacijskiKod(null);
+        kupacDTO.setKodValidanDo(null);
         kupacDTO.setVerificiranKupac(true);
-        updateKupac(kupacId, kupacDTO);
+        updateKupac(kupacDTO.getKupacId(), kupacDTO);
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", "KUPAC");

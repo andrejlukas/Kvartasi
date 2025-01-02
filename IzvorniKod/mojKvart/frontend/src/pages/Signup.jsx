@@ -41,12 +41,18 @@ export function Signup() {
          body: JSON.stringify(data)
       };
 
-      return fetch('/api/kupacs/verification', options)
+      return fetch('/api/kupacs/signup', options)
          .then(response => {
             if (response.ok) {
                setErrorMessage('');
-               const verificationData = { "data": data, "tries": 0 };
-               localStorage.setItem("verificationData", JSON.stringify(verificationData));
+               
+               fetch('/api/kupacs/sendVerificationMail', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ "oneLiner": emailAddress })
+               });
+
+               localStorage.setItem("verificationData", JSON.stringify({ "email": emailAddress, "verificationCode": "", "tries": 0 }));
                window.location.reload();
             } else {
                return response.text().then(text => {
@@ -61,10 +67,9 @@ export function Signup() {
    function checkVerificationCode(e) {
       e.preventDefault();
    
-      let data = JSON.parse(localStorage.getItem("verificationData")).data;
-      let tries  = JSON.parse(localStorage.getItem("verificationData")).tries;
-
-      data.verifikacijskiKod = verificationCode;
+      let data = JSON.parse(localStorage.getItem("verificationData"));
+      data.verificationCode = verificationCode;
+      data.tries = data.tries + 1;
    
       const options = {
          method: 'POST',
@@ -74,11 +79,11 @@ export function Signup() {
          body: JSON.stringify(data)
       };
    
-      return fetch('/api/kupacs/signup', options)
+      return fetch('/api/kupacs/verification', options)
          .then((response) => {
             if (!response.ok) {
                return response.text().then((text) => {
-                  localStorage.setItem("verificationData", JSON.stringify({ "data": data, "tries": tries + 1 }));
+                  localStorage.setItem("verificationData", JSON.stringify(data));
                   throw new Error(text);
                });
             }
@@ -94,27 +99,33 @@ export function Signup() {
                alert("Nemate više pravo upisivati verifikacijski kod nakon 5 minuta. Pokušajte se registrirati opet te pažljivo upišite svoje podatke.");
                localStorage.removeItem("verificationData");
                setErrorMessage('');
-            } else if(tries == 2) {
+            } else if(data.tries == 3) {
                alert("Nemate više pravo upisivati verifikacijski kod nakon 3 pokušaja. Pokušajte se registrirati opet te pažljivo upišite svoje podatke.");
                localStorage.removeItem("verificationData");
                setErrorMessage('');
             } else {
-               setErrorMessage(`Netočan verifikacijski kod!<br/>Broj preostalih pokušaja verifikacije: ${ 2 - tries }`);
+               setErrorMessage(`Netočan verifikacijski kod!<br/>Broj preostalih pokušaja verifikacije: ${ 3 - data.tries }`);
             }
          });
+   }
+
+   function backToSignUp() {
+      localStorage.removeItem("verificationData");
+      window.location.reload();
    }
    
    
    if(localStorage.getItem("verificationData") != null) {
       return (
          <div>
-            <h3>Verifikacijski kod je poslan na email adresu {JSON.parse(localStorage.getItem("verificationData")).data.kupacEmail}</h3>
+            <h3>Verifikacijski kod je poslan na email adresu {JSON.parse(localStorage.getItem("verificationData")).email}</h3>
             <h2>Imate pet minuta i/ili 3 pokušaja da unesete kod nakon čega verifikacija više neće biti moguća.</h2>
             <form onSubmit={checkVerificationCode}>
                <input type="text" placeholder="Verifikacijski kod" name="verificationCode" value={verificationCode} 
                onChange={(e) => setVerificationCode(e.target.value)}/>
                <button type="submit">Verificiraj</button>
             </form>
+            <button type="click" onClick={backToSignUp}>Natrag na registraciju</button>
             {errorMessage && <p className="error-message" dangerouslySetInnerHTML={{ __html: errorMessage }}/>}
          </div>
       );

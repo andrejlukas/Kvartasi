@@ -34,7 +34,7 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ "oneLiner": token }),
     };
 
     try {
@@ -84,7 +84,7 @@ function App() {
             <PonudeiPromocije />
           </SecuredRoute>
         } />
-        <Route path="/home/popistrgovina/:id" element={
+        <Route path="/home/popisTrgovina/:id" element={
           <SecuredRoute>
             <Shop />
           </SecuredRoute>
@@ -94,7 +94,7 @@ function App() {
             <Dogadaji />
           </SecuredRoute>
         } />
-        <Route path="/korisnickiRacun" element={
+        <Route path="/korisnickiracun" element={
           <SecuredRoute>
             <KorisnickiRacun />
           </SecuredRoute>
