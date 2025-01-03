@@ -1,7 +1,9 @@
 import { Navbar } from "../components/Navbar";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/MojiPodaci.css"
+import { MapContainer, TileLayer, Marker, useMapEvents  } from 'react-leaflet';
+import "leaflet/dist/leaflet.css";
+import "../styles/MojiPodaci.css";
 
 export function MojiPodaci(){
     const navigate = useNavigate();
@@ -13,6 +15,7 @@ export function MojiPodaci(){
     const [sifra, setSifra] = useState('')
     const [errorMessage, setErrorMessage] = useState('');
     const [hasChanges, setHasChanges] = useState(false);
+    const [markerPosition, setMarkerPosition] = useState(null);
    
     //dohvacanje email-a
     useEffect(() => {
@@ -113,15 +116,43 @@ export function MojiPodaci(){
         navigate('/korisnickiracun');
    }
 
-   function handleClose(){
+   function handleClose() {
         navigate('/korisnickiracun');
         return;
    }
 
-   function handleInputChange(setter, value){
+   function handleInputChange(setter, value) {
     setter(value);
     setHasChanges(true); 
    }
+
+   const LocationMarker = () => {
+        useMapEvents({
+            click(e) {
+                const { lat, lng } = e.latlng;
+                setMarkerPosition([lat, lng]);
+                setHomeAddress(`${lat},${lng}`);
+                setHasChanges(true);
+            },
+        });
+
+        return markerPosition ? <Marker position={markerPosition} /> : null;
+    };
+
+    useEffect(() => {
+        const initialPosition = getCurrentLocation();
+        setMarkerPosition(initialPosition);
+    }, [homeAddress]);
+
+    const getCurrentLocation = () => {
+        if (homeAddress) {
+            const [lat, lng] = homeAddress.split(',').map(Number);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                return [lat, lng];
+            }
+        }
+        return [45.815, 15.9819]; // default Zagreb
+    };
 
     return(
         <div className="moji-podaci-wrapper">
@@ -133,7 +164,7 @@ export function MojiPodaci(){
                             <div className="moji-podaci-form-group">
                                 <label >Ime:</label>
                                 <input type="text"  placeholder={firstName} className="moji-podaci-inputs" name="firstName" value={firstName}
-                                onChange={(e) => handleInputChange(setFirstName,e.target.value)} />
+                                onChange={(e) => handleInputChange(setFirstName, e.target.value)} />
                             </div>
                             
                             <div className="moji-podaci-form-group">
@@ -149,11 +180,21 @@ export function MojiPodaci(){
                             </div>
                             
                             <div className="moji-podaci-form-group">
-                                <label >Adresa:</label>
-                                <input type="text"  placeholder={homeAddress} className="moji-podaci-inputs" name="homeAddress" value={homeAddress}
-                                onChange={(e) => handleInputChange(setHomeAddress,e.target.value)} />
+                                <label>Adresa:</label>
+                                <MapContainer
+                                    center={markerPosition || [45.815, 15.9819]}
+                                    zoom={12}
+                                    style={{ height: "400px", width: "100%" }}
+                                    key={markerPosition}
+                                >
+                                    <TileLayer
+                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                    />
+                                    <LocationMarker />
+                                </MapContainer>
                             </div>
-                            {/* Prikaz poruke o grešci ako postoji */}
+
                             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                             <div className="moji-podaci-gumbovi-container">
                                 <button type="submit" id="spremi-promjene-button">Spremi promjene</button> 
@@ -161,7 +202,7 @@ export function MojiPodaci(){
                                     type="button" 
                                     id = "zatvori-button"
                                     onClick={handleClose} 
-                                    disabled={!!errorMessage || hasChanges }>Zatvori</button>
+                                    disabled={ !!errorMessage || hasChanges }>Zatvori</button>
                             </div>
                             
                            

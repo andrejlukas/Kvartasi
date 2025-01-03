@@ -1,6 +1,8 @@
 import "../styles/Signup.css"
+import "leaflet/dist/leaflet.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { MapContainer, TileLayer, Marker, useMapEvents  } from 'react-leaflet';
 import googleLogo from "../assets/google-logo.png"
 
 export function Signup() {
@@ -14,6 +16,7 @@ export function Signup() {
    const [showPassword, setShowPassword] = useState(false);
    const [verificationCode, setVerificationCode] = useState('');
    const [errorMessage, setErrorMessage] = useState('');
+   const [markerPosition, setMarkerPosition] = useState(null);
 
    const togglePasswordVisibility = () => {
       setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -114,6 +117,18 @@ export function Signup() {
       window.location.reload();
    }
    
+   const LocationMarker = () => {
+      useMapEvents({
+         click(e) {
+               const { lat, lng } = e.latlng;
+               setMarkerPosition([lat, lng]);
+               setHomeAddress(`${lat},${lng}`);
+         },
+      });
+
+      return markerPosition ? <Marker position={markerPosition} /> : null;
+   };
+
    
    if(localStorage.getItem("verificationData") != null) {
       return (
@@ -142,12 +157,22 @@ export function Signup() {
                         <input type="text" placeholder="Prezime" className="signup-inputs" name="lastName" value={lastName}
                         onChange={(e) => setLastName(e.target.value)}/>
                      </div>
-                     <input type="text" placeholder="Kućna adresa" id="home" className="signup-inputs"  name="homeAddress" value={homeAddress}
-                        onChange={(e) => setHomeAddress(e.target.value)}/>
+                     <label>Kućna adresa</label>
+                     <MapContainer
+                        center={markerPosition || [45.815, 15.9819]}
+                        zoom={12}
+                        style={{ height: "400px", width: "100%" }}
+                        key={markerPosition}
+                     >
+                        <TileLayer
+                              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        />
+                        <LocationMarker />
+                     </MapContainer>
+                        
                      <input type="email" placeholder="E-mail adresa" id = "email" className="signup-inputs"  name="emailAddress" value={emailAddress}
                         onChange={(e) => setEmailAddress(e.target.value)}/>
-                        
-                     
                      <div className="password-input-container">
                      <input type={showPassword ? "text" : "password"} placeholder="Lozinka" id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
                      <button
