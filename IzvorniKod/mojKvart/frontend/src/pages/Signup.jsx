@@ -1,47 +1,46 @@
-import "../styles/Signup.css"
+import "../styles/Signup.css";
 import "leaflet/dist/leaflet.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, useMapEvents  } from 'react-leaflet';
-import googleLogo from "../assets/google-logo.png"
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import googleLogo from "../assets/google-logo.png";
 
 export function Signup() {
    const navigate = useNavigate();
-   const [firstName, setFirstName] = useState('')
-   const [lastName, setLastName] = useState('')
-   const [homeAddress, setHomeAddress] = useState('')
-   const [emailAddress, setEmailAddress] = useState('')
-   const [password, setPassword] = useState('')
-
+   const [registrationType, setRegistrationType] = useState("customer");
+   const [customerData, setCustomerData] = useState({
+      kupacIme: "",
+      kupacPrezime: "",
+      kupacAdresa: "",
+      kupacEmail: "",
+      kupacSifra: "",
+      verificiranKupac: false
+   });
+   const [shopData, setShopData] = useState({
+      trgovinaNaziv: "",
+      trgovinaOpis: "",
+      trgovinaKategorija: "",
+      trgovinaLokacija: "",
+      trgovinaSlika: "",
+      trgovinaRadnoVrijemeOd: "",
+      trgovinaRadnoVrijemeDo: "",
+      trgovinaEmail: "",
+      trgovinaSifra: "",
+   });
    const [showPassword, setShowPassword] = useState(false);
-   const [verificationCode, setVerificationCode] = useState('');
-   const [errorMessage, setErrorMessage] = useState('');
+   const [verificationCode, setVerificationCode] = useState("");
+   const [errorMessage, setErrorMessage] = useState("");
    const [markerPosition, setMarkerPosition] = useState(null);
-
-   const togglePasswordVisibility = () => {
-      setShowPassword((prevShowPassword) => !prevShowPassword);
-   };
-
 
    function getVerificationCode(e){   
       e.preventDefault();
 
-      const data = {
-         kupacEmail: emailAddress,
-         kupacIme: firstName,
-         kupacPrezime: lastName,
-         kupacAdresa: homeAddress,
-         kupacSifra: password,
-         verifikacijskiKod: null,
-         kodValidanDo: null,
-         verificiranKupac: false
-      };
       const options = {
          method: 'POST',
          headers: {
             'Content-Type': 'application/json'
          },
-         body: JSON.stringify(data)
+         body: JSON.stringify(customerData)
       };
 
       return fetch('/api/kupacs/signup', options)
@@ -52,10 +51,10 @@ export function Signup() {
                fetch('/api/kupacs/sendVerificationMail', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ "oneLiner": emailAddress })
+                  body: JSON.stringify({ "oneLiner": customerData.kupacEmail })
                });
 
-               localStorage.setItem("verificationData", JSON.stringify({ "email": emailAddress, "verificationCode": "", "tries": 0 }));
+               localStorage.setItem("verificationData", JSON.stringify({ "email": customerData.kupacEmail, "verificationCode": "", "tries": 0 }));
                window.location.reload();
             } else {
                return response.text().then(text => {
@@ -112,24 +111,235 @@ export function Signup() {
          });
    }
 
-   function backToSignUp() {
+   function registerShop(e) {
+      e.preventDefault();
+
+      const options = {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(shopData)
+      };
+
+      return fetch("/api/trgovinas/signup", options)
+         .then((response) => {
+            if (!response.ok) {
+               return response.text().then((text) => {
+                  throw new Error(text);
+               });
+            }
+            return response.json();
+         })
+         .then((data) => {
+            navigate('/home?token=' + data.token);
+            window.location.reload();
+         })
+         .catch(error => setErrorMessage(error.message))
+   }
+
+   const backToSignUp = () => {
       localStorage.removeItem("verificationData");
       window.location.reload();
    }
-   
+
+   const togglePasswordVisibility = () => {
+      setShowPassword((prevShowPassword) => !prevShowPassword);
+   };
+
+   const handleRegistrationTypeChange = (e) => {
+      setRegistrationType(e.target.value);
+   };
+
+   const handleCustomerChange = (e) => {
+      const { name, value } = e.target;
+      setCustomerData((prevData) => ({ ...prevData, [name]: value }));
+   };
+
+   const handleShopChange = (e) => {
+      const { name, value } = e.target;
+      setShopData((prevData) => ({ ...prevData, [name]: value }));
+   };
+
    const LocationMarker = () => {
       useMapEvents({
          click(e) {
-               const { lat, lng } = e.latlng;
-               setMarkerPosition([lat, lng]);
-               setHomeAddress(`${lat},${lng}`);
+            const { lat, lng } = e.latlng;
+            setMarkerPosition([lat, lng]);
+            if (registrationType === "customer") {
+               setCustomerData((prevData) => ({
+                  ...prevData,
+                  kupacAdresa: `${lat},${lng}`,
+               }));
+            } else {
+               setShopData((prevData) => ({
+                  ...prevData,
+                  trgovinaLokacija: `${lat},${lng}`,
+               }));
+            }
          },
       });
 
       return markerPosition ? <Marker position={markerPosition} /> : null;
    };
 
-   
+   const renderCustomerForm = () => (
+      <>
+         <div className="form-group">
+            <input
+               type="text"
+               placeholder="Ime"
+               className="signup-inputs"
+               name="kupacIme"
+               value={customerData.kupacIme}
+               onChange={handleCustomerChange}
+            />
+            <input
+               type="text"
+               placeholder="Prezime"
+               className="signup-inputs"
+               name="kupacPrezime"
+               value={customerData.kupacPrezime}
+               onChange={handleCustomerChange}
+            />
+         </div>
+         <div id="leafletMapCustomer">
+            <label>Kućna adresa</label>
+            <MapContainer
+               center={markerPosition || [45.815, 15.9819]}
+               zoom={12}
+               style={{ height: "400px", width: "100%" }}
+               key={markerPosition}
+            >
+               <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+               />
+               <LocationMarker />
+            </MapContainer>
+         </div>
+         <input
+            type="email"
+            placeholder="E-mail adresa"
+            className="signup-inputs"
+            name="kupacEmail"
+            value={customerData.kupacEmail}
+            onChange={handleCustomerChange}
+         />
+         <div className="password-input-container">
+            <input
+               type={showPassword ? "text" : "password"}
+               placeholder="Lozinka"
+               name="kupacSifra"
+               className="inputs"
+               value={customerData.kupacSifra}
+               onChange={handleCustomerChange}
+            />
+            <button
+               type="button"
+               onClick={togglePasswordVisibility}
+               className="toggle-password-button-signup"
+            >
+               {showPassword ? "Sakrij" : "Otkrij"}
+            </button>
+         </div>
+      </>
+   );
+
+   const renderShopForm = () => (
+      <>
+         <input
+            type="text"
+            placeholder="Naziv trgovine"
+            className="signup-inputs"
+            name="trgovinaNaziv"
+            value={shopData.trgovinaNaziv}
+            onChange={handleShopChange}
+         />
+         <textarea
+            placeholder="Opis trgovine"
+            className="signup-inputs"
+            name="trgovinaOpis"
+            value={shopData.trgovinaOpis}
+            onChange={handleShopChange}
+         />
+         <input
+            type="text"
+            placeholder="Kategorija trgovine"
+            className="signup-inputs"
+            name="trgovinaKategorija"
+            value={shopData.trgovinaKategorija}
+            onChange={handleShopChange}
+         />
+         <label>Lokacija trgovine</label>
+         <div id="leafletMapShop">
+            <MapContainer
+               center={markerPosition || [45.815, 15.9819]}
+               zoom={12}
+               style={{ height: "400px", width: "100%" }}
+               key={markerPosition}
+            >
+               <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+               />
+               <LocationMarker />
+            </MapContainer>
+         </div>
+         <input
+            type="text"
+            placeholder="Slika trgovine (URL)"
+            className="signup-inputs"
+            name="trgovinaSlika"
+            value={shopData.trgovinaSlika}
+            onChange={handleShopChange}
+         />
+         <div className="form-group">
+            <input
+               type="time"
+               placeholder="Radno vrijeme od"
+               className="signup-inputs"
+               name="trgovinaRadnoVrijemeOd"
+               value={shopData.trgovinaRadnoVrijemeOd}
+               onChange={handleShopChange}
+            />
+            <input
+               type="time"
+               placeholder="Radno vrijeme do"
+               className="signup-inputs"
+               name="trgovinaRadnoVrijemeDo"
+               value={shopData.trgovinaRadnoVrijemeDo}
+               onChange={handleShopChange}
+            />
+         </div>
+         <input
+            type="email"
+            placeholder="E-mail trgovine"
+            className="signup-inputs"
+            name="trgovinaEmail"
+            value={shopData.trgovinaEmail}
+            onChange={handleShopChange}
+         />
+         <div className="password-input-container">
+            <input
+               type={showPassword ? "text" : "password"}
+               placeholder="Lozinka"
+               name="trgovinaSifra"
+               className="inputs"
+               value={shopData.trgovinaSifra}
+               onChange={handleShopChange}
+            />
+            <button
+               type="button"
+               onClick={togglePasswordVisibility}
+               className="toggle-password-button-signup"
+            >
+               {showPassword ? "Sakrij" : "Otkrij"}
+            </button>
+         </div>
+      </>
+   );
+
    if(localStorage.getItem("verificationData") != null) {
       return (
          <div>
@@ -150,50 +360,48 @@ export function Signup() {
             <div className="container">
                <div className="form-box">
                   <h2>Registracija</h2>
-                  <form onSubmit={getVerificationCode}>
-                     <div className="form-group">
-                        <input type="text" placeholder="Ime" className="signup-inputs" name="firstName" value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}/>
-                        <input type="text" placeholder="Prezime" className="signup-inputs" name="lastName" value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}/>
-                     </div>
-                     <label>Kućna adresa</label>
-                     <MapContainer
-                        center={markerPosition || [45.815, 15.9819]}
-                        zoom={12}
-                        style={{ height: "400px", width: "100%" }}
-                        key={markerPosition}
-                     >
-                        <TileLayer
-                              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  <div className="registration-type">
+                     <label>
+                        <input
+                           type="radio"
+                           name="registrationType"
+                           value="customer"
+                           checked={registrationType === "customer"}
+                           onChange={handleRegistrationTypeChange}
                         />
-                        <LocationMarker />
-                     </MapContainer>
-                        
-                     <input type="email" placeholder="E-mail adresa" id = "email" className="signup-inputs"  name="emailAddress" value={emailAddress}
-                        onChange={(e) => setEmailAddress(e.target.value)}/>
-                     <div className="password-input-container">
-                     <input type={showPassword ? "text" : "password"} placeholder="Lozinka" id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
-                     <button
-                              type="button"
-                              onClick={togglePasswordVisibility}
-                              className="toggle-password-button-signup"
-                           >
-                              {showPassword ? "Sakrij" : "Otkrij"}
-                           </button>
-                     </div>
-                     <button type="submit" className="signup-buttons" >Registriraj se</button>
-                     {errorMessage && <p className="error-message">{errorMessage}</p>}
-                     <a href="/">
-                        <button id="Back" type="button" className="signup-buttons">Natrag na prijavu</button>
-                     </a>
-                     <a href={`${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`} role="button" id="google-btn">
+                        Registracija kupca
+                     </label>
+                     <label>
+                        <input
+                           type="radio"
+                           name="registrationType"
+                           value="shop"
+                           checked={registrationType === "shop"}
+                           onChange={handleRegistrationTypeChange}
+                        />
+                        Registracija trgovine
+                     </label>
+                  </div>
+                  <form onSubmit={(e) => registrationType === "customer" ? getVerificationCode(e) : registerShop(e)}>
+                     {registrationType === "customer"
+                        ? renderCustomerForm()
+                        : renderShopForm()}
+                     <button type="submit" className="signup-buttons">
+                        {registrationType === "customer"
+                           ? "Registriraj se"
+                           : "Registriraj trgovinu"}
+                     </button>
+                     {registrationType === "customer" && <a href={`${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`} role="button" id="google-btn">
                         <img src={googleLogo} alt="Google Logo"/>
                         <span>Google registracija</span>
+                     </a>}
+                     {errorMessage && <p className="error-message">{errorMessage}</p>}
+                     <a href="/">
+                        <button id="Back" type="button" className="signup-buttons">
+                           Natrag na prijavu
+                        </button>
                      </a>
                   </form>
-               
                </div>
             </div>
          </div>

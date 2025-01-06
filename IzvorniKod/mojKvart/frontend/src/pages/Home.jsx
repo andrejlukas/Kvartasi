@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 export function Home() {
   const [products, setProducts] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const url = window.location.search;

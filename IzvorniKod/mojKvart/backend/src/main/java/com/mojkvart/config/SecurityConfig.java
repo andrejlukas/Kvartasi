@@ -37,11 +37,14 @@ public class SecurityConfig{
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> { registry
+                        .requestMatchers("/api/tokens/expiration").permitAll()
+
                         .requestMatchers("/api/kupacs/signup").permitAll()
                         .requestMatchers("/api/kupacs/sendVerificationMail").permitAll()
                         .requestMatchers("/api/kupacs/verification").permitAll()
                         .requestMatchers("/api/kupacs/login").permitAll()
-                        .requestMatchers("/api/tokens/expiration").permitAll()
+
+                        .requestMatchers("/api/trgovinas/signup").permitAll()
                         .anyRequest().authenticated(); })
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

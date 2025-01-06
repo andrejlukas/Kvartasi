@@ -1,14 +1,17 @@
 package com.mojkvart.rest;
 
-import com.mojkvart.model.ProizvodDTO;
-import com.mojkvart.model.RecenzijaDTO;
 import com.mojkvart.model.TrgovinaDTO;
-import com.mojkvart.service.ProizvodService;
-import com.mojkvart.service.TrgovinaService;
+import com.mojkvart.service.*;
+import com.mojkvart.util.AuthenticationResponse;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,11 +32,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/trgovinas", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TrgovinaResource {
 
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9šđčćžŠĐČĆŽ._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+    @Autowired
+    private KupacService kupacService;
+
     @Autowired
     private TrgovinaService trgovinaService;
 
     @Autowired
+    private ModeratorService moderatorService;
+
+    @Autowired
+    private AdministratorService administratorService;
+
+    @Autowired
     private ProizvodService proizvodService;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -52,12 +69,39 @@ public class TrgovinaResource {
     }
 
     //UC5, koristite api/trgovinas za kreiranje nove trgovine
-    @PostMapping
-    public ResponseEntity<Integer> createTrgovina(
-            @RequestBody @Valid final TrgovinaDTO trgovinaDTO) {
+    @PostMapping("/signup")
+    public ResponseEntity<Object> createTrgovina(@RequestBody @Valid final TrgovinaDTO trgovinaDTO) {
+        if(trgovinaDTO.getTrgovinaNaziv().length() < 2)
+            return ResponseEntity.badRequest().body("Naziv trgovine mora biti minimalno duljine 2 znaka!");
+        if(trgovinaDTO.getTrgovinaOpis().length() < 10)
+            return ResponseEntity.badRequest().body("Opis trgovine mora biti minimalno duljine 10 znakova!");
+        if(trgovinaDTO.getTrgovinaKategorija().length() < 2)
+            return ResponseEntity.badRequest().body("Kategorija trgovine mora biti minimalno duljine 2 znaka!");
+        if(trgovinaDTO.getTrgovinaLokacija().isEmpty())
+            return ResponseEntity.badRequest().body("Morate odabrati lokaciju trgovine na karti!");
+        if(trgovinaDTO.getTrgovinaSlika().isEmpty())
+            return ResponseEntity.badRequest().body("Morate upisati URL slike!");
+        if(trgovinaDTO.getTrgovinaRadnoVrijemeOd().isEmpty() || trgovinaDTO.getTrgovinaRadnoVrijemeDo().isEmpty())
+            return ResponseEntity.badRequest().body("Početno radno vrijeme treba biti upisano!");
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(trgovinaDTO.getTrgovinaEmail());
+        if(!matcher.matches())
+            return ResponseEntity.badRequest().body("Upisan nevažeći oblik e-mail adrese!");
+        if(trgovinaDTO.getTrgovinaSifra().length() < 8)
+            return ResponseEntity.badRequest().body("Lozinka mora biti minimalno duljine 8 znakova!");
+        if(administratorService.findByAdministratorEmail(trgovinaDTO.getTrgovinaEmail()).isPresent() ||
+                moderatorService.findByModeratorEmail(trgovinaDTO.getTrgovinaEmail()).isPresent() ||
+                trgovinaService.findByTrgovinaEmail(trgovinaDTO.getTrgovinaEmail()).isPresent() ||
+                kupacService.findByKupacEmail(trgovinaDTO.getTrgovinaEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Imate već postojeći korisnički račun?");
+        }
+
         trgovinaDTO.setTrgovinaSifra(passwordEncoder.encode(trgovinaDTO.getTrgovinaSifra()));
-        final Integer createdTrgovinaId = trgovinaService.create(trgovinaDTO);
-        return new ResponseEntity<>(createdTrgovinaId, HttpStatus.CREATED);
+        trgovinaService.create(trgovinaDTO);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", "TRGOVINA");
+        AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(claims, trgovinaDTO.getTrgovinaEmail()));
+        return new ResponseEntity<>(resp, HttpStatus.CREATED);
     }
 
     //UC4, koristite api/trgovinas/{trgovinaId} za uredivanje osnovnih podataka

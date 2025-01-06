@@ -34,6 +34,7 @@ public class Oauth2KorisnikService extends DefaultOAuth2UserService {
             kupac.setKupacEmail(email);
             kupac.setKupacIme(ime);
             kupac.setKupacPrezime(prezime);
+            kupac.setVerificiranKupac(true);
             kupacRepository.save(kupac);
         }
     }
@@ -48,7 +49,7 @@ public class Oauth2KorisnikService extends DefaultOAuth2UserService {
             claims.put("role", "MODERATOR");
         else if(administratorRepository.findByAdministratorEmail(email).isPresent())
             claims.put("role", "AMDINISTRATOR");
-        else // ili u bazi u tabli kupac ili novonastali korisnik
+        else
             claims.put("role", "KUPAC");
 
         return claims;
