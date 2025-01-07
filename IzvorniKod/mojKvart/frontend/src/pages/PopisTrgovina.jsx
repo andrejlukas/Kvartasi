@@ -101,7 +101,7 @@ export function PopisTrgovina() {
           <div className="container-shops mt-4">
             {error ? (
               <p className="text-danger">{error}</p>
-            ) : !shops ? (
+            ) : !shops.length ? (
               <p>Loading shops...</p>
             ) : (
               <div className="shop-shop-row">

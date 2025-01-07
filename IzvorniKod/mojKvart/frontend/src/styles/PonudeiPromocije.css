@@ -1,0 +1,176 @@
+.container-popusti  {
+  background-color: #ededed;
+  padding: 20px 0;
+  display: flex;
+  justify-content: start;
+}
+
+.popust-popust-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+  align-items: flex-start; 
+  justify-content: flex-start; 
+}
+.banner {
+  flex: 0 0 20%; 
+  margin-left: 20px; 
+  margin-right: 20px;
+  width: 20%; 
+  padding: 20px;
+  border-radius: 20px;
+  font-family: Raleway, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.popusti-section{
+  width: 85%; 
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap; 
+  gap: 20px;
+}
+
+.my-popust-wrapper{
+   flex: 0 0 calc(50% - 20px);
+  width:100%;
+  border-bottom: 50px;
+}
+
+.popust-card {
+  width: 95%; 
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+  text-align: left;
+  font-family: Raleway, sans-serif;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 13rem;
+  transition: border ease; 
+}
+
+
+
+.popust-header {
+   padding-left: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.popust-body {
+   padding-left: 10px;
+   padding-right: 20px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popust-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 14px;
+  color: #555;
+}
+
+.popust-store {
+  font-weight: bold;
+}
+
+.popust-code {
+  color: #333;
+  font-style: italic;
+}
+
+.popust-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 110px;
+}
+
+.qr-code {
+  
+  height: 100%;
+  padding-bottom: 0px;
+  object-fit: contain;
+}
+
+.save-button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  height:45px;
+  border-radius: 7px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.save-button:hover {
+  background-color: #218838;
+}
+
+@media (max-width: 868px) {
+   .container-popusti  {
+      flex-direction: column;
+   }
+  .popust-popust-row {
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    width: 100%;
+    gap: 10px;
+  }
+
+  .banner {
+    width: 50%;
+    margin-bottom: 20px;
+  }
+
+  .popusti-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 20px;
+  }
+
+  /* ovo mozda fali  */
+  .row-shops{ 
+    flex-direction: column;
+    align-items: center;
+  }
+  .my-popust-wrapper {
+   flex-direction: column;
+    width: 90%; 
+    margin-bottom: 20px; 
+  }
+  
+  .popust-card {
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 13rem; 
+    box-sizing: border-box;
+    padding: 15px;
+  }
+  .card-body-shop {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
