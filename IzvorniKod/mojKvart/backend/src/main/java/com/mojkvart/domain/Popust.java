@@ -1,5 +1,6 @@
 package com.mojkvart.domain;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +12,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.persistence.Transient;
+
 
 
 @Entity
@@ -44,5 +47,8 @@ public class Popust {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ponuda_popust_id", nullable = false)
     private PonudaPopust ponudaPopust;
+
+    @Transient
+    private String trgovinaIme;
 
 }

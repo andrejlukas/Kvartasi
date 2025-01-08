@@ -27,10 +27,18 @@ public class PonudaResource {
         this.ponudaService = ponudaService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<PonudaDTO>> getAllPonudas() {
-        return ResponseEntity.ok(ponudaService.findAll());
+    // vraća sve ponude koje je moderator odobrio
+    @GetMapping("/flag-true")
+    public ResponseEntity<List<PonudaDTO>> getAllWithFlagTrue() {
+        return ResponseEntity.ok(ponudaService.findAllWithFlagTrue());
     }
+
+    // vraća sve ponude koje moderator mora odobriti
+    @GetMapping("/flag-false")
+    public ResponseEntity<List<PonudaDTO>> getAllWithFlagFalse() {
+        return ResponseEntity.ok(ponudaService.findAllWithFlagFalse());
+    }
+
 
     @GetMapping("/{ponudaId}")
     public ResponseEntity<PonudaDTO> getPonuda(

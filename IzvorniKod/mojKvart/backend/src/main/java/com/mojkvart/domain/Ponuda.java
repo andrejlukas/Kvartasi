@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,5 +42,8 @@ public class Ponuda {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ponuda_popust_id", nullable = false)
     private PonudaPopust ponudaPopust;
+
+    @Transient // Ovo polje nije mapirano u bazu
+    private String trgovinaIme;
 
 }

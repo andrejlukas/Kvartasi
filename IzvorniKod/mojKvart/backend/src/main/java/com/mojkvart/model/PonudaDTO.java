@@ -23,4 +23,6 @@ public class PonudaDTO {
     @NotNull
     private Integer ponudaPopust;
 
+    // nije obavezno polje, njega popunjavam s trgovinaIme prilikom fetcha
+    private String trgovinaIme;
 }

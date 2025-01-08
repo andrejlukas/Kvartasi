@@ -27,9 +27,16 @@ public class PopustResource {
         this.popustService = popustService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<PopustDTO>> getAllPopusts() {
-        return ResponseEntity.ok(popustService.findAll());
+    // vraca sve popuste koji su odobreni od strane moderatora
+    @GetMapping("/flag-true")
+    public ResponseEntity<List<PopustDTO>> getAllPopustsWithFlagTrue() {
+        return ResponseEntity.ok(popustService.findAllWithFlagTrue());
+    }
+
+    // vraca sve popuste koje moderator treba odobriti
+    @GetMapping("/flag-false")
+    public ResponseEntity<List<PopustDTO>> getAllPopustsWithFlagFalse() {
+        return ResponseEntity.ok(popustService.findAllWithFlagFalse());
     }
 
     @GetMapping("/{popustId}")
