@@ -51,7 +51,7 @@ public class KupacResource {
     private JwtService jwtService;
 
     @Autowired
-    private MailService mailService;
+    private EmailService mailService;
 
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9šđčćžŠĐČĆŽ._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
@@ -112,7 +112,7 @@ public class KupacResource {
             verificationRoutine(kupacDTO);
             kupacService.update(kupacId, kupacDTO);
         }
-        return new ResponseEntity<>("Stvorena trgovina!", HttpStatus.CREATED);
+        return new ResponseEntity<>("Stvoren kupac!", HttpStatus.CREATED);
     }
 
     @PostMapping("/sendVerificationMail")
@@ -140,7 +140,7 @@ public class KupacResource {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", "KUPAC");
-        AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(claims, kupacDTO.getKupacEmail()));
+        AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(claims, kupacDTO.getKupacEmail()), "KUPAC");
         return ResponseEntity.ok().body(resp);
     }
 
@@ -180,7 +180,7 @@ public class KupacResource {
         if (passwordEncoder.matches(sifra, sifraIzBaze)){
             Map<String, Object> claims = new HashMap<>();
             claims.put("role", role);
-            AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(claims, email));
+            AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(claims, email), role);
             return ResponseEntity.ok().body(resp);
         }
         else

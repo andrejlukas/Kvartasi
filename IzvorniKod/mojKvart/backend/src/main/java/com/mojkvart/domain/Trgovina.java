@@ -10,15 +10,21 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
 @Entity
 @Getter
 @Setter
-public class Trgovina {
+public class Trgovina implements UserDetails {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -84,4 +90,38 @@ public class Trgovina {
     )
     private Set<Atribut> imaAtributeAtributs;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("TRGOVINA"));
+    }
+
+    @Override
+    public String getPassword() {
+        return trgovinaSifra;
+    }
+
+    @Override
+    public String getUsername() {
+        return trgovinaEmail;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

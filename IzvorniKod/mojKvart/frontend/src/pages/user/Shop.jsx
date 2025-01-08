@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Navbar } from '../components/Navbar';
-import "../styles/Shop.css";
+import { Navbar } from '../../components/Navbar';
+import "../../styles/Shop.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function Shop() {
+export function Shop() {
   const { id } = useParams();
   const [shop, setShop] = useState(null);
   const [products, setProducts] = useState([]); 

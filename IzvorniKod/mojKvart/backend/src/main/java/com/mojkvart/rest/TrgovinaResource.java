@@ -3,6 +3,7 @@ package com.mojkvart.rest;
 import com.mojkvart.model.TrgovinaDTO;
 import com.mojkvart.service.*;
 import com.mojkvart.util.AuthenticationResponse;
+import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
@@ -61,11 +62,12 @@ public class TrgovinaResource {
         return ResponseEntity.ok(trgovinaService.findAll());
     }
 
-    //UC4, koristite api/trgovinas/{trgovinaId} za pregled osnovnih podataka
-    @GetMapping("/{trgovinaId}")
-    public ResponseEntity<TrgovinaDTO> getTrgovina(
-            @PathVariable(name = "trgovinaId") final Integer trgovinaId) {
-        return ResponseEntity.ok(trgovinaService.get(trgovinaId));
+    //UC4, koristite api/trgovinas/{trgovinaEmail} za pregled osnovnih podataka
+    @GetMapping("/{trgovinaEmail}")
+    public ResponseEntity<Object> getTrgovina(@PathVariable(name = "trgovinaEmail") final String trgovinaEmail) {
+        if(trgovinaService.findByTrgovinaEmail(trgovinaEmail).isEmpty())
+            return ResponseEntity.badRequest().body("ne funkcionira getTrgovina");
+        return ResponseEntity.ok(trgovinaService.findByTrgovinaEmail(trgovinaEmail).get());
     }
 
     //UC5, koristite api/trgovinas za kreiranje nove trgovine
@@ -100,7 +102,7 @@ public class TrgovinaResource {
         trgovinaService.create(trgovinaDTO);
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", "TRGOVINA");
-        AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(claims, trgovinaDTO.getTrgovinaEmail()));
+        AuthenticationResponse resp = new AuthenticationResponse(jwtService.generateToken(claims, trgovinaDTO.getTrgovinaEmail()), "TRGOVINA");
         return new ResponseEntity<>(resp, HttpStatus.CREATED);
     }
 

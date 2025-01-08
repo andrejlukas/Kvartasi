@@ -1,9 +1,9 @@
-import { Navbar } from "../components/Navbar";
+import { Navbar } from "../../components/Navbar";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, useMapEvents  } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
-import "../styles/MojiPodaci.css";
+import "../../styles/MojiPodaci.css";
 
 export function MojiPodaci(){
     const navigate = useNavigate();
@@ -29,7 +29,7 @@ export function MojiPodaci(){
             body: JSON.stringify({ oneLiner: token })
         }
 
-        fetch('/api/tokens', options)
+        fetch('/api/tokens/claims', options)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

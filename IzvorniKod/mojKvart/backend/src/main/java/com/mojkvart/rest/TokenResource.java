@@ -20,7 +20,7 @@ public class TokenResource {
 
     private final JwtService jwtService;
 
-    @PostMapping
+    @PostMapping("/claims")
     public ResponseEntity<TokenResponse> extractInfoFromToken(@RequestBody @Valid OneLineDTO oneLineDTO) {
         String email = jwtService.getEmailFromToken(oneLineDTO.getOneLiner());
         Claims claims = jwtService.getAllClaims(oneLineDTO.getOneLiner());

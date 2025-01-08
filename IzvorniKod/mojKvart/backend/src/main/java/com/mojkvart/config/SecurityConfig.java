@@ -38,6 +38,7 @@ public class SecurityConfig{
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry -> { registry
                         .requestMatchers("/api/tokens/expiration").permitAll()
+                        .requestMatchers(("/api/tokens/claims")).permitAll()
 
                         .requestMatchers("/api/kupacs/signup").permitAll()
                         .requestMatchers("/api/kupacs/sendVerificationMail").permitAll()

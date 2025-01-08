@@ -43,8 +43,14 @@ export function Login() {
             }
          })
          .then(data => {
-            navigate('/home?token=' + data.token);
-            window.location.reload();
+            if(data.role === "KUPAC")
+               navigate('/home?token=' + data.token);
+            else if(data.role === "TRGOVINA")
+               navigate('/trgovina/home?token=' + data.token);
+            else if(data.role === "MODERATOR")
+               navigate('/moderator/home?token=' + data.token);
+            else 
+               navigate('/admin/home?token=' + data.token);
          })
          .catch( error => {
             navigate('/');

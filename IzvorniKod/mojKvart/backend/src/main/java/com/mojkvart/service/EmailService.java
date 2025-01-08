@@ -4,22 +4,20 @@ import jakarta.mail.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
-import java.util.Properties;
-
 @Service
-public class MailService {
+public class EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
-    private String from;
+    private String fromEmail;
 
     private String createBody(String code) {
         return "Poštovani,\n\nVaš šesteroznamenkasti kod za potvrdu registracije u aplikaciju MojKvart je: " + code +
@@ -28,19 +26,13 @@ public class MailService {
 
     @Async
     public void sendVerificationMail(String to, String code) throws MessagingException {
-        Properties properties = new Properties();
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587");
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true);
 
-        Session session = Session.getInstance(properties);
-
-        MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(from));
-        message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(to));
-        message.setSubject("Potvrdite svoju registraciju");
-        message.setText(createBody(code));
+        mimeMessageHelper.setFrom(fromEmail);
+        mimeMessageHelper.setTo(to);
+        mimeMessageHelper.setSubject("Potvrdite svoju registraciju");
+        mimeMessageHelper.setText(createBody(code), false);
 
         javaMailSender.send(message);
     }

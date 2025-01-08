@@ -1,27 +1,46 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route } from "react-router-dom";
+
 import { Login } from "./pages/Login";
 import { Signup } from './pages/Signup';
 import { NotFound } from "./pages/NotFound";
-import { Home } from './pages/Home';
-import { PopisTrgovina } from './pages/PopisTrgovina';
-import { PonudeiPromocije } from './pages/PonudeiPromocije';
-import { Dogadaji } from './pages/Dogadaji';
-import { KorisnickiRacun } from './pages/KorisnickiRacun';
-import Shop from './pages/Shop';
-import { MojiPodaci } from './pages/MojiPodaci';
-import { MojiRacuni } from './pages/MojiRacuni';
-import { MojeRecenzije } from './pages/MojeRecenzije';
+
+import { Home } from './pages/user/Home';
+import { PopisTrgovina } from './pages/user/PopisTrgovina';
+import { PonudeiPromocije } from './pages/user/PonudeiPromocije';
+import { Dogadaji } from './pages/user/Dogadaji';
+import { KorisnickiRacun } from './pages/user/KorisnickiRacun';
+import { Shop } from './pages/user/Shop';
+import { MojiPodaci } from './pages/user/MojiPodaci';
+import { MojiRacuni } from './pages/user/MojiRacuni';
+import { MojeRecenzije } from './pages/user/MojeRecenzije';
+
+import { ShopHome } from './pages/shop/Home';
 
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(null);
+  const [role, setRole] = useState(null);
 
-  const checkTokenExpiration = async () => {
+  const checkTokenExpirationAndRole = async () => {
     const url = window.location.href;
     if (url.includes("?token=")) {
+      localStorage.setItem('token', url.split("?token=")[1]);
       setIsAuthorized(true);
+
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "oneLiner": url.split("?token=")[1] }),
+      };
+
+      const claimsResponse = await fetch('/api/tokens/claims', options);
+      if (!claimsResponse.ok) throw new Error('Failed to fetch claims');
+      const claims = await claimsResponse.json();
+      setRole(claims.role);
       return;
-    }
+    } 
 
     const token = localStorage.getItem("token");
     if (!token) {
@@ -38,9 +57,13 @@ function App() {
     };
 
     try {
-      const response = await fetch('/api/tokens/expiration', options);
-      if (!response.ok) throw new Error('Token is expired!');
-      await response.json();
+      const expirationResponse = await fetch('/api/tokens/expiration', options);
+      if (!expirationResponse.ok) throw new Error('Token expired');
+
+      const claimsResponse = await fetch('/api/tokens/claims', options);
+      if (!claimsResponse.ok) throw new Error('Failed to fetch claims');
+      const claims = await claimsResponse.json();
+      setRole(claims.role);
       setIsAuthorized(true);
     } catch (error) {
       setIsAuthorized(false);
@@ -48,73 +71,102 @@ function App() {
   };
 
   useEffect(() => {
-    checkTokenExpiration();
+    checkTokenExpirationAndRole();
   }, []);
 
-  const SecuredRoute = ({ children }) => {
-    if (isAuthorized === null) return <div>Loading...</div>;
-    if (!isAuthorized) return <NotFound />;
+  const SecuredUserRoute = ({ children }) => {
+    if(isAuthorized === null || role === null) return <div>Loading...</div>;
+    if(!isAuthorized || role !== "KUPAC") return <NotFound />;
+    return children;
+  };
 
+  const SecuredShopRoute = ({ children }) => {
+    if(isAuthorized === null || role === null) return <div>Loading...</div>;
+    if(!isAuthorized || role !== "TRGOVINA") return <NotFound />;
+    return children;
+  };
+
+  const SecuredModeratorRoute = ({ children }) => {
+    if(isAuthorized === null || role === null) return <div>Loading...</div>;
+    if(!isAuthorized || role !== "MODERATOR") return <NotFound />;
+    return children;
+  };
+
+  const SecuredAdminRoute = ({ children }) => {
+    if(isAuthorized === null || role === null) return <div>Loading...</div>;
+    if(!isAuthorized || role !== "ADMIN") return <NotFound />;
     return children;
   };
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-
         <Route path="/home" element={
-          <SecuredRoute>
+          <SecuredUserRoute>
             <Home />
-          </SecuredRoute>
+          </SecuredUserRoute>
         } />
         <Route path="/home/kvart" element={
-          <SecuredRoute>
+          <SecuredUserRoute>
             <Home />
-          </SecuredRoute>
+          </SecuredUserRoute>
         } />
         <Route path="/home/popisTrgovina" element={
-          <SecuredRoute>
+          <SecuredUserRoute>
             <PopisTrgovina />
-          </SecuredRoute>
+          </SecuredUserRoute>
         } />
         <Route path="/home/ponude" element={
-          <SecuredRoute>
+          <SecuredUserRoute>
             <PonudeiPromocije />
-          </SecuredRoute>
+          </SecuredUserRoute>
         } />
         <Route path="/home/popisTrgovina/:id" element={
-          <SecuredRoute>
+          <SecuredUserRoute>
             <Shop />
-          </SecuredRoute>
+          </SecuredUserRoute>
         } />
         <Route path="/home/dogadaji" element={
-          <SecuredRoute>
+          <SecuredUserRoute>
             <Dogadaji />
-          </SecuredRoute>
+          </SecuredUserRoute>
         } />
         <Route path="/korisnickiracun" element={
-          <SecuredRoute>
+          <SecuredUserRoute>
             <KorisnickiRacun />
-          </SecuredRoute>
+          </SecuredUserRoute>
         } />
         <Route path='/mojipodaci' element={
-          <SecuredRoute>
+          <SecuredUserRoute>
             <MojiPodaci />
-          </SecuredRoute>
+          </SecuredUserRoute>
         } />
         <Route path='/mojiracuni' element={
-          <SecuredRoute>
+          <SecuredUserRoute>
             <MojiRacuni />
-          </SecuredRoute>
+          </SecuredUserRoute>
         } />
         <Route path='/mojerecenzije' element={
-          <SecuredRoute>
+          <SecuredUserRoute>
             <MojeRecenzije />
-          </SecuredRoute>
+          </SecuredUserRoute>
         } />
 
+
+        <Route path="/trgovina/home" element={
+          <SecuredShopRoute>
+            <ShopHome />
+          </SecuredShopRoute>
+        } />
+        <Route path="/trgovina/home/proizvodi" element={
+          <SecuredShopRoute>
+            <ShopHome />
+          </SecuredShopRoute>
+        } />
+
+
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

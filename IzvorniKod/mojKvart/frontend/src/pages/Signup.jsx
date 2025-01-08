@@ -132,7 +132,7 @@ export function Signup() {
             return response.json();
          })
          .then((data) => {
-            navigate('/home?token=' + data.token);
+            navigate('/trgovina/home?token=' + data.token);
             window.location.reload();
          })
          .catch(error => setErrorMessage(error.message))

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Navbar } from '../components/Navbar';
-import "../styles/Home.css";
+import { Navbar } from '../../components/Navbar';
+import "../../styles/Home.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export function Home() {
