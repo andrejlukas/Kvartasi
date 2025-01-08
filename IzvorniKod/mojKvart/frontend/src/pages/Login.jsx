@@ -51,6 +51,7 @@ export function Login() {
                navigate('/moderator/home?token=' + data.token);
             else 
                navigate('/admin/home?token=' + data.token);
+            window.location.reload();
          })
          .catch( error => {
             navigate('/');

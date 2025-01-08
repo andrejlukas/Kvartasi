@@ -8,14 +8,6 @@ export function Home() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const url = window.location.search;
-    if(url) {
-      const urlParams = new URLSearchParams(url);
-      const token = urlParams.get('token');
-      if(token)
-        localStorage.setItem('token', token);
-    }
-
     const token = localStorage.getItem('token');
     const options = {
       method: 'GET',
@@ -27,7 +19,7 @@ export function Home() {
     fetch('/api/proizvods', options)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Failed to fetch products.");
+          return response.text().then(text => {throw new Error(text)});
         }
         return response.json();
       })
@@ -42,6 +34,7 @@ export function Home() {
   return (
     <div id="vani2">
   <Navbar />
+  {error && <p>{error}</p>}
   <div id="products-alt" className="product-section-alt">
     <div className="row">
         {products.length > 0 ? (

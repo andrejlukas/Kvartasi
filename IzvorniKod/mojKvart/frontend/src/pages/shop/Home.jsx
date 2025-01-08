@@ -22,7 +22,7 @@ export function ShopHome() {
         fetch('/api/tokens/claims', options)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Could not extract claims');
+                    return response.text().then(text => {throw new Error(text)});
                 }
                 return response.json();
             })
@@ -74,7 +74,7 @@ export function ShopHome() {
         fetch(`/api/proizvods/fromTrgovina/${shopId}`, options)
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error("Failed to fetch products.");
+                    return response.text().then(text => {throw new Error(text)});
                 }
                 return response.json();
             })
