@@ -2,9 +2,12 @@ import { Navbar } from "../../components/Navbar";
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/PopisTrgovina.css";
+import L from 'leaflet';
 
 export function PopisTrgovina() {
   const [shops, setShops] = useState([]);
+  const [email, setEmail] = useState(null);
+  const [address, setAddress] = useState(null);
   const [categories, setCategories] = useState([]);
   const [atributs, setAtributs] = useState([]);
   const [error, setError] = useState(null);
@@ -12,7 +15,7 @@ export function PopisTrgovina() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const options = {
+    let options = {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -23,13 +26,14 @@ export function PopisTrgovina() {
     fetch(`/api/trgovinas`, options)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Neuspješno dohvaćanje trgovina.");
+          return response.text().then(text => {throw new Error(text)});
         }
         return response.json();
       })
       .then((data) => {
         setShops(data);
         setCategories(new Set(data.map(trgovina => trgovina.trgovinaKategorija)));
+        
       })
       .catch((error) => {
         setError(error.message);
@@ -38,7 +42,7 @@ export function PopisTrgovina() {
     fetch("/api/atributs", options)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Neuspješno dohvaćanje dodatnih značajki.");
+          return response.text().then(text => {throw new Error(text)});
         }
         return response.json();
       })
@@ -48,7 +52,56 @@ export function PopisTrgovina() {
       .catch((error) => {
         setError(error.message);
       });
+
+    options = {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ oneLiner: token })
+    }
+
+    fetch('/api/tokens/claims', options)
+        .then(response => {
+            if (!response.ok) {
+              return response.text().then(text => {throw new Error(text)});
+            }
+            return response.json();
+        })
+        .then(data => {
+            setEmail(data.email);
+        })
+        .catch(error => setError(error.message));
   }, []);
+
+  useEffect(() => {
+    if (!email) return;
+
+    const token = localStorage.getItem('token');
+    const options = {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    }
+    
+    fetch(`/api/kupacs/${email}`, options)
+      .then((response) => {
+          if (!response.ok) {
+              return response.text().then(text => {throw new Error(text)});
+          }
+          return response.json();
+      })
+      .then((data) => {
+          setAddress(data.kupacAdresa);
+          //console.log(distanceToShop(data.kupacAdresa, shops[0].trgovinaLokacija));
+      })
+      .catch((error) => {
+          setError(error.message);
+      });
+  }, [email]);
 
   const isShopOpen = (openingTime, closingTime) => {
     const now = new Date();
@@ -63,6 +116,12 @@ export function PopisTrgovina() {
 
     return now >= openTime && now <= closeTime;
   };
+
+  const distanceToShop = (myLocation, shopLocation) => {
+    const coord1 = L.latLng(myLocation.split(",")[0], myLocation.split(",")[1]);
+    const coord2 = L.latLng(shopLocation.split(",")[0], shopLocation.split(",")[1]);
+    return coord1.distanceTo(coord2); // distance in meters
+  }
 
   function openTheFilter(popoverDiv) {
     const element = document.getElementById("window");

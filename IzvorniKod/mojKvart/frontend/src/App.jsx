@@ -34,11 +34,15 @@ function App() {
         },
         body: JSON.stringify({ "oneLiner": url.split("?token=")[1] }),
       };
-
-      const claimsResponse = await fetch('/api/tokens/claims', options);
-      if (!claimsResponse.ok) throw new Error('Failed to fetch claims');
-      const claims = await claimsResponse.json();
-      setRole(claims.role);
+      try {
+        const claimsResponse = await fetch('/api/tokens/claims', options);
+        if (!claimsResponse.ok) throw new Error('Failed to fetch claims');
+        const claims = await claimsResponse.json();
+        setRole(claims.role);
+      } catch(e) {
+        setIsAuthorized(false);
+      }
+      
       return;
     } 
 
@@ -75,25 +79,25 @@ function App() {
   }, []);
 
   const SecuredUserRoute = ({ children }) => {
-    if(isAuthorized === null || role === null) return <div>Loading...</div>;
+    if(isAuthorized === null && role === null) return <div>Loading...</div>;
     if(!isAuthorized || role !== "KUPAC") return <NotFound />;
     return children;
   };
 
   const SecuredShopRoute = ({ children }) => {
-    if(isAuthorized === null || role === null) return <div>Loading...</div>;
+    if(isAuthorized === null && role === null) return <div>Loading...</div>;
     if(!isAuthorized || role !== "TRGOVINA") return <NotFound />;
     return children;
   };
 
   const SecuredModeratorRoute = ({ children }) => {
-    if(isAuthorized === null || role === null) return <div>Loading...</div>;
+    if(isAuthorized === null && role === null) return <div>Loading...</div>;
     if(!isAuthorized || role !== "MODERATOR") return <NotFound />;
     return children;
   };
 
   const SecuredAdminRoute = ({ children }) => {
-    if(isAuthorized === null || role === null) return <div>Loading...</div>;
+    if(isAuthorized === null && role === null) return <div>Loading...</div>;
     if(!isAuthorized || role !== "ADMIN") return <NotFound />;
     return children;
   };

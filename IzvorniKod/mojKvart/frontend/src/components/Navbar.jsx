@@ -2,20 +2,20 @@ import logo from '../assets/MojKvart.png'
 import kosarica from '../assets/kosarica.png'
 import '../styles/NavBar.css'
 
-export function Navbar() {
+export function Navbar() { 
 
     const handleLogout = () => {
         localStorage.clear();
         window.location.href = '/'; 
-     };
+    };
    
     
    return (
-      <div className="header-container">
-         <div id='najvanjski'>
+        <div className="header-container">
+            <div id='najvanjski'>
                 <nav className="navbar navbar-expand-lg  w-100" id="Vanjski">
                     <div className="container-fluid d-flex justify-content-between w-100" id="unutarnji">
-                        <img className="navbar-brand" src={logo} alt="Logo" style={{ width: '150px' }} />
+                        <img className="navbar-brand" id="logo" src={logo} alt="Logo" style={{ width: '150px' }} />
 
                         <form className="d-flex mx-auto" role="search" id="searchdiv">
                             <input className="form-control me-2" type="search" placeholder="Pretraži" aria-label="Pretraži" />
@@ -48,7 +48,7 @@ export function Navbar() {
                         </ul>
                     </div>
                 </nav>
-         </div>
+            </div>
       </div>
    );
 }
