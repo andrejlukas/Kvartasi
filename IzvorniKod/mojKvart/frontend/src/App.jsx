@@ -16,7 +16,12 @@ import { MojiRacuni } from './pages/user/MojiRacuni';
 import { MojeRecenzije } from './pages/user/MojeRecenzije';
 
 import { ShopHome } from './pages/shop/Home';
-import { ShopKorisnickiRacun } from './pages/shop/KorisnickiRacun'
+import { ShopNarudzbe } from './pages/shop/Narudzbe';
+import { ShopPonudeiPromocije } from './pages/shop/PonudeiPromocije';
+import { ShopDogadaji } from './pages/shop/Dogadaji';
+import { ShopKorisnickiRacun } from './pages/shop/KorisnickiRacun';
+import { ShopMojiPodaci } from './pages/shop/MojiPodaci';
+import { ShopMojeRecenzije } from './pages/shop/MojeRecenzije';
 
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(null);
@@ -43,7 +48,6 @@ function App() {
       } catch(e) {
         setIsAuthorized(false);
       }
-      
       return;
     } 
 
@@ -168,10 +172,34 @@ function App() {
             <ShopHome />
           </SecuredShopRoute>
         } />
-
-        <Route path="/racunTrgovine" element={
+        <Route path="/trgovina/home/narudzbe" element={
+          <SecuredShopRoute>
+            <ShopNarudzbe />
+          </SecuredShopRoute>
+        } />
+        <Route path="/trgovina/home/ponude" element={
+          <SecuredShopRoute>
+            <ShopPonudeiPromocije />
+          </SecuredShopRoute>
+        } />
+        <Route path="/trgovina/home/dogadaji" element={
+          <SecuredShopRoute>
+            <ShopDogadaji />
+          </SecuredShopRoute>
+        } />
+        <Route path="/racuntrgovine" element={
           <SecuredShopRoute>
             <ShopKorisnickiRacun />
+          </SecuredShopRoute>
+        } />
+        <Route path="/podacitrgovine" element={
+          <SecuredShopRoute>
+            <ShopMojiPodaci />
+          </SecuredShopRoute>
+        } />
+        <Route path="/recenzijetrgovine" element={
+          <SecuredShopRoute>
+            <ShopMojeRecenzije />
           </SecuredShopRoute>
         } />
 

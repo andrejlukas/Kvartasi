@@ -17,10 +17,9 @@ export function MojiPodaci(){
     const [hasChanges, setHasChanges] = useState(false);
     const [markerPosition, setMarkerPosition] = useState(null);
    
-    //dohvacanje email-a
     useEffect(() => {
         const token = localStorage.getItem('token');
-        var options = {
+        const options = {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -32,15 +31,15 @@ export function MojiPodaci(){
         fetch('/api/tokens/claims', options)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    return response.text().then(text => {throw new Error(text)});
                 }
                 return response.json();
             })
             .then(data => {
                 setEmailAddress(data.email);
             })
-            .catch(error => console.error('There was a problem with the fetch operation: ', error));
-    }, []); //prazno, radi se na pocetku samo
+            .catch(error => setErrorMessage(error.message));
+    }, []);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -52,12 +51,11 @@ export function MojiPodaci(){
             }
         };
     
-        // Dohvaćanje korisničkih podataka ako postoji email
         if (emailAddress) {
             fetch(`/api/kupacs/${emailAddress}`, options)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        return response.text().then(text => {throw new Error(text)});
                     }
                     return response.json();
                 })
@@ -68,23 +66,18 @@ export function MojiPodaci(){
                     setSifra(data.kupacSifra);
                     setId(data.kupacId);
                 })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation: ', error);
-                });
+                .catch(error => setErrorMessage(error.message));
         }
     }, [emailAddress]);
 
-   //spremanje promjena -> slanje promjena na backend
    function savePromjene(e){
         e.preventDefault();
 
-        // Provjera praznih polja
         if (!firstName || !lastName || !homeAddress || !emailAddress) {
             setErrorMessage("Sva polja moraju biti popunjena.");
-            return; // Zaustavlja submit ako neka polja nisu popunjena
+            return;
         }
 
-        // Ako su sva polja popunjena, resetirajte poruku o grešci i nastavite s API pozivom
         setErrorMessage('');
 
         const token = localStorage.getItem('token');
@@ -104,6 +97,7 @@ export function MojiPodaci(){
                 verificiranKupac: true
             })
         }
+        
         fetch(`/api/kupacs/${id}`, options)
         .then(response => response.ok ? response.json() : Promise.reject('Failed to save changes'))
         .then(updated => {
@@ -197,20 +191,16 @@ export function MojiPodaci(){
 
                             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                             <div className="moji-podaci-gumbovi-container">
-                                <button type="submit" id="spremi-promjene-button">Spremi promjene</button> 
+                                <button type="submit" id="spremi-promjene-button" disabled={ !hasChanges }>Spremi promjene</button> 
                                 <button 
                                     type="button" 
                                     id = "zatvori-button"
                                     onClick={handleClose} 
-                                    disabled={ !!errorMessage || hasChanges }>Zatvori</button>
+                                    disabled={ errorMessage || hasChanges }>Zatvori</button>
                             </div>
-                            
-                           
                         </form>
-
                     </div>
                 </div>
         </div>
     )
-    
 }

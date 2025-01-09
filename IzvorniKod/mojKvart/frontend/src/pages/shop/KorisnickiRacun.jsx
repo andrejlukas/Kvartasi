@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Navbar } from "../../components/ShopNavbar";
 import '../../styles/KorisnickiRacun.css'
 
-
 export function ShopKorisnickiRacun(){
     const [shopEmail, setShopEmail] = useState(null);
     const [shopId, setShopId] = useState(null);
@@ -70,7 +69,7 @@ export function ShopKorisnickiRacun(){
         const confirmationText = document.getElementById("text").value;
 
         if (confirmationText !== "obrisi-moj-racun") {
-            setPopupError('Potrebno je upisati "obrisi-moj-racun" za brisanje računa.');
+            setPopupError('Potrebno je upisati "obrisi-moj-racun"!');
             return;
         }
 
@@ -103,6 +102,8 @@ export function ShopKorisnickiRacun(){
         element.style.cursor = "auto";
         element.style.opacity = 1;
         document.getElementById("deletePopup").style.display = "none";
+        setPopupError(null);
+        document.getElementById("text").value = "";
     }
     
     return(
@@ -141,5 +142,4 @@ export function ShopKorisnickiRacun(){
             </div>
         </div>
     )
-    
 }

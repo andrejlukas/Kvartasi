@@ -22,8 +22,8 @@ export function Signup() {
       trgovinaKategorija: "",
       trgovinaLokacija: "",
       trgovinaSlika: "",
-      trgovinaRadnoVrijemeOd: "",
-      trgovinaRadnoVrijemeDo: "",
+      trgovinaRadnoVrijemeOd: "08:00",
+      trgovinaRadnoVrijemeDo: "20:00",
       trgovinaEmail: "",
       trgovinaSifra: "",
    });
