@@ -22,4 +22,7 @@ public class KupacProizvodInfoDTO {
     @NotNull
     private Integer proizvodKolicina;
 
+    @NotNull
+    private String trgovinaNaziv;
+
 }

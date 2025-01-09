@@ -32,30 +32,30 @@ public class KupacProizvodService {
         this.proizvodRepository = proizvodRepository;
     }
 
-    public Map<String, List<KupacProizvodInfoDTO>> getKupacKosarica(Integer kupacId) {
+    public Map<Object, List<Object>> getKupacKosarica(Integer kupacId) {
         // Dohvati sve KupacProizvod zapise za kupca
         List<KupacProizvod> kupacProizvodi = kupacProizvodRepository.findByKupac_KupacId(kupacId);
     
         // Grupiraj proizvode po trgovinama koristeći mapu
         return kupacProizvodi.stream().filter(kp -> kp.getRacun().getStanje() == 'K')
                 .collect(Collectors.groupingBy(
-                        kp -> kp.getRacun().getTrgovina().getTrgovinaNaziv(), // Grupiraj po nazivu trgovine
+                        kp -> kp.getRacun().getRacunId(), // Grupiraj po racun id-ju
                         Collectors.mapping(kp -> new KupacProizvodInfoDTO(kp.getProizvod().getProizvodNaziv(), kp.getProizvod().getProizvodCijena(),
-                        kp.getProizvod().getProizvodSlika(), kp.getKolicinaProizvoda()), // Mapiraj id i količinu proizvoda
+                        kp.getProizvod().getProizvodSlika(), kp.getKolicinaProizvoda(), kp.getRacun().getTrgovina().getTrgovinaNaziv()), // Mapiraj id i količinu proizvoda
                                 Collectors.toList()) // Prikupljaj proizvode u listu
                 ));
     }
 
-    public Map<String, List<KupacProizvodInfoDTO>> getKupacProsleNarudzbe(Integer kupacId) {
+    public Map<Object, List<Object>> getKupacProsleNarudzbe(Integer kupacId) {
         // Dohvati sve KupacProizvod zapise za kupca
         List<KupacProizvod> kupacProizvodi = kupacProizvodRepository.findByKupac_KupacId(kupacId);
     
         // Grupiraj proizvode po trgovinama koristeći mapu
         return kupacProizvodi.stream().filter(kp -> kp.getRacun().getStanje() == 'P')
                 .collect(Collectors.groupingBy(
-                        kp -> kp.getRacun().getTrgovina().getTrgovinaNaziv(), // Grupiraj po nazivu trgovine
+                        kp -> kp.getRacun().getRacunId(), // Grupiraj po racun Id
                         Collectors.mapping(kp -> new KupacProizvodInfoDTO(kp.getProizvod().getProizvodNaziv(), kp.getProizvod().getProizvodCijena(),
-                        kp.getProizvod().getProizvodSlika(), kp.getKolicinaProizvoda()), // Mapiraj id i količinu proizvoda
+                        kp.getProizvod().getProizvodSlika(), kp.getKolicinaProizvoda(), kp.getRacun().getTrgovina().getTrgovinaNaziv()), // Mapiraj id i količinu proizvoda
                                 Collectors.toList()) // Prikupljaj proizvode u listu
                 ));
     }
@@ -69,7 +69,7 @@ public class KupacProizvodService {
                 .collect(Collectors.groupingBy(
                         kp -> kp.getRacun().getKupac().getKupacEmail(), // Grupiraj po emailu kupca
                         Collectors.mapping(kp -> new KupacProizvodInfoDTO(kp.getProizvod().getProizvodNaziv(), kp.getProizvod().getProizvodCijena(),
-                        kp.getProizvod().getProizvodSlika(), kp.getKolicinaProizvoda()), // Mapiraj id i količinu proizvoda
+                        kp.getProizvod().getProizvodSlika(), kp.getKolicinaProizvoda(), kp.getRacun().getTrgovina().getTrgovinaNaziv()), // Mapiraj id i količinu proizvoda
                                 Collectors.toList()) // Prikupljaj proizvode u listu
                 ));
     }
