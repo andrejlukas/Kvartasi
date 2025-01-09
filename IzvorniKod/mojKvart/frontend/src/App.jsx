@@ -16,6 +16,7 @@ import { MojiRacuni } from './pages/user/MojiRacuni';
 import { MojeRecenzije } from './pages/user/MojeRecenzije';
 
 import { ShopHome } from './pages/shop/Home';
+import { ShopKorisnickiRacun } from './pages/shop/KorisnickiRacun'
 
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(null);
@@ -125,7 +126,7 @@ function App() {
             <PonudeiPromocije />
           </SecuredUserRoute>
         } />
-        <Route path="/home/popisTrgovina/:id" element={
+        <Route path="/home/popisTrgovina/:email" element={
           <SecuredUserRoute>
             <Shop />
           </SecuredUserRoute>
@@ -165,6 +166,12 @@ function App() {
         <Route path="/trgovina/home/proizvodi" element={
           <SecuredShopRoute>
             <ShopHome />
+          </SecuredShopRoute>
+        } />
+
+        <Route path="/racunTrgovine" element={
+          <SecuredShopRoute>
+            <ShopKorisnickiRacun />
           </SecuredShopRoute>
         } />
 

@@ -5,11 +5,15 @@ import "../../styles/Shop.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export function Shop() {
-  const { id } = useParams();
+  const { email } = useParams();
   const [shop, setShop] = useState(null);
   const [products, setProducts] = useState([]); 
   const [error, setError] = useState(null);
+
+  useEffect(() => { console.log(email); }, []);
+
   useEffect(() => {
+    console.log(email);
     const token = localStorage.getItem('token');
     const options = {
       method: 'GET',
@@ -18,8 +22,8 @@ export function Shop() {
         'Content-Type': 'application/json'
       }
     }
-    if (id) {
-      fetch(`/api/trgovinas/${id}`, options)
+    if (email) {
+      fetch(`/api/trgovinas/${email}`, options)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Neuspjesno dohvacanje trgovine.");
@@ -27,25 +31,27 @@ export function Shop() {
           return response.json();
         })
         .then((data) => {
+          console.log(data);
           setShop(data);
         })
         .catch((error) => {
           setError(error.message);
         });
     }
-  }, [id]);
+  }, [email]);
 
   useEffect(() => {
-    if (id) {
+    if (shop) {
       const token = localStorage.getItem('token');
       const options = {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       }
-    }
-      fetch(`/api/proizvods/fromTrgovina/${id}`, options)
+
+      fetch(`/api/proizvods/fromTrgovina/${shop.trgovinaId}`, options)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Neuspjesno dohvacanje proizvoda.");
@@ -59,7 +65,7 @@ export function Shop() {
           setError(error.message);
         });
     }
-  }, [id]);
+  }, [shop]);
 
   return (
     <div>

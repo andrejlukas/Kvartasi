@@ -6,8 +6,8 @@ export function Navbar() {
     const handleLogout = () => {
         localStorage.clear();
         window.location.href = '/'; 
-     };
-   
+    };
+
     
    return (
       <div className="header-container">

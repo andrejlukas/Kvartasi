@@ -120,7 +120,7 @@ export function PopisTrgovina() {
   const distanceToShop = (myLocation, shopLocation) => {
     const coord1 = L.latLng(myLocation.split(",")[0], myLocation.split(",")[1]);
     const coord2 = L.latLng(shopLocation.split(",")[0], shopLocation.split(",")[1]);
-    return coord1.distanceTo(coord2); // distance in meters
+    return Math.round(coord1.distanceTo(coord2)) / 1000; // distance in meters
   }
 
   function openTheFilter(popoverDiv) {
@@ -173,11 +173,11 @@ export function PopisTrgovina() {
 
                 <div id="shops" className="shop-section">
                   <div className="row-shops">
-                    {shops.length > 0 ? (
+                    {address && shops.length > 0 ? (
                       shops.map((shop) => (
                         <div key={shop.trgovinaId} className="my-card-wrapper">
                           <a
-                            href={`/home/popistrgovina/${shop.trgovinaId}`}
+                            href={`/home/popistrgovina/${shop.trgovinaEmail}`}
                             className="nav-link"
                           >
                             <div className="cards shop-card">
@@ -219,7 +219,7 @@ export function PopisTrgovina() {
                                   </span>
                                 </div>
                                 <p className="card-text location-text">
-                                  {shop.trgovinaLokacija}
+                                  {"Udaljeno od vas: " + distanceToShop(address, shop.trgovinaLokacija) + " km"}
                                 </p>
                                 <span>avg stars</span>
                                 <p className="card-text hours-text">
