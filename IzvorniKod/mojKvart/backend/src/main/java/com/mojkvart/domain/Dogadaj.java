@@ -40,7 +40,7 @@ public class Dogadaj {
     @Column(nullable = false, length = 50)
     private String dogadajVrijeme;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 300)
     private String dogadajSlika;
 
     @Column(length = 50)

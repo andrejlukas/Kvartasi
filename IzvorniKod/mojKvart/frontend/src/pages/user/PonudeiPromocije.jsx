@@ -18,7 +18,7 @@ export function PonudeiPromocije() {
          'Content-Type': 'application/json',
          },
       };
-      fetch(`/api/popusts`, options)
+      fetch(`/api/popusts/flag-true`, options)
          .then((response) => {
          if (!response.ok) {
             throw new Error("Neuspješno dohvaćanje ponuda.");
