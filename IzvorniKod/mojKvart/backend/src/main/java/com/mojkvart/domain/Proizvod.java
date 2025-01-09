@@ -11,6 +11,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -54,11 +57,14 @@ public class Proizvod {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trgovina_id", nullable = false)
+    
     private Trgovina trgovina;
 
+    @JsonBackReference 
     @OneToMany(mappedBy = "proizvod")
     private Set<OcjenaProizvodKupac> proizvodOcjenaProizvodKupacs;
 
+    @JsonBackReference 
     @OneToMany(mappedBy = "proizvod")
     private Set<KupacProizvod> proizvodKupacProizvods;
 

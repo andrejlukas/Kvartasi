@@ -1,9 +1,12 @@
 package com.mojkvart.rest;
 
 import com.mojkvart.model.KupacProizvodDTO;
+import com.mojkvart.model.KupacProizvodInfoDTO;
 import com.mojkvart.service.KupacProizvodService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +31,25 @@ public class KupacProizvodResource {
         this.kupacProizvodService = kupacProizvodService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<KupacProizvodDTO>> getAllkupacProizvods() {
-        return ResponseEntity.ok(kupacProizvodService.findAll());
+    // dohvati kosaricu za kupca s odredenim ID-jem
+    @GetMapping("/kosarica/{kupacId}")
+    public ResponseEntity<Map<String, List<KupacProizvodInfoDTO>>> getKupacKosarica(@PathVariable Integer kupacId) {
+        Map<String, List<KupacProizvodInfoDTO>> groupedProizvodi = kupacProizvodService.getKupacKosarica(kupacId);
+        return ResponseEntity.ok(groupedProizvodi);
+    }
+
+    // dohvati prosle narudzbe za kupca s odredenim ID-jem
+    @GetMapping("/prosleNarudzbe/{kupacId}")
+    public ResponseEntity<Map<String, List<KupacProizvodInfoDTO>>> getKupacProsleNarudzbe(@PathVariable Integer kupacId) {
+        Map<String, List<KupacProizvodInfoDTO>> groupedProizvodi = kupacProizvodService.getKupacProsleNarudzbe(kupacId);
+        return ResponseEntity.ok(groupedProizvodi);
+    }
+
+    // dohvati prosle narudzbe za kupca s odredenim ID-jem
+    @GetMapping("/narudzbeTrgovina/{kupacId}")
+    public ResponseEntity<Map<String, List<KupacProizvodInfoDTO>>> getNarudzbeTrgovina(@PathVariable Integer kupacId) {
+        Map<String, List<KupacProizvodInfoDTO>> groupedProizvodi = kupacProizvodService.getTrgovinaNarudzbe(kupacId);
+        return ResponseEntity.ok(groupedProizvodi);
     }
 
     @GetMapping("/{id}")

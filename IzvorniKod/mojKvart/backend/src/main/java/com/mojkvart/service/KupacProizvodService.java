@@ -2,10 +2,13 @@ package com.mojkvart.service;
 
 import com.mojkvart.domain.*;
 import com.mojkvart.model.KupacProizvodDTO;
+import com.mojkvart.model.KupacProizvodInfoDTO;
 import com.mojkvart.repos.*;
 import com.mojkvart.util.NotFoundException;
 import java.util.List;
-import org.springframework.data.domain.Sort;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 
@@ -29,12 +32,52 @@ public class KupacProizvodService {
         this.proizvodRepository = proizvodRepository;
     }
 
-    public List<KupacProizvodDTO> findAll() {
-        final List<KupacProizvod> kupacProizvods = kupacProizvodRepository.findAll(Sort.by("id"));
-        return kupacProizvods.stream()
-                .map(kupacProizvod -> mapToDTO(kupacProizvod, new KupacProizvodDTO()))
-                .toList();
+    public Map<String, List<KupacProizvodInfoDTO>> getKupacKosarica(Integer kupacId) {
+        // Dohvati sve KupacProizvod zapise za kupca
+        List<KupacProizvod> kupacProizvodi = kupacProizvodRepository.findByKupac_KupacId(kupacId);
+    
+        // Grupiraj proizvode po trgovinama koristeći mapu
+        return kupacProizvodi.stream().filter(kp -> kp.getRacun().getStanje() == 'K')
+                .collect(Collectors.groupingBy(
+                        kp -> kp.getRacun().getTrgovina().getTrgovinaNaziv(), // Grupiraj po nazivu trgovine
+                        Collectors.mapping(kp -> new KupacProizvodInfoDTO(kp.getProizvod().getProizvodNaziv(), kp.getProizvod().getProizvodCijena(),
+                        kp.getProizvod().getProizvodSlika(), kp.getKolicinaProizvoda()), // Mapiraj id i količinu proizvoda
+                                Collectors.toList()) // Prikupljaj proizvode u listu
+                ));
     }
+
+    public Map<String, List<KupacProizvodInfoDTO>> getKupacProsleNarudzbe(Integer kupacId) {
+        // Dohvati sve KupacProizvod zapise za kupca
+        List<KupacProizvod> kupacProizvodi = kupacProizvodRepository.findByKupac_KupacId(kupacId);
+    
+        // Grupiraj proizvode po trgovinama koristeći mapu
+        return kupacProizvodi.stream().filter(kp -> kp.getRacun().getStanje() == 'P')
+                .collect(Collectors.groupingBy(
+                        kp -> kp.getRacun().getTrgovina().getTrgovinaNaziv(), // Grupiraj po nazivu trgovine
+                        Collectors.mapping(kp -> new KupacProizvodInfoDTO(kp.getProizvod().getProizvodNaziv(), kp.getProizvod().getProizvodCijena(),
+                        kp.getProizvod().getProizvodSlika(), kp.getKolicinaProizvoda()), // Mapiraj id i količinu proizvoda
+                                Collectors.toList()) // Prikupljaj proizvode u listu
+                ));
+    }
+
+    public Map<String, List<KupacProizvodInfoDTO>> getTrgovinaNarudzbe(Integer trgovinaId) {
+        // Dohvati sve KupacProizvod zapise za trgovinu
+        List<KupacProizvod> kupacProizvodi = kupacProizvodRepository.findByRacun_Trgovina_TrgovinaId(trgovinaId);
+    
+        // Grupiraj proizvode po kupcima koristeći mapu
+        return kupacProizvodi.stream().filter(kp -> kp.getRacun().getStanje() == 'T')
+                .collect(Collectors.groupingBy(
+                        kp -> kp.getRacun().getKupac().getKupacEmail(), // Grupiraj po emailu kupca
+                        Collectors.mapping(kp -> new KupacProizvodInfoDTO(kp.getProizvod().getProizvodNaziv(), kp.getProizvod().getProizvodCijena(),
+                        kp.getProizvod().getProizvodSlika(), kp.getKolicinaProizvoda()), // Mapiraj id i količinu proizvoda
+                                Collectors.toList()) // Prikupljaj proizvode u listu
+                ));
+    }
+
+
+
+
+
 
     public KupacProizvodDTO get(final Long id) {
         return kupacProizvodRepository.findById(id)

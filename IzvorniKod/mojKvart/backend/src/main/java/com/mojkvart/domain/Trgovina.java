@@ -20,6 +20,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Getter
@@ -68,6 +70,7 @@ public class Trgovina implements UserDetails {
     private String trgovinaSifra;
 
     @OneToMany(mappedBy = "trgovina")
+    @JsonManagedReference 
     private Set<Proizvod> trgovinaProizvods;
 
     @OneToMany(mappedBy = "trgovina")

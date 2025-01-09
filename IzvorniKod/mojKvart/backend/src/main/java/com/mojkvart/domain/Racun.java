@@ -29,8 +29,10 @@ public class Racun {
     @Column(nullable = false)
     private LocalDateTime vrijemeDatumNastanka;
 
+    // defaultno, kada se ubace proizvodi u KupacProizvod stanje je da su u kosarici
+
     @Column(nullable = false)
-    private boolean placen;
+    private Character stanje = 'K';
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kupac_id", nullable = false)
