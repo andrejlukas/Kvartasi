@@ -34,6 +34,7 @@ public class Oauth2KorisnikService extends DefaultOAuth2UserService {
             kupac.setKupacEmail(email);
             kupac.setKupacIme(ime);
             kupac.setKupacPrezime(prezime);
+            kupac.setKupacAdresa("45.815,15.9819"); // default Zagreb
             kupac.setVerificiranKupac(true);
             kupacRepository.save(kupac);
         }
@@ -48,7 +49,7 @@ public class Oauth2KorisnikService extends DefaultOAuth2UserService {
         else if(moderatorRepository.findByModeratorEmail(email).isPresent())
             claims.put("role", "MODERATOR");
         else if(administratorRepository.findByAdministratorEmail(email).isPresent())
-            claims.put("role", "AMDINISTRATOR");
+            claims.put("role", "AMDIN");
         else
             claims.put("role", "KUPAC");
 

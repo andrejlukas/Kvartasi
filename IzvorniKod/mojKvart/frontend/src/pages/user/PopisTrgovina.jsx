@@ -11,6 +11,7 @@ export function PopisTrgovina() {
 
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedAtributs, setSelectedAtributs] = useState([]);
+  const [shopsToRenderOut, setShopsToRenderOut] = useState([]);
 
   const [email, setEmail] = useState(null);
   const [address, setAddress] = useState(null);
@@ -114,8 +115,9 @@ export function PopisTrgovina() {
   }, [categories]);
 
   useEffect(() => {
+    if(!address) return;
     if(localStorage.getItem("filter") !== null) applyFilters();
-  }, [address]);
+  }, [shops]);
   
 
   const isShopOpen = (openingTime, closingTime) => {
@@ -172,7 +174,8 @@ export function PopisTrgovina() {
 
   function startFiltering(by) {
     var data = JSON.parse(localStorage.getItem("filter"));
-    if(by === "distance") data.distance = true;
+    if(by === "distanceYes") data.distance = true;
+    else if(by === "distanceNo") data.distance = false;
     else if(by == "categories") data.categories = selectedCategories;
     else data.atributs = selectedAtributs;
     localStorage.setItem("filter", JSON.stringify(data));
@@ -205,7 +208,7 @@ export function PopisTrgovina() {
     if(filteredShops.length > 0 && distanceYesNo) 
       filteredShops = filteredShops.map((shop) => ({...shop, "distance": distanceToShop(address, shop.trgovinaLokacija)})).sort(compareShopsByDistance);
     
-    setShops(filteredShops);
+    setShopsToRenderOut(filteredShops);
   }
 
   function resetFilters() {
@@ -230,13 +233,13 @@ export function PopisTrgovina() {
 
               {error ? (
                 <p className="text-danger">{error}</p>
-              ) : !shops ? (
+              ) : !shopsToRenderOut ? (
                 <p>Loading shops...</p>
               ) : (
                 <div id="shops" className="shop-section">
                   <div className="row-shops">
-                    {address && shops.length > 0 ? (
-                      shops.map((shop) => (
+                    {address && shopsToRenderOut.length > 0 ? (
+                      shopsToRenderOut.map((shop) => (
                         <div key={shop.trgovinaId} className="my-card-wrapper">
                           <a
                             href={`/home/popistrgovina/${shop.trgovinaEmail}`}
@@ -311,8 +314,8 @@ export function PopisTrgovina() {
         <div id="distanceDiv" className="filterPopovers">
           <p>Želite li izlistati Vama najbliže trgovine?</p>
           <div className="YesNoButtons">
-            <button onClick={() => startFiltering("distance")}>Da</button>
-            <button onClick={() => closeTheFilter()}>Ne</button>
+            <button onClick={() => startFiltering("distanceYes")}>Da</button>
+            <button onClick={() => startFiltering("distanceNo")}>Ne</button>
           </div>
         </div>
       )}

@@ -56,8 +56,10 @@ public class SecurityConfig{
                             OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
                             oauth2KorisnikService.authenticateKorisnik(oauth2User);
                             HashMap<String, Object> claims = oauth2KorisnikService.getClaims(oauth2User);
+                            String role = (String) claims.get("role");
                             String token = jwtService.generateToken(claims, oauth2User.getAttribute("email"));
-                            response.sendRedirect(frontendUri +"/home?token=" + token);
+                            role = role.equals("KUPAC") ? "" : role.toLowerCase();
+                            response.sendRedirect(String.format("%s%s/home?token=%s", frontendUri, role, token));
                         }));
         return http.build();
     }
