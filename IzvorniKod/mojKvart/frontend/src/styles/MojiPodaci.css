@@ -13,13 +13,18 @@
     text-align: left;
     padding: 20px;
     background-color: #ffffff;
-    border-radius: 8px;
+    border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     position: relative;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
 }
+
+body {
+    font-family: 'Raleway', sans-serif;
+  }
+  
 
 .osobni-podaci-container h1 {
     margin: 0;

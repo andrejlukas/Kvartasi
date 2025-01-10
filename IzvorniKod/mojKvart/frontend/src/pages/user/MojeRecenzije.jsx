@@ -64,7 +64,7 @@ export function MojeRecenzije() {
            })
            .then(data => {
                setId(data.kupacId);
-               
+               console.log(token)
            })
            .catch(error => {
                console.error('There was a problem with the fetch operation: ', error);
@@ -212,7 +212,7 @@ function brisanjeRecenzije(poslanId) {
                )
                
                :
-               (<p>No deals available.</p> )
+               (<p>Korisnik nije ostavio recenziju.</p> )
               
             }
 
