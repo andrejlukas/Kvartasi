@@ -19,8 +19,6 @@ export function PopisTrgovina() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if(localStorage.getItem("filter") !== null) applyFilters();
-    
     const token = localStorage.getItem('token');
     let options = {
       method: 'GET',
@@ -114,6 +112,10 @@ export function PopisTrgovina() {
       return;
     }
   }, [categories]);
+
+  useEffect(() => {
+    if(localStorage.getItem("filter") !== null) applyFilters();
+  }, [address]);
   
 
   const isShopOpen = (openingTime, closingTime) => {
@@ -182,20 +184,28 @@ export function PopisTrgovina() {
     return shop1.distance - shop2.distance;
   }
 
+  function checkAtributs(shopAtributs, chosenAtributs) {
+    return chosenAtributs.every((elem) => { return shopAtributs.includes(elem) }) // isprobaj i bez return
+  }
+
   // sutra ovo rjesiti filtre u JS
   function applyFilters() { // nije odrađen dio s atributima, filtrira samo po kategorijama i udaljenosti
-    const dinstanceYesNo = JSON.parse(localStorage.getItem("filter")).distance;
+    const distanceYesNo = JSON.parse(localStorage.getItem("filter")).distance;
     const chosenCategories = JSON.parse(localStorage.getItem("filter")).categories;
     const chosenAtributs = JSON.parse(localStorage.getItem("filter")).atributs;
-    console.log(chosenCategories);
-    if(chosenCategories.length > 0) {
-      let filteredShops1 = shops.filter((shop) => chosenCategories.indexOf(shop.trgovinaKategorija) > -1);
-      console.log(chosenCategories, filteredShops1);
-      let filteredShops2;
-      if(dinstanceYesNo)
-        filteredShops2 = filteredShops1.map((shop) => ({...shop, "distance": distanceToShop(address, shop.trgovinaLokacija)})).sort(compareShopsByDistance);
-      setShops(filteredShops2);
-    } else setShops([]);
+
+    let filteredShops = chosenCategories.length === 0 ? [] : shops;
+    /*
+    if(chosenAtributs.length > 0) {
+      filteredShops = filteredShops.filter((shop) => chosenCategories.indexOf(shop.trgovinaKategorija) > -1);
+    }*/
+    if(filteredShops.length > 0) 
+      filteredShops = filteredShops.filter((shop) => chosenCategories.indexOf(shop.trgovinaKategorija) > -1);
+
+    if(filteredShops.length > 0 && distanceYesNo) 
+      filteredShops = filteredShops.map((shop) => ({...shop, "distance": distanceToShop(address, shop.trgovinaLokacija)})).sort(compareShopsByDistance);
+    
+    setShops(filteredShops);
   }
 
   function resetFilters() {
@@ -309,6 +319,7 @@ export function PopisTrgovina() {
 
       {activePopover === "categoryDiv" && (
         <div id="categoryDiv" className="filterPopovers">
+          <p>Prikazivat će se trgovine čija</p><p>je kategorija makar jedna od odabranih!</p>
           {categories.length > 0 ? (categories.map(category => 
             <div className="filterItem">
               <input type="checkbox" 
