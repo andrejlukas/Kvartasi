@@ -152,7 +152,6 @@ export function PopisTrgovina() {
     });
   };
   
-  
   const handleAtributChange = (event) => {
     const { value, checked } = event.target;
     setSelectedAtributs((prev) => checked ? [...prev, value] : prev.filter((atribut) => atribut !== value));
@@ -191,7 +190,6 @@ export function PopisTrgovina() {
     return chosenAtributs.every((elem) => { return shopAtributs.includes(elem) }) // isprobaj i bez return
   }
 
-  // sutra ovo rjesiti filtre u JS
   function applyFilters() { // nije odrađen dio s atributima, filtrira samo po kategorijama i udaljenosti
     const distanceYesNo = JSON.parse(localStorage.getItem("filter")).distance;
     const chosenCategories = JSON.parse(localStorage.getItem("filter")).categories;

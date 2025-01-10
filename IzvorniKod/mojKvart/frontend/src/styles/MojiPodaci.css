@@ -70,6 +70,11 @@ body {
     margin-bottom: 5px;
 }
 
+.moji-podaci-form-group textarea{
+    resize: none;
+    height: 80px !important;
+}
+
 #spremi-promjene-button, #zatvori-button {
     border-radius: 30px;
     background: rgba(196, 196, 196, 0.80);

@@ -53,7 +53,7 @@ public class Proizvod {
     private String proizvodSlika;
 
     @Column(nullable = false)
-    private Boolean proizvodFlag;
+    private String proizvodFlag;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trgovina_id", nullable = false)

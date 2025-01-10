@@ -41,9 +41,19 @@ public class ProizvodService {
                 .toList();
     }
 
-    public List<ProizvodDTO> findByTrgovina(Integer trgovinaId) {
-        return proizvodRepository.findByTrgovinaId(trgovinaId).stream().map(p -> mapToDTO(p, new ProizvodDTO()))
-                .toList();
+    public List<ProizvodDTO> findApprovedByTrgovina(Integer trgovinaId) {
+        return proizvodRepository.findAllApprovedByTrgovinaId(trgovinaId).stream().
+                map(p -> mapToDTO(p, new ProizvodDTO())).toList();
+    }
+
+    public List<ProizvodDTO> findNotApprovedByTrgovina(Integer trgovinaId) {
+        return proizvodRepository.findAllNotApprovedByTrgovinaId(trgovinaId).stream().
+                map(p -> mapToDTO(p, new ProizvodDTO())).toList();
+    }
+
+    public List<ProizvodDTO> findRejectedByTrgovina(Integer trgovinaId) {
+        return proizvodRepository.findAllRejectedByTrgovinaId(trgovinaId).stream().
+                map(p -> mapToDTO(p, new ProizvodDTO())).toList();
     }
 
     public List<ProizvodDTO> findAllApproved() {
@@ -73,7 +83,7 @@ public class ProizvodService {
         proizvodRepository.save(proizvod);
     }
 
-    public void promijeniZastavicu(Integer proizvodId, Boolean novoStanje){
+    public void promijeniZastavicu(Integer proizvodId, String novoStanje){
         Proizvod proizvod = proizvodRepository.findById(proizvodId)
                 .orElseThrow(() -> new NotFoundException("Proizvod s ID-jem " + proizvodId + " nije pronađen."));
         proizvod.setProizvodFlag(novoStanje);

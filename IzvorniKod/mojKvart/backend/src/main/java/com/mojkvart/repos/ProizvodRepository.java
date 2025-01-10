@@ -13,13 +13,19 @@ public interface ProizvodRepository extends JpaRepository<Proizvod, Integer> {
 
     Proizvod findFirstByTrgovina(Trgovina trgovina);
 
-    @Query("SELECT p FROM Proizvod p WHERE p.trgovina.trgovinaId = :trgovinaId")
-    List<Proizvod> findByTrgovinaId(@Param("trgovinaId") Integer trgovinaId);
+    @Query("SELECT p FROM Proizvod p WHERE p.trgovina.trgovinaId = :trgovinaId AND p.proizvodFlag = 'A'")
+    List<Proizvod> findAllApprovedByTrgovinaId(@Param("trgovinaId") Integer trgovinaId);
 
-    @Query("SELECT p FROM Proizvod p WHERE p.proizvodFlag = true")
+    @Query("SELECT p FROM Proizvod p WHERE p.trgovina.trgovinaId = :trgovinaId AND p.proizvodFlag = 'N'")
+    List<Proizvod> findAllNotApprovedByTrgovinaId(@Param("trgovinaId") Integer trgovinaId);
+
+    @Query("SELECT p FROM Proizvod p WHERE p.trgovina.trgovinaId = :trgovinaId AND p.proizvodFlag = 'R'")
+    List<Proizvod> findAllRejectedByTrgovinaId(@Param("trgovinaId") Integer trgovinaId);
+
+    @Query("SELECT p FROM Proizvod p WHERE p.proizvodFlag = 'A'")
     List<Proizvod> findAllApproved();
 
-    @Query("SELECT p FROM Proizvod p WHERE p.proizvodFlag = false")
+    @Query("SELECT p FROM Proizvod p WHERE p.proizvodFlag = 'N'")
     List<Proizvod> findAllNotApproved();
 
 }

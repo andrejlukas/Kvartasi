@@ -31,7 +31,7 @@ public class ProizvodDTO {
     private String proizvodSlika;
 
     @NotNull
-    private Boolean proizvodFlag;
+    private String proizvodFlag;
 
     @NotNull
     private Integer trgovina;
