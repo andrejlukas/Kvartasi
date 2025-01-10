@@ -52,6 +52,7 @@ public class PonudaResource {
         return new ResponseEntity<>(createdPonudaId, HttpStatus.CREATED);
     }
 
+    // za promijenu zastavice iz false u true pogledajte komentar kod putMapping u ponudaPopust
     @PutMapping("/{ponudaId}")
     public ResponseEntity<Integer> updatePonuda(
             @PathVariable(name = "ponudaId") final Integer ponudaId,

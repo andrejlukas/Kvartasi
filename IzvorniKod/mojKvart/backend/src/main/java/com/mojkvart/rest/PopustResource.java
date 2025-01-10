@@ -51,6 +51,7 @@ public class PopustResource {
         return new ResponseEntity<>(createdPopustId, HttpStatus.CREATED);
     }
 
+    // za promijenu zastavice iz false u true pogledajte komentar kod putMapping u ponudaPopust
     @PutMapping("/{popustId}")
     public ResponseEntity<Integer> updatePopust(
             @PathVariable(name = "popustId") final Integer popustId,

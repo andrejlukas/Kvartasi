@@ -73,6 +73,14 @@ public class ProizvodService {
         proizvodRepository.save(proizvod);
     }
 
+    public void promijeniZastavicu(Integer proizvodId, Boolean novoStanje){
+        Proizvod proizvod = proizvodRepository.findById(proizvodId)
+                .orElseThrow(() -> new NotFoundException("Proizvod s ID-jem " + proizvodId + " nije pronađen."));
+        proizvod.setProizvodFlag(novoStanje);
+
+        proizvodRepository.save(proizvod);
+    }
+
     public void delete(final Integer proizvodId) {
         proizvodRepository.deleteById(proizvodId);
     }

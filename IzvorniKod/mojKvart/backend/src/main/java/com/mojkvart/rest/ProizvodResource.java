@@ -6,6 +6,8 @@ import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -67,14 +69,22 @@ public class ProizvodResource {
         return new ResponseEntity<>(createdProizvodId, HttpStatus.CREATED);
     }
 
-    // UC7, koristite api/proizvods/{proizvodId} za mijenjanje atributa iz F u T ako
-    // je odobren
     @PutMapping("/{proizvodId}")
     public ResponseEntity<Integer> updateProizvod(
             @PathVariable(name = "proizvodId") final Integer proizvodId,
             @RequestBody @Valid final ProizvodDTO proizvodDTO) {
         proizvodService.update(proizvodId, proizvodDTO);
         return ResponseEntity.ok(proizvodId);
+    }
+
+    // UC7, koristite za mijenjanje zastavice proizvoda kada ga moderator odobri
+    @PutMapping("/stanje/{proizvodId}")
+    public ResponseEntity<Void> promijeniZastavicu(
+            @PathVariable(name = "proizvodId") final Integer proizvodId,
+            @RequestBody Map<String, Boolean> requestBody) {
+            Boolean novoStanje = requestBody.get("novoStanje");
+        proizvodService.promijeniZastavicu(proizvodId, novoStanje);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{proizvodId}")

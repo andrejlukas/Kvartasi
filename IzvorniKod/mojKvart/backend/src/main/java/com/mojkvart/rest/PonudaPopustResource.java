@@ -6,6 +6,8 @@ import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,13 +50,25 @@ public class PonudaPopustResource {
         return new ResponseEntity<>(createdPonudaPopustId, HttpStatus.CREATED);
     }
 
-    //UC8, koristite api/ponudaPopusts/{ponudaPopustId} za mijenjanje atributa iz F u T ako su odobreni
     @PutMapping("/{ponudaPopustId}")
     public ResponseEntity<Integer> updatePonudaPopust(
             @PathVariable(name = "ponudaPopustId") final Integer ponudaPopustId,
             @RequestBody @Valid final PonudaPopustDTO ponudaPopustDTO) {
         ponudaPopustService.update(ponudaPopustId, ponudaPopustDTO);
         return ResponseEntity.ok(ponudaPopustId);
+    }
+
+    // koristite za mijenjanje zastavice ponude i popusta kada ih moderator odobri,
+    // saljete prvo id ponude u get za ponudu (ili popust) i onda iz te ponude
+    // uzimate id od ponudePopusta i saljete ovdje
+    
+    @PutMapping("/stanje/{ponudaPopustId}")
+    public ResponseEntity<Void> promijeniZastavicu(
+            @PathVariable(name = "ponudaPopustId") final Integer ponudaPopustId,
+            @RequestBody Map<String, Boolean> requestBody) {
+            Boolean novoStanje = requestBody.get("novoStanje");
+        ponudaPopustService.promijeniZastavicu(ponudaPopustId, novoStanje);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{ponudaPopustId}")
