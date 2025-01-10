@@ -1,6 +1,7 @@
 package com.mojkvart.rest;
 
 import com.mojkvart.model.DogadajDTO;
+import com.mojkvart.model.RecenzijaDTO;
 import com.mojkvart.service.DogadajService;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
@@ -35,6 +36,12 @@ public class DogadajResource {
     public ResponseEntity<List<DogadajDTO>> getAllDogadajs() {
         return ResponseEntity.ok(dogadajService.findAll());
     }
+
+    // API za dohvacanje svih dogadaja odredene trgovine
+    @GetMapping("/trgovina/{trgovinaId}")
+    public ResponseEntity<List<DogadajDTO>> getTrgovinasDogadajs(@PathVariable(name = "trgovinaId") final Integer id) {
+        return ResponseEntity.ok(dogadajService.getTrgovinasDogadaj(id));
+}
 
     @GetMapping("/{dogadajId}")
     public ResponseEntity<DogadajDTO> getDogadaj(

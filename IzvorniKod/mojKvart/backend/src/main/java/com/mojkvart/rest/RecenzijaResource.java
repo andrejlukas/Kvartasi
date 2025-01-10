@@ -68,7 +68,7 @@ public class RecenzijaResource {
         return ResponseEntity.noContent().build();
     }
 
-    //UC14 Kada zelite dobiti sve recenzije od neke trgovine saljete zahtjev na http://localhost:8080/api/recenzijas/trgovinas/{idtrgovine}
+    //UC14, Kada zelite dobiti sve recenzije od neke trgovine saljete zahtjev na http://localhost:8080/api/recenzijas/trgovinas/{idtrgovine}
 
     @GetMapping("/trgovinas/{trgovinaId}")
 public ResponseEntity<List<RecenzijaDTO>> getTrgovinasRecenzijas(@PathVariable(name = "trgovinaId") final Integer id) {

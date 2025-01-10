@@ -67,19 +67,19 @@ public class RecenzijaService {
     }
         List<Recenzija> listaRecenzija = recenzijaRepository.findByTrgovina_TrgovinaId(id);
         return listaRecenzija.stream()
-                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))  // mapiraš recenziju u DTO
-                .collect(Collectors.toList());  // vraćaš listu DTO objekata
+                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))  
+                .collect(Collectors.toList());  
     }
 
     public List<RecenzijaDTO> getKupacsRecenzijas(Integer id) {
-        // Provera postojanja trgovine
+        // Provera postojanja kupca
     if (!kupacRepository.existsById(id)) {
         throw new NotFoundException("Kupac sa ID " + id + " nije pronađen");
     }
         List<Recenzija> listaRecenzija = recenzijaRepository.findByKupac_KupacId(id);
         return listaRecenzija.stream()
-                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))  // mapiraš recenziju u DTO
-                .collect(Collectors.toList());  // vraćaš listu DTO objekata
+                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO())) 
+                .collect(Collectors.toList());  
     }
     
     
