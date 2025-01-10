@@ -2,14 +2,18 @@ package com.mojkvart.service;
 
 import com.mojkvart.domain.Dogadaj;
 import com.mojkvart.domain.KupacDogadaj;
+import com.mojkvart.domain.Recenzija;
 import com.mojkvart.domain.Trgovina;
 import com.mojkvart.model.DogadajDTO;
+import com.mojkvart.model.RecenzijaDTO;
 import com.mojkvart.repos.DogadajRepository;
 import com.mojkvart.repos.KupacDogadajRepository;
 import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +61,17 @@ public class DogadajService {
 
     public void delete(final Integer dogadajId) {
         dogadajRepository.deleteById(dogadajId);
+    }
+
+     public List<DogadajDTO> getTrgovinasDogadaj(Integer trgovinaId) {
+        // Provera postojanja trgovine
+    if (!trgovinaRepository.existsById(trgovinaId)) {
+        throw new NotFoundException("Trgovina sa ID " + trgovinaId + " nije pronađena");
+    }
+        List<Dogadaj> listaDogadaja = dogadajRepository.findByTrgovina_TrgovinaId(trgovinaId);
+        return listaDogadaja.stream()
+                .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))  
+                .collect(Collectors.toList());  
     }
 
     private DogadajDTO mapToDTO(final Dogadaj dogadaj, final DogadajDTO dogadajDTO) {
