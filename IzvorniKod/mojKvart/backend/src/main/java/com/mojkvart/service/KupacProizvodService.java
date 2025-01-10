@@ -32,7 +32,7 @@ public class KupacProizvodService {
         this.proizvodRepository = proizvodRepository;
     }
 
-    public Map<Object, List<Object>> getKupacKosarica(Integer kupacId) {
+    public Map<Long, List<KupacProizvodInfoDTO>> getKupacKosarica(Integer kupacId) {
         // Dohvati sve KupacProizvod zapise za kupca
         List<KupacProizvod> kupacProizvodi = kupacProizvodRepository.findByKupac_KupacId(kupacId);
     
@@ -46,7 +46,7 @@ public class KupacProizvodService {
                 ));
     }
 
-    public Map<Object, List<Object>> getKupacProsleNarudzbe(Integer kupacId) {
+    public Map<Long, List<KupacProizvodInfoDTO>> getKupacProsleNarudzbe(Integer kupacId) {
         // Dohvati sve KupacProizvod zapise za kupca
         List<KupacProizvod> kupacProizvodi = kupacProizvodRepository.findByKupac_KupacId(kupacId);
     
