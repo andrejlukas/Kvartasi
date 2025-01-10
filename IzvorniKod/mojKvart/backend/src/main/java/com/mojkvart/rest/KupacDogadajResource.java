@@ -29,14 +29,21 @@ public class KupacDogadajResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<com.mojkvart.domain.KupacDogadaj>> getAllkupacDogadajs() {
+    public ResponseEntity<List<KupacDogadajDTO>> getAllkupacDogadajs() {
         return ResponseEntity.ok(kupacDogadajService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<com.mojkvart.domain.KupacDogadaj> getkupacDogadaj(
+    public ResponseEntity<KupacDogadajDTO> getkupacDogadaj(
             @PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(kupacDogadajService.get(id));
+    }
+
+    // api za dohvacanje svih dogadaja na koje neki kupac ide
+    @GetMapping("/kupac/{kupacId}")
+    public ResponseEntity<List<KupacDogadajDTO>> getDogadajiZaKupca(@PathVariable Integer kupacId) {
+        List<KupacDogadajDTO> dogadaji = kupacDogadajService.getDogadajiZaKupca(kupacId);
+        return ResponseEntity.ok(dogadaji);
     }
 
     @PostMapping
