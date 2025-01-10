@@ -1,7 +1,6 @@
 import { Navbar } from "../../components/Navbar";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, useMapEvents  } from 'react-leaflet';
 import "leaflet/dist/leaflet.css";
 import "../../styles/MojeRecenzije.css";
 

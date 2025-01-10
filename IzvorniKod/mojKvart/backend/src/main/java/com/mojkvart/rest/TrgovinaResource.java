@@ -3,7 +3,6 @@ package com.mojkvart.rest;
 import com.mojkvart.model.TrgovinaDTO;
 import com.mojkvart.service.*;
 import com.mojkvart.util.AuthenticationResponse;
-import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
@@ -68,6 +67,11 @@ public class TrgovinaResource {
         if(trgovinaService.findByTrgovinaEmail(trgovinaEmail).isEmpty())
             return ResponseEntity.badRequest().body("ne funkcionira getTrgovina");
         return ResponseEntity.ok(trgovinaService.findByTrgovinaEmail(trgovinaEmail).get());
+    }
+
+    @GetMapping("getById/{trgovinaId}")
+    public ResponseEntity<Object> getTrgovina(@PathVariable(name = "trgovinaId") final Integer trgovinaId) {
+        return ResponseEntity.ok(trgovinaService.get(trgovinaId));
     }
 
     //UC5, koristite api/trgovinas za kreiranje nove trgovine

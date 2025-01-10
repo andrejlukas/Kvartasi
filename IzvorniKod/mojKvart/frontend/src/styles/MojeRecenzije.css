@@ -1,15 +1,3 @@
-.main-container{
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    background-color: #ededed;
-    padding: 40px;
-    box-sizing: border-box;
-    flex-direction: column;
-    justify-content: flex-start
-}
-
 .moje-recenzije-container {
 
     width: 100%;

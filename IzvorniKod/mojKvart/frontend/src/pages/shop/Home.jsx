@@ -89,6 +89,12 @@ export function ShopHome() {
     return (
         <div id="vani2">
             <Navbar />
+            <form></form>
+
+            {/*
+            ovdje dodajem proizvode
+             */}
+             
             {error && <p>{error}</p>}
             <div id="products-alt" className="product-section-alt">
                 <div className="row">

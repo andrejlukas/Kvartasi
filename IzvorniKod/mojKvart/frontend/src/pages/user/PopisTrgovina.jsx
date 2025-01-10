@@ -6,14 +6,21 @@ import L from 'leaflet';
 
 export function PopisTrgovina() {
   const [shops, setShops] = useState([]);
-  const [email, setEmail] = useState(null);
-  const [address, setAddress] = useState(null);
   const [categories, setCategories] = useState([]);
   const [atributs, setAtributs] = useState([]);
-  const [error, setError] = useState(null);
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedAtributs, setSelectedAtributs] = useState([]);
+
+  const [email, setEmail] = useState(null);
+  const [address, setAddress] = useState(null);
   const [activePopover, setActivePopover] = useState(null);
 
+  const [error, setError] = useState(null);
+
   useEffect(() => {
+    if(localStorage.getItem("filter") !== null) applyFilters();
+    
     const token = localStorage.getItem('token');
     let options = {
       method: 'GET',
@@ -32,8 +39,7 @@ export function PopisTrgovina() {
       })
       .then((data) => {
         setShops(data);
-        setCategories(new Set(data.map(trgovina => trgovina.trgovinaKategorija)));
-        
+        setCategories([...new Set(data.map(trgovina => trgovina.trgovinaKategorija))]);
       })
       .catch((error) => {
         setError(error.message);
@@ -96,12 +102,19 @@ export function PopisTrgovina() {
       })
       .then((data) => {
           setAddress(data.kupacAdresa);
-          //console.log(distanceToShop(data.kupacAdresa, shops[0].trgovinaLokacija));
       })
       .catch((error) => {
           setError(error.message);
       });
   }, [email]);
+
+  useEffect(() => {
+    if(categories.length > 0 && localStorage.getItem("filter") === null) {
+      localStorage.setItem("filter", JSON.stringify({ distance: false, categories, atributs: [] }));
+      return;
+    }
+  }, [categories]);
+  
 
   const isShopOpen = (openingTime, closingTime) => {
     const now = new Date();
@@ -120,8 +133,26 @@ export function PopisTrgovina() {
   const distanceToShop = (myLocation, shopLocation) => {
     const coord1 = L.latLng(myLocation.split(",")[0], myLocation.split(",")[1]);
     const coord2 = L.latLng(shopLocation.split(",")[0], shopLocation.split(",")[1]);
-    return Math.round(coord1.distanceTo(coord2)) / 1000; // distance in meters
+    return Math.round(coord1.distanceTo(coord2)) / 1000; // distance in km
   }
+
+  const handleCategoryChange = (event) => {
+    const { value, checked } = event.target;
+    setSelectedCategories((prev) => {
+      if (checked && !prev.includes(value)) {
+        return [...prev, value];
+      } else if (!checked) {
+        return prev.filter((category) => category !== value);
+      }
+      return prev;
+    });
+  };
+  
+  
+  const handleAtributChange = (event) => {
+    const { value, checked } = event.target;
+    setSelectedAtributs((prev) => checked ? [...prev, value] : prev.filter((atribut) => atribut !== value));
+  };
 
   function openTheFilter(popoverDiv) {
     const element = document.getElementById("window");
@@ -137,20 +168,40 @@ export function PopisTrgovina() {
     setActivePopover(null);
   }
 
-  function filterByDistance() {
+  function startFiltering(by) {
+    var data = JSON.parse(localStorage.getItem("filter"));
+    if(by === "distance") data.distance = true;
+    else if(by == "categories") data.categories = selectedCategories;
+    else data.atributs = selectedAtributs;
+    localStorage.setItem("filter", JSON.stringify(data));
+    closeTheFilter();
     window.location.reload();
   }
 
-  function filterByCategories() {
-    window.location.reload();
-    //console.log(categories);
+  function compareShopsByDistance(shop1, shop2) {
+    return shop1.distance - shop2.distance;
   }
 
-  function filterByAtributs() {
-    window.location.reload();
-    //console.log(atributs);
+  // sutra ovo rjesiti filtre u JS
+  function applyFilters() { // nije odrađen dio s atributima, filtrira samo po kategorijama i udaljenosti
+    const dinstanceYesNo = JSON.parse(localStorage.getItem("filter")).distance;
+    const chosenCategories = JSON.parse(localStorage.getItem("filter")).categories;
+    const chosenAtributs = JSON.parse(localStorage.getItem("filter")).atributs;
+    console.log(chosenCategories);
+    if(chosenCategories.length > 0) {
+      let filteredShops1 = shops.filter((shop) => chosenCategories.indexOf(shop.trgovinaKategorija) > -1);
+      console.log(chosenCategories, filteredShops1);
+      let filteredShops2;
+      if(dinstanceYesNo)
+        filteredShops2 = filteredShops1.map((shop) => ({...shop, "distance": distanceToShop(address, shop.trgovinaLokacija)})).sort(compareShopsByDistance);
+      setShops(filteredShops2);
+    } else setShops([]);
   }
 
+  function resetFilters() {
+    localStorage.setItem("filter", JSON.stringify({ distance: false, categories: categories, atributs: [] }));
+    window.location.reload();
+  }
 
   return (
     <div>
@@ -158,19 +209,20 @@ export function PopisTrgovina() {
         <Navbar />
         <div className="content-wrapper-shop">
           <div className="container-shops mt-4">
-            {error ? (
-              <p className="text-danger">{error}</p>
-            ) : !shops.length ? (
-              <p>Loading shops...</p>
-            ) : (
-              <div className="shop-shop-row">
-                <div className="filters">
-                  <strong><p>FILTRIRAJ</p></strong>
-                  <button onClick={() => openTheFilter("distanceDiv")}>Po udaljenosti</button>
-                  <button onClick={() => openTheFilter("categoryDiv")}>Po kategorijama</button>
-                  <button onClick={() => openTheFilter("atributsDiv")}>Po dodatnim značajkama</button>
-                </div>
+            <div className="shop-shop-row">
+              <div className="filters">
+                <strong><p>FILTRIRAJ</p></strong>
+                <button onClick={() => openTheFilter("distanceDiv")}>Po udaljenosti</button>
+                <button onClick={() => openTheFilter("categoryDiv")}>Po kategorijama</button>
+                <button onClick={() => openTheFilter("atributsDiv")}>Po dodatnim značajkama</button>
+                <button onClick={() => resetFilters()}>Po početnim postavkama</button>
+              </div>
 
+              {error ? (
+                <p className="text-danger">{error}</p>
+              ) : !shops ? (
+                <p>Loading shops...</p>
+              ) : (
                 <div id="shops" className="shop-section">
                   <div className="row-shops">
                     {address && shops.length > 0 ? (
@@ -239,8 +291,8 @@ export function PopisTrgovina() {
                     )}
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -249,7 +301,7 @@ export function PopisTrgovina() {
         <div id="distanceDiv" className="filterPopovers">
           <p>Želite li izlistati Vama najbliže trgovine?</p>
           <div className="YesNoButtons">
-            <button onClick={() => filterByDistance()}>Da</button>
+            <button onClick={() => startFiltering("distance")}>Da</button>
             <button onClick={() => closeTheFilter()}>Ne</button>
           </div>
         </div>
@@ -257,13 +309,18 @@ export function PopisTrgovina() {
 
       {activePopover === "categoryDiv" && (
         <div id="categoryDiv" className="filterPopovers">
-          <div className="filterItem">
-            <input type="checkbox" name="category" value="category" />
-            <label htmlFor="category">Prva kategorija</label>
-            <br/>
-          </div>
+          {categories.length > 0 ? (categories.map(category => 
+            <div className="filterItem">
+              <input type="checkbox" 
+                    name={`${category}`} 
+                    value={`${category}`} 
+                    onChange={handleCategoryChange}
+              />
+              <label htmlFor={`${category}`}>{`${category}`}</label>
+              <br/>
+            </div>)) : <p>Nema dostupnih kategorija</p> }
           <div className="YesNoButtons">
-              <button onClick={() => filterByCategories()}>Pretraži</button>
+              <button onClick={() => startFiltering("categories")}>Pretraži</button>
               <button onClick={() => closeTheFilter()}>Odustani</button>
             </div>
         </div>
@@ -271,13 +328,18 @@ export function PopisTrgovina() {
 
       {activePopover === "atributsDiv" && (
         <div id="atributsDiv" className="filterPopovers">
-          <div className="filterItem">
-            <input type="checkbox" name="atribut" value="atribut" />
-            <label htmlFor="atribut">Prvi atribut</label>
-            <br/>
-          </div>
+          {atributs.length > 0 ? (atributs.map(atribut => 
+            <div className="filterItem">
+              <input type="checkbox"
+                     name={`${atribut}`}
+                     value={`${atribut}`}
+                     onChange={handleAtributChange}
+              />
+              <label htmlFor={`${atribut}`}>{`${atribut}`}</label>
+              <br/>
+            </div>)) : <p>Nema dostupnih dodatnih atributa</p> }
           <div className="YesNoButtons">
-              <button onClick={() => filterByAtributs()}>Pretraži</button>
+              <button onClick={() => startFiltering("atributs")}>Pretraži</button>
               <button onClick={() => closeTheFilter()}>Odustani</button>
             </div>
         </div>

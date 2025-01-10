@@ -16,10 +16,8 @@ import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.transaction.Transactional;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
@@ -144,5 +142,4 @@ public class TrgovinaService {
         }
         return null;
     }
-
 }
