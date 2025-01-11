@@ -6,7 +6,6 @@
 }
 
 .dogadaji-section {
-
   width: 85%; 
   display: flex;
   flex-wrap: wrap; 
@@ -103,7 +102,6 @@
 }
 
 @media (max-width: 868px) {
-
   .dogadaji-section {
     width: 100%;
     display: flex;
@@ -112,13 +110,13 @@
     gap: 20px;
   }
 
-    .filteri-dogadaji {
+  .filteri-dogadaji {
     margin-top: 20px;
     width: 100%;
     margin-bottom: 20px;
   }
 
-    .dogadaj-dogadaj-row {
+  .dogadaj-dogadaj-row {
     flex-direction: column;
     align-items: center; 
     justify-content: center; 
@@ -126,7 +124,7 @@
     gap: 10px;
   }
 
-    .dogadaj-card {
+  .dogadaj-card {
     width: 100%; 
     display: flex;
     flex-direction: column;
@@ -134,16 +132,15 @@
     min-height: 300px; 
     box-sizing: border-box;
    }
-    .row-dogadaji{
+  .row-dogadaji{
     flex-direction: column;
     align-items: center;
   }
-    .my-dogadaj-wrapper {
-
+  .my-dogadaj-wrapper {
     width: 90%; 
     margin-bottom: 20px; 
   }
-    .card-body-dogadaj {
+  .card-body-dogadaj {
     display: flex;
     flex-direction: column;
     justify-content: space-between;

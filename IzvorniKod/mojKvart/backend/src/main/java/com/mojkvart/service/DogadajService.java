@@ -11,6 +11,8 @@ import com.mojkvart.repos.KupacDogadajRepository;
 import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DogadajService {
-
     private final DogadajRepository dogadajRepository;
     private final TrgovinaRepository trgovinaRepository;
     private final KupacDogadajRepository kupacDogadajRepository;
@@ -31,6 +32,17 @@ public class DogadajService {
         this.dogadajRepository = dogadajRepository;
         this.trgovinaRepository = trgovinaRepository;
         this.kupacDogadajRepository = kupacDogadajRepository;
+    }
+
+    private LocalDateTime getVrijeme(String formmatedString) {
+        String date = formmatedString.split(" ")[0];
+        String time = formmatedString.split(" ")[1];
+        int day = Integer.parseInt(date.split("\\.")[0]);
+        int month = Integer.parseInt(date.split("\\.")[1]);
+        int year = Integer.parseInt(date.split("\\.")[2]);
+        int hour = Integer.parseInt(time.split(":")[0]);
+        int minutes = Integer.parseInt(time.split(":")[1]);
+        return LocalDateTime.of(year, month, day, hour, minutes);
     }
 
     public List<DogadajDTO> findAll() {
@@ -63,15 +75,28 @@ public class DogadajService {
         dogadajRepository.deleteById(dogadajId);
     }
 
-     public List<DogadajDTO> getTrgovinasDogadaj(Integer trgovinaId) {
+    public List<DogadajDTO> getUpcomingTrgovinasDogadaj(Integer trgovinaId) {
         // Provera postojanja trgovine
-    if (!trgovinaRepository.existsById(trgovinaId)) {
-        throw new NotFoundException("Trgovina sa ID " + trgovinaId + " nije pronađena");
-    }
+        if (!trgovinaRepository.existsById(trgovinaId)) {
+            throw new NotFoundException("Trgovina sa ID " + trgovinaId + " nije pronađena");
+        }
         List<Dogadaj> listaDogadaja = dogadajRepository.findByTrgovina_TrgovinaId(trgovinaId);
         return listaDogadaja.stream()
-                .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))  
+                .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
+                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isAfter(LocalDateTime.now()))
                 .collect(Collectors.toList());  
+    }
+
+    public List<DogadajDTO> getFinishedTrgovinasDogadaj(Integer trgovinaId) {
+        // Provera postojanja trgovine
+        if (!trgovinaRepository.existsById(trgovinaId)) {
+            throw new NotFoundException("Trgovina sa ID " + trgovinaId + " nije pronađena");
+        }
+        List<Dogadaj> listaDogadaja = dogadajRepository.findByTrgovina_TrgovinaId(trgovinaId);
+        return listaDogadaja.stream()
+                .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
+                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
     }
 
     private DogadajDTO mapToDTO(final Dogadaj dogadaj, final DogadajDTO dogadajDTO) {

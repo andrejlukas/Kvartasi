@@ -1,11 +1,11 @@
 package com.mojkvart.rest;
 
 import com.mojkvart.model.DogadajDTO;
-import com.mojkvart.model.RecenzijaDTO;
 import com.mojkvart.service.DogadajService;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
+
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/api/dogadajs", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DogadajResource {
-
     private final DogadajService dogadajService;
 
     public DogadajResource(final DogadajService dogadajService) {
@@ -40,8 +39,20 @@ public class DogadajResource {
     // API za dohvacanje svih dogadaja odredene trgovine
     @GetMapping("/trgovina/{trgovinaId}")
     public ResponseEntity<List<DogadajDTO>> getTrgovinasDogadajs(@PathVariable(name = "trgovinaId") final Integer id) {
-        return ResponseEntity.ok(dogadajService.getTrgovinasDogadaj(id));
-}
+        return ResponseEntity.ok(dogadajService.getUpcomingTrgovinasDogadaj(id));
+    }
+
+    // API za dohvacanje svih nadolazecih dogadaja odredene trgovine
+    @GetMapping("/upcoming/{trgovinaId}")
+    public ResponseEntity<List<DogadajDTO>> getUpcomingTrgovinasDogadajs(@PathVariable(name = "trgovinaId") final Integer id) {
+        return ResponseEntity.ok(dogadajService.getUpcomingTrgovinasDogadaj(id));
+    }
+
+    // API za dohvacanje svih prijasnjih dogadaja odredene trgovine
+    @GetMapping("/finished/{trgovinaId}")
+    public ResponseEntity<List<DogadajDTO>> getFinishedTrgovinasDogadajs(@PathVariable(name = "trgovinaId") final Integer id) {
+        return ResponseEntity.ok(dogadajService.getFinishedTrgovinasDogadaj(id));
+    }
 
     @GetMapping("/{dogadajId}")
     public ResponseEntity<DogadajDTO> getDogadaj(

@@ -17,7 +17,7 @@ export function ShopHome() {
     const [products, setProducts] = useState([]);
 
     const [productData, setProductData] = useState({
-        "proizvodId": null,
+        "proizvodId": "placeholder",
         "proizvodNaziv": "",
         "proizvodOpis": "",
         "proizvodCijena": "",
@@ -161,7 +161,7 @@ export function ShopHome() {
         return false;
     }
 
-    function showProductForm() {
+    function showCreateForm() {
         setToUpdate(false);
         const element = document.getElementById("vani2");
         element.style.cursor = "not-allowed";
@@ -169,14 +169,18 @@ export function ShopHome() {
         document.getElementById("registrationPopup").style.display = "flex";
     }
 
-    function setUpdateForm(product, flag) {
-        const element = document.getElementById("vani2");
-        element.style.cursor = "not-allowed";
-        element.style.opacity = 0.5;
-        document.getElementById("registrationPopup").style.display = "flex";
-
+    function showUpdateForm(product, flag) {
         product.proizvodFlag = flag;
         setProductData(product);
+
+        if(flag === "N") {
+            const element = document.getElementById("vani2");
+            element.style.cursor = "not-allowed";
+            element.style.opacity = 0.5;
+            document.getElementById("registrationPopup").style.display = "flex";
+        } else {
+            updateProduct();
+        }
     }
 
     function closeProductForm() {
@@ -184,17 +188,26 @@ export function ShopHome() {
         element.style.cursor = "auto";
         element.style.opacity = 1;
         document.getElementById("registrationPopup").style.display = "none";
+        setProductData({
+            "proizvodId": "placeholder",
+            "proizvodNaziv": "",
+            "proizvodOpis": "",
+            "proizvodCijena": "",
+            "proizvodKategorija": "",
+            "proizvodSlika": "",
+            "proizvodFlag": "N",
+            "trgovina": -1   
+        });
         setToUpdate(true);
-        window.location.reload();
     }
 
     function createProduct() {
-        setProductData(({ proizvodId, ...rest }) => rest);
         if(isAnyPropertyEmpty(productData)) {
             setPopupError("Sva polja moraju biti popunjena!");
             return;
         }
         
+        productData.proizvodId = null;
         productData.trgovina = shopId;
         productData.proizvodCijena = +(productData.proizvodCijena);
         
@@ -216,10 +229,10 @@ export function ShopHome() {
                 }
             })
             .catch((error) => {
-                setError(error.message);
+                setPopupError(error.message);
             });
-        setPopupError("Forma šalje proizvode na odobravanje!");
         closeProductForm();
+        window.location.reload();
     }
 
     function updateProduct() {
@@ -248,14 +261,14 @@ export function ShopHome() {
             .catch((error) => {
                 setError(error.message);
             });
-        setPopupError("Forma šalje proizvode na odobravanje!");
         closeProductForm();
+        window.location.reload();
     }
 
 
     return (
         <div>
-            <div id="vani2">
+            <div id="vani2" style={{"minHeight": "100vh"}}>
                 <Navbar />
                 {error && <p>{error}</p>}
                 <div id="products-alt" className="product-section-alt">
@@ -290,7 +303,7 @@ export function ShopHome() {
                             />
                             Neodobreni proizvodi
                         </label>
-                        <button id="addProduct" onClick={showProductForm}>Dodaj proizvod</button>
+                        <button id="addProduct" onClick={showCreateForm}>Dodaj proizvod</button>
                     </div>
                     <div className="row">
                         {products.length > 0 ? (
@@ -307,8 +320,8 @@ export function ShopHome() {
                                             <p className="card-text-alt">{product.proizvodOpis}</p>
                                             <div id="gumbcijena-alt">
                                                 <p className="price-alt">€{product.proizvodCijena}</p>
-                                                {productsType === "approved" && <button className="add-to-cart-btn-alt" onClick={() => setUpdateForm(product, "D")}>Ukloni proizvod</button>}
-                                                {productsType !== "approved" && <button className="add-to-cart-btn-alt" onClick={() => setUpdateForm(product, "N")}>Ažuriraj proizvod</button>}
+                                                {productsType === "approved" && <button className="add-to-cart-btn-alt" onClick={() => showUpdateForm(product, "D")}>Ukloni proizvod</button>}
+                                                {productsType !== "approved" && <button className="add-to-cart-btn-alt" onClick={() => showUpdateForm(product, "N")}>Ažuriraj proizvod</button>}
                                             </div>
                                         </div>
                                     </div>
@@ -372,7 +385,7 @@ export function ShopHome() {
                     <button onClick={closeProductForm}>Odustani</button>
                 </div>}
                 {toUpdate && <div className="YesNoButtons">
-                    <button onClick={updateProduct}>Spremi proizvod</button>
+                    <button onClick={updateProduct}>Ažuriraj proizvod</button>
                     <button onClick={closeProductForm}>Odustani</button>
                 </div>}
             </div>

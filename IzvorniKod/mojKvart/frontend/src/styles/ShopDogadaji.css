@@ -1,0 +1,201 @@
+body {
+    background-color: #ededed;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.date-alt {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+#events-alt {
+    flex: 2;
+    background-color: #ededed;
+    border-radius: 8px;
+    margin: 30px;
+    margin-top: 40px;
+}
+
+.card-title-alt {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+}
+
+.card-text-alt {
+    font-size: 16px;
+    color: #555;
+}
+
+.event-card-alt img {
+    padding-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.event-card-alt {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    text-align: left;
+    font-family: Raleway, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.event-card-alt:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.card-body-alt {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+#eventController {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#eventController label {
+    font-family: Raleway, sans-serif;
+    font-size: 16px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#eventController input[type="radio"] {
+    margin-right: 5px;
+    accent-color: #2c8c2c;
+}
+
+#addEvent {
+    background-color: #2c8c2c;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-family: Raleway, sans-serif;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#addEvent:hover {
+    background-color: rgba(62, 152, 30);
+}
+
+#vani2 {
+    z-index: 1;
+}
+
+#vani2[style*="cursor: not-allowed"] * {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+#vani2[style*="cursor: not-allowed"] #registrationPopup {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+#registrationPopup {
+    display: none;
+    flex-direction: column;
+    gap: 3px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 90%;
+    max-width: 500px;
+    background-color: #ffffff;
+    padding: 20px 30px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    font-family: Raleway, sans-serif;
+}
+
+#registrationPopup input,
+#registrationPopup textarea {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-family: Raleway, sans-serif;
+}
+
+#registrationPopup input:focus,
+#registrationPopup textarea:focus {
+    outline: none;
+    border-color: #2c8c2c;
+    box-shadow: 0px 0px 5px rgba(44, 140, 44, 0.5);
+}
+
+#registrationPopup textarea {
+    resize: none;
+    height: 80px;
+}
+
+#registrationPopup button {
+    padding: 10px 20px;
+    background-color: #2c8c2c;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#registrationPopup button:hover {
+    background-color: rgba(62, 152, 30);
+}
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 750px) {
+    #eventController {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    #eventController label {
+        margin-right: 0;
+    }
+
+    #addEvent {
+        align-self: flex-start;
+    }
+}  
