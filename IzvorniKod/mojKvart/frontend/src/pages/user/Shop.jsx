@@ -10,10 +10,7 @@ export function Shop() {
   const [products, setProducts] = useState([]); 
   const [error, setError] = useState(null);
 
-  useEffect(() => { console.log(email); }, []);
-
   useEffect(() => {
-    console.log(email);
     const token = localStorage.getItem('token');
     const options = {
       method: 'GET',
@@ -31,17 +28,17 @@ export function Shop() {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
           setShop(data);
         })
         .catch((error) => {
+          console.log("definitivno nije do ovog");
           setError(error.message);
         });
     }
   }, [email]);
 
   useEffect(() => {
-    if (shop) {
+    if(shop) {
       const token = localStorage.getItem('token');
       const options = {
         method: 'GET',
@@ -51,7 +48,7 @@ export function Shop() {
         }
       }
 
-      fetch(`/api/proizvods/fromTrgovina/${shop.trgovinaId}`, options)
+      fetch(`/api/proizvods/approved/${shop.trgovinaId}`, options)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Neuspjesno dohvacanje proizvoda.");
@@ -62,6 +59,7 @@ export function Shop() {
           setProducts(data);
         })
         .catch((error) => {
+          console.log("do ovog je");
           setError(error.message);
         });
     }

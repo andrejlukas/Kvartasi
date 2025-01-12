@@ -8,6 +8,7 @@ export function ShopDogadaji() {
    const [dogadajiType, setDogadajiType] = useState("upcoming");
    const [dogadaji, setDogadaji] = useState([]);
    const [error, setError] = useState("");
+   const [popupError, setPopupError] = useState("");
    const [dogadajData, setDogadajData] = useState({
       dogadajId: null,
       dogadajNaziv: "",
@@ -127,6 +128,31 @@ export function ShopDogadaji() {
       document.getElementById("registrationPopup").style.display = "none";
    };
 
+   const createDogadaj = () => {
+      dogadajData.trgovina = shopId;
+      const token = localStorage.getItem("token");
+      const options = {
+         method: "POST",
+         headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+         }, body: JSON.stringify(dogadajData)
+      }
+
+      fetch("/api/dogadajs", options)
+         .then(async (response) => {
+            if (!response.ok) {
+               const text = await response.text();
+               throw new Error(text);
+            }
+            closeDogadajForm();
+            window.location.reload();
+         })
+         .catch((error) => {
+            setPopupError(error.message);
+         });
+   };
+
    return (
       <div>
          <div id="vani2" style={{"minHeight": "100vh"}}>
@@ -165,7 +191,7 @@ export function ShopDogadaji() {
                               <div className="card-body-alt">
                                  <h5 className="card-title-alt">{dogadaj.dogadajNaziv}</h5>
                                  <p className="card-text-alt">{dogadaj.dogadajOpis}</p>
-                                 <p className="date-alt">Vrijeme: {dogadaj.dogadajVrijeme}</p>
+                                 <p className="date-alt">Datum i vrijeme: {dogadaj.dogadajVrijeme}</p>
                               </div>
                            </div>
                         </div>
@@ -174,7 +200,7 @@ export function ShopDogadaji() {
                </div>
             </div>
          </div>
-         <div id="registrationPopup" style={{ display: "none" }}>
+         <div id="registrationPopup">
             <input
                type="text"
                placeholder="Naziv događaja"
@@ -206,8 +232,9 @@ export function ShopDogadaji() {
                value={dogadajData.dogadajSlika}
                onChange={handleDogadajChange}
             />
+            {popupError && <p style={{"textAlign": "center", "color": "red"}}>{popupError}</p>}
             <div className="YesNoButtons">
-               <button onClick={() => {}}>Spremi događaj</button>
+               <button onClick={createDogadaj}>Spremi događaj</button>
                <button onClick={closeDogadajForm}>Odustani</button>
             </div>
          </div>

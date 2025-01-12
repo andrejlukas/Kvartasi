@@ -228,11 +228,13 @@ export function ShopHome() {
                     throw new Error(text);
                 }
             })
+            .then(data => {
+                closeProductForm();
+                window.location.reload();
+            })
             .catch((error) => {
                 setPopupError(error.message);
             });
-        closeProductForm();
-        window.location.reload();
     }
 
     function updateProduct() {
@@ -258,11 +260,13 @@ export function ShopHome() {
                     throw new Error(text);
                 }
             })
+            .then(data => {
+                closeProductForm();
+                window.location.reload();
+            })
             .catch((error) => {
                 setError(error.message);
             });
-        closeProductForm();
-        window.location.reload();
     }
 
 

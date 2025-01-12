@@ -69,7 +69,7 @@ public class TrgovinaResource {
         return ResponseEntity.ok(trgovinaService.findByTrgovinaEmail(trgovinaEmail).get());
     }
 
-    @GetMapping("getById/{trgovinaId}")
+    @GetMapping("/getById/{trgovinaId}")
     public ResponseEntity<Object> getTrgovina(@PathVariable(name = "trgovinaId") final Integer trgovinaId) {
         return ResponseEntity.ok(trgovinaService.get(trgovinaId));
     }

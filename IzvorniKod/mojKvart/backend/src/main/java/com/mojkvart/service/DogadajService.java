@@ -34,9 +34,11 @@ public class DogadajService {
         this.kupacDogadajRepository = kupacDogadajRepository;
     }
 
-    private LocalDateTime getVrijeme(String formmatedString) {
+    public static LocalDateTime getVrijeme(String formmatedString) {
         String date = formmatedString.split(" ")[0];
+        if(date.length() != 11) throw new RuntimeException("Datum i vrijeme događaja mora biti u formatu \"dd.MM.gggg. ss:mm\"!");
         String time = formmatedString.split(" ")[1];
+        if(time.length() != 5) throw new RuntimeException("Datum i vrijeme događaja mora biti u formatu \"dd.MM.gggg. ss:mm\"!");
         int day = Integer.parseInt(date.split("\\.")[0]);
         int month = Integer.parseInt(date.split("\\.")[1]);
         int year = Integer.parseInt(date.split("\\.")[2]);

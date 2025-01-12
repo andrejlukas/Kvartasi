@@ -6,6 +6,7 @@ import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/api/dogadajs", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DogadajResource {
+
     private final DogadajService dogadajService;
 
     public DogadajResource(final DogadajService dogadajService) {
@@ -62,9 +64,24 @@ public class DogadajResource {
 
     //UC12, koristite api/dogadajs i posaljite JSON objekt za kreiranje novog dogadaja od strane trgovine
     @PostMapping
-    public ResponseEntity<Integer> createDogadaj(@RequestBody @Valid final DogadajDTO dogadajDTO) {
-        final Integer createdDogadajId = dogadajService.create(dogadajDTO);
-        return new ResponseEntity<>(createdDogadajId, HttpStatus.CREATED);
+    public ResponseEntity<Object> createDogadaj(@RequestBody @Valid final DogadajDTO dogadajDTO) {
+        if(dogadajDTO.getDogadajNaziv().length() < 2)
+            return ResponseEntity.badRequest().body("Naziv događaja mora biti minimalno duljine 2!");
+        if(dogadajDTO.getDogadajOpis().length() < 10)
+            return ResponseEntity.badRequest().body("Opis događaja mora biti minimalno duljine 10!");
+        try {
+            LocalDateTime vrijemeDogadaja = DogadajService.getVrijeme(dogadajDTO.getDogadajVrijeme());
+            if(vrijemeDogadaja.isBefore(LocalDateTime.now()))
+                throw new RuntimeException("Datum mora biti u budućnosti!");
+        } catch(Exception e) {
+            if(e.getMessage().startsWith("Datum")) return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Datum i vrijeme događaja mora biti u formatu \"dd.MM.gggg. ss:mm\"!");
+        }
+        if(dogadajDTO.getDogadajSlika().isEmpty())
+            return ResponseEntity.badRequest().body("URL slike proizvoda ne smije biti prazna!");
+
+        dogadajService.create(dogadajDTO);
+        return new ResponseEntity<>("Uspješno kreiran događaj.", HttpStatus.CREATED);
     }
 
     @PutMapping("/{dogadajId}")
