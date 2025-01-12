@@ -14,7 +14,7 @@ export function Signup() {
       kupacAdresa: "",
       kupacEmail: "",
       kupacSifra: "",
-      kupacStatus: false
+      kupacStatus: "N"
    });
    const [shopData, setShopData] = useState({
       trgovinaNaziv: "",

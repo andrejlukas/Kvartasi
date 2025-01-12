@@ -31,7 +31,7 @@ public class EmailService {
 
         mimeMessageHelper.setFrom(fromEmail);
         mimeMessageHelper.setTo(to);
-        mimeMessageHelper.setSubject("Potvrdite svoju registraciju");
+        mimeMessageHelper.setSubject("[Do not reply] Potvrdite svoju registraciju");
         mimeMessageHelper.setText(createBody(code), false);
 
         javaMailSender.send(message);
