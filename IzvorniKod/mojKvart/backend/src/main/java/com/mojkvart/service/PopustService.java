@@ -1,14 +1,21 @@
 package com.mojkvart.service;
 
+import com.mojkvart.domain.KupacPonudaPopust;
+import com.mojkvart.domain.Ponuda;
 import com.mojkvart.domain.PonudaPopust;
 import com.mojkvart.domain.Popust;
 import com.mojkvart.domain.Trgovina;
+import com.mojkvart.model.PonudaDTO;
 import com.mojkvart.model.PopustDTO;
+import com.mojkvart.repos.KupacPonudaPopustRepository;
 import com.mojkvart.repos.PonudaPopustRepository;
 import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.repos.PopustRepository;
 import com.mojkvart.util.NotFoundException;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -19,23 +26,38 @@ public class PopustService {
     private final PopustRepository popustRepository;
     private final PonudaPopustRepository ponudaPopustRepository;
     private final TrgovinaRepository trgovinaRepository;
+    private final KupacPonudaPopustRepository kupacPonudaPopustRepository;
+
     public PopustService(final PopustRepository popustRepository,
             final PonudaPopustRepository ponudaPopustRepository,
-             final TrgovinaRepository trgovinaRepository) {
+             final TrgovinaRepository trgovinaRepository,
+              final KupacPonudaPopustRepository kupacPonudaPopustRepository) {
         this.popustRepository = popustRepository;
         this.ponudaPopustRepository = ponudaPopustRepository;
         this.trgovinaRepository = trgovinaRepository;
+        this.kupacPonudaPopustRepository = kupacPonudaPopustRepository;
     }
 
-    public List<PopustDTO> findAllWithFlagTrue() {
-        final List<Popust> popusti = popustRepository.findAll(Sort.by("popustId"));
-        return popusti.stream()
-                .filter(popust -> popust.getPonudaPopust() != null &&
-                        popust.getPonudaPopust().getPonudaPopustFlag() != null &&
-                        popust.getPonudaPopust().getPonudaPopustFlag())
-                .map(popust -> mapToDTO(popust, new PopustDTO()))
-                .toList();
-    }
+    // prikazi sve popuste koje je moderator odobrio i kupac nije jos spremio
+    public List<PopustDTO> findAllWithFlagTrue(Integer kupacId) {
+    final List<Popust> popusts = popustRepository.findAll(Sort.by("popustId"));
+    final List<KupacPonudaPopust> kupacPonudaPopusts = kupacPonudaPopustRepository.findAll(Sort.by("kupac"));
+
+    // Pronađi sve ponudaPopuste koje je kupac već spremio
+    final Set<Integer> spremljeniPopustiIds = kupacPonudaPopusts.stream()
+            .filter(kpp -> kpp.getKupac().getKupacId().equals(kupacId))
+            .map(kpp -> kpp.getPonudaPopust().getPonudaPopustId())
+            .collect(Collectors.toSet());
+
+    // Filtriraj ponude koje imaju flag true i nisu spremljene od strane kupca
+    return popusts.stream()
+            .filter(popust -> popust.getPonudaPopust() != null &&
+                    popust.getPonudaPopust().getPonudaPopustFlag() != null &&
+                    popust.getPonudaPopust().getPonudaPopustFlag() &&
+                    !spremljeniPopustiIds.contains(popust.getPonudaPopust().getPonudaPopustId()))
+            .map(popust -> mapToDTO(popust, new PopustDTO()))
+            .toList();
+}
 
     public List<PopustDTO> findAllWithFlagFalse() {
         final List<Popust> popusti = popustRepository.findAll(Sort.by("popustId"));

@@ -27,10 +27,11 @@ public class PonudaResource {
         this.ponudaService = ponudaService;
     }
 
-    // vraća sve ponude koje je moderator odobrio
-    @GetMapping("/flag-true")
-    public ResponseEntity<List<PonudaDTO>> getAllWithFlagTrue() {
-        return ResponseEntity.ok(ponudaService.findAllWithFlagTrue());
+    // vraća sve ponude koje je moderator odobrio i koje kupac vec nije spremio ni iskoristio
+    @GetMapping("/flag-true/{kupacId}")
+    public ResponseEntity<List<PonudaDTO>> getPonudeForKupac( @PathVariable(name = "kupacId") Integer kupacId) {
+        List<PonudaDTO> ponude = ponudaService.findAllWithFlagTrue(kupacId);
+        return ResponseEntity.ok(ponude);
     }
 
     // vraća sve ponude koje moderator mora odobriti

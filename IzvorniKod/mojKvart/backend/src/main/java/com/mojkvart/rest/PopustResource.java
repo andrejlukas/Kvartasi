@@ -1,5 +1,6 @@
 package com.mojkvart.rest;
 
+import com.mojkvart.model.PonudaDTO;
 import com.mojkvart.model.PopustDTO;
 import com.mojkvart.service.PopustService;
 import jakarta.validation.Valid;
@@ -26,11 +27,12 @@ public class PopustResource {
     public PopustResource(final PopustService popustService) {
         this.popustService = popustService;
     }
-
-    // vraca sve popuste koji su odobreni od strane moderatora
-    @GetMapping("/flag-true")
-    public ResponseEntity<List<PopustDTO>> getAllPopustsWithFlagTrue() {
-        return ResponseEntity.ok(popustService.findAllWithFlagTrue());
+    
+    // vraća sve popuste koje je moderator odobrio i koje kupac vec nije spremio ni iskoristio
+    @GetMapping("/flag-true/{kupacId}")
+    public ResponseEntity<List<PopustDTO>> getPopustiForKupac( @PathVariable(name = "kupacId") Integer kupacId) {
+        List<PopustDTO> popusti = popustService.findAllWithFlagTrue(kupacId);
+        return ResponseEntity.ok(popusti);
     }
 
     // vraca sve popuste koje moderator treba odobriti

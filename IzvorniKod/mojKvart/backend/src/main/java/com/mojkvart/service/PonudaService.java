@@ -1,15 +1,20 @@
 package com.mojkvart.service;
 
+import com.mojkvart.domain.KupacPonudaPopust;
 import com.mojkvart.domain.Ponuda;
 import com.mojkvart.domain.PonudaPopust;
 import com.mojkvart.domain.Trgovina;
 import com.mojkvart.model.PonudaDTO;
 import com.mojkvart.model.PonudaPopustDTO;
+import com.mojkvart.repos.KupacPonudaPopustRepository;
 import com.mojkvart.repos.PonudaPopustRepository;
 import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.repos.PonudaRepository;
 import com.mojkvart.util.NotFoundException;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -20,25 +25,38 @@ public class PonudaService {
     private final PonudaRepository ponudaRepository;
     private final PonudaPopustRepository ponudaPopustRepository;
     private final TrgovinaRepository trgovinaRepository;
+    private final KupacPonudaPopustRepository kupacPonudaPopustRepository;
 
     public PonudaService(final PonudaRepository ponudaRepository,
             final PonudaPopustRepository ponudaPopustRepository,
-            final TrgovinaRepository trgovinaRepository) {
+            final TrgovinaRepository trgovinaRepository, final KupacPonudaPopustRepository kupacPonudaPopustRepository) {
         this.ponudaRepository = ponudaRepository;
         this.ponudaPopustRepository = ponudaPopustRepository;
         this.trgovinaRepository = trgovinaRepository;
+        this.kupacPonudaPopustRepository = kupacPonudaPopustRepository;
     }
 
-    // vraća sve ponude koje su pregledane od strane moderatora
-    public List<PonudaDTO> findAllWithFlagTrue() {
-        final List<Ponuda> ponudas = ponudaRepository.findAll(Sort.by("ponudaId"));
-        return ponudas.stream()
-                .filter(ponuda -> ponuda.getPonudaPopust() != null &&
-                        ponuda.getPonudaPopust().getPonudaPopustFlag() != null &&
-                        ponuda.getPonudaPopust().getPonudaPopustFlag())
-                .map(ponuda -> mapToDTO(ponuda, new PonudaDTO()))
-                .toList();
-    }
+    // vraća sve ponude koje su pregledane od strane moderatora i koje kupac već nije spremio
+public List<PonudaDTO> findAllWithFlagTrue(Integer kupacId) {
+    final List<Ponuda> ponudas = ponudaRepository.findAll(Sort.by("ponudaId"));
+    final List<KupacPonudaPopust> kupacPonudaPopusts = kupacPonudaPopustRepository.findAll(Sort.by("kupac"));
+
+    // Pronađi sve ponudaPopuste koje je kupac već spremio
+    final Set<Integer> spremljenePonudeIds = kupacPonudaPopusts.stream()
+            .filter(kpp -> kpp.getKupac().getKupacId().equals(kupacId))
+            .map(kpp -> kpp.getPonudaPopust().getPonudaPopustId())
+            .collect(Collectors.toSet());
+
+    // Filtriraj ponude koje imaju flag true i nisu spremljene od strane kupca
+    return ponudas.stream()
+            .filter(ponuda -> ponuda.getPonudaPopust() != null &&
+                    ponuda.getPonudaPopust().getPonudaPopustFlag() != null &&
+                    ponuda.getPonudaPopust().getPonudaPopustFlag() &&
+                    !spremljenePonudeIds.contains(ponuda.getPonudaPopust().getPonudaPopustId()))
+            .map(ponuda -> mapToDTO(ponuda, new PonudaDTO()))
+            .toList();
+}
+
 
     // vraća sve ponude koje moderator mora pregledati
     public List<PonudaDTO> findAllWithFlagFalse() {
