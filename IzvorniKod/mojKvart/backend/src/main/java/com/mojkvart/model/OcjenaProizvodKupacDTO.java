@@ -1,5 +1,7 @@
 package com.mojkvart.model;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +16,8 @@ public class OcjenaProizvodKupacDTO {
     @NotNull
     private Integer proizvod;
 
+    @Min(1)
+    @Max(5)
     @NotNull
     private Integer ocjena;
 

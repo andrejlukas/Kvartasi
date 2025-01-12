@@ -36,6 +36,17 @@ public class OcjenaProizvodKupacService {
                 .toList();
     }
 
+    public double getProsjecnaOcjena(Integer proizvodId) {
+        List<OcjenaProizvodKupac> ocjene = ocjenaProizvodKupacRepository.findAllByProizvod_ProizvodId(proizvodId);
+        if (ocjene.isEmpty()) {
+            throw new NotFoundException("Nema ocjena za proizvod s ID-om: " + proizvodId);
+        }
+        return ocjene.stream()
+                     .mapToInt(OcjenaProizvodKupac::getOcjena)
+                     .average()
+                     .orElse(0.0);
+    }
+
     public OcjenaProizvodKupacDTO get(final Long id) {
         return ocjenaProizvodKupacRepository.findById(id)
                 .map(ocjenaProizvodKupac -> mapToDTO(ocjenaProizvodKupac, new OcjenaProizvodKupacDTO()))
