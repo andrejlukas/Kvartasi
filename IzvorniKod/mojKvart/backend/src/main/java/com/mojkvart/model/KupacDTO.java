@@ -1,7 +1,5 @@
 package com.mojkvart.model;
 
-
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -21,11 +19,11 @@ public class KupacDTO {
     private String kupacEmail;
 
     @NotNull
-    @Size(max = 20)
+    @Size(max = 50)
     private String kupacIme;
 
     @NotNull
-    @Size(max = 20)
+    @Size(max = 50)
     private String kupacPrezime;
 
     @Size(max = 50)
@@ -40,5 +38,5 @@ public class KupacDTO {
     private LocalDateTime kodValidanDo;
 
     @NotNull
-    private Boolean verificiranKupac;
+    private String kupacStatus;
 }

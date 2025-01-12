@@ -47,10 +47,21 @@ public class DogadajService {
         return LocalDateTime.of(year, month, day, hour, minutes);
     }
 
-    public List<DogadajDTO> findAll() {
+    // svi nadolazeci dogadaji
+    public List<DogadajDTO> findAllUpcoming() {
         final List<Dogadaj> dogadajs = dogadajRepository.findAll(Sort.by("dogadajId"));
         return dogadajs.stream()
                 .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
+                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isAfter(LocalDateTime.now()))
+                .toList();
+    }
+
+    // svi prijsanji dogadaji
+    public List<DogadajDTO> findAllFinished() {
+        final List<Dogadaj> dogadajs = dogadajRepository.findAll(Sort.by("dogadajId"));
+        return dogadajs.stream()
+                .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
+                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isBefore(LocalDateTime.now()))
                 .toList();
     }
 

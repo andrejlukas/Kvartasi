@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from 'react-router-dom';
 
-import { Login } from "./pages/Login";
+import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
-import { NotFound } from "./pages/NotFound";
+import { NotVerified } from './pages/NotVerified'
+import { Suspended  } from './pages/Suspended';
+import { NotFound } from './pages/NotFound';
 
 import { Home } from './pages/user/Home';
 import { PopisTrgovina } from './pages/user/PopisTrgovina';
@@ -206,6 +208,8 @@ function App() {
 
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/notverified" element={<NotVerified />} />
+        <Route path="/suspended" element={<Suspended />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

@@ -35,7 +35,7 @@ public class DogadajResource {
     //UC17, koristite api/dogadajs za dohvacanje svih dogadaja od strane korisnika
     @GetMapping
     public ResponseEntity<List<DogadajDTO>> getAllDogadajs() {
-        return ResponseEntity.ok(dogadajService.findAll());
+        return ResponseEntity.ok(dogadajService.findAllUpcoming());
     }
 
     // API za dohvacanje svih dogadaja odredene trgovine

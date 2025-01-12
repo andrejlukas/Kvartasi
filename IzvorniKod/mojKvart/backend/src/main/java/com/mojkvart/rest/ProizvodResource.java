@@ -89,11 +89,21 @@ public class ProizvodResource {
     }
 
     @PutMapping("/{proizvodId}")
-    public ResponseEntity<Integer> updateProizvod(
+    public ResponseEntity<String> updateProizvod(
             @PathVariable(name = "proizvodId") final Integer proizvodId,
             @RequestBody @Valid final ProizvodDTO proizvodDTO) {
+        if(proizvodDTO.getProizvodNaziv().length() < 2)
+            return ResponseEntity.badRequest().body("Naziv proizvoda mora biti minimalno duljine 2!");
+        if(proizvodDTO.getProizvodOpis().length() < 10)
+            return ResponseEntity.badRequest().body("Opis proizvoda mora biti minimalno duljine 10!");
+        if(proizvodDTO.getProizvodCijena() <= 0)
+            return ResponseEntity.badRequest().body("Cijena proizvoda mora biti pozitivna!");
+        if(proizvodDTO.getProizvodKategorija().length() < 2)
+            return ResponseEntity.badRequest().body("Kategorija proizvoda mora biti minimalno duljine 2!");
+        if(proizvodDTO.getProizvodSlika().isEmpty())
+            return ResponseEntity.badRequest().body("Naziv proizvoda ne smije biti prazan!");
         proizvodService.update(proizvodId, proizvodDTO);
-        return ResponseEntity.ok(proizvodId);
+        return ResponseEntity.ok("Uspješno promijenjen proizvod!");
     }
 
     // UC7, koristite za mijenjanje zastavice proizvoda kada ga moderator odobri

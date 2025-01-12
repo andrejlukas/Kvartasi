@@ -12,7 +12,6 @@ import com.mojkvart.util.ReferencedWarning;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +65,7 @@ public class KupacResource {
         kupacDTO.setKupacSifra(passwordEncoder.encode(kupacDTO.getKupacSifra()));
         kupacDTO.setVerifikacijskiKod(verificationCode);
         kupacDTO.setKodValidanDo(LocalDateTime.now().plusMinutes(5)); // verifikacijski kod traje 5 minuta
-        kupacDTO.setVerificiranKupac(false);
+        kupacDTO.setKupacStatus("N");
     }
 
 
@@ -99,8 +98,7 @@ public class KupacResource {
         if(administratorService.findByAdministratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
                 moderatorService.findByModeratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
                 trgovinaService.findByTrgovinaEmail(kupacDTO.getKupacEmail()).isPresent() ||
-                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isPresent() &&
-                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).get().getVerificiranKupac()) {
+                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Imate već postojeći korisnički račun?");
         }
 
@@ -135,7 +133,7 @@ public class KupacResource {
 
         kupacDTO.setVerifikacijskiKod(null);
         kupacDTO.setKodValidanDo(null);
-        kupacDTO.setVerificiranKupac(true);
+        kupacDTO.setKupacStatus("V");
         updateKupac(kupacDTO.getKupacId(), kupacDTO);
 
         Map<String, Object> claims = new HashMap<>();
@@ -167,7 +165,7 @@ public class KupacResource {
             role = "TRGOVINA";
             sifraIzBaze = trgovinaService.findByTrgovinaEmail(email).get().getTrgovinaSifra();
         } else if (kupacService.findByKupacEmail(email).isPresent() &&
-                   kupacService.findByKupacEmail(email).get().getVerificiranKupac()) {
+                   kupacService.findByKupacEmail(email).get().getKupacStatus().equals("V")) {
             role = "KUPAC";
             sifraIzBaze = kupacService.findByKupacEmail(email).get().getKupacSifra();
         } else

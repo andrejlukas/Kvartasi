@@ -59,7 +59,12 @@ public class SecurityConfig{
                             String role = (String) claims.get("role");
                             String token = jwtService.generateToken(claims, oauth2User.getAttribute("email"));
                             role = role.equals("KUPAC") ? "" : role.toLowerCase();
-                            response.sendRedirect(String.format("%s%s/home?token=%s", frontendUri, role, token));
+                            if(oauth2KorisnikService.getStatus().equals("V"))
+                                response.sendRedirect(String.format("%s%s/home?token=%s", frontendUri, role, token));
+                            else if(oauth2KorisnikService.getStatus().equals("N"))
+                                response.sendRedirect(frontendUri + "/notVerifiedYet");
+                            else
+                                response.sendRedirect(frontendUri + "/suspended");
                         }));
         return http.build();
     }

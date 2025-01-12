@@ -38,10 +38,10 @@ public class Kupac implements UserDetails {
     @Column(unique = true, nullable = false, length = 50)
     private String kupacEmail;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 50)
     private String kupacIme;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 50)
     private String kupacPrezime;
 
     @Column(length = 50)
@@ -57,7 +57,7 @@ public class Kupac implements UserDetails {
     private LocalDateTime kodValidanDo;
 
     @Column(nullable = false)
-    private Boolean verificiranKupac;
+    private String kupacStatus; // V-verificiran, N-neverificiran, S-suspendiran
 
     @OneToMany(mappedBy = "kupac")
     private Set<KupacDogadaj> kupacKupacDogadajs;
