@@ -34,6 +34,18 @@ public class RecenzijaResource {
         return ResponseEntity.ok(recenzijaService.findAll());
     }
 
+    // API za dohvaćanje svih recenzija koje je moderator potvrdio
+    @GetMapping("/approved")
+    public ResponseEntity<List<RecenzijaDTO>> getAllApproved() {
+        return ResponseEntity.ok(recenzijaService.getAllApproved());
+    }
+
+    // API za dohvaćanje svih recenzija koje moderator mora potvrditi
+    @GetMapping("/not-approved")
+    public ResponseEntity<List<RecenzijaDTO>> getAllNotApproved() {
+        return ResponseEntity.ok(recenzijaService.getAllNotApproved());
+    }
+
     @GetMapping("/{recenzijaId}")
     public ResponseEntity<RecenzijaDTO> getRecenzija(
             @PathVariable(name = "recenzijaId") final Integer recenzijaId) {
@@ -54,6 +66,21 @@ public class RecenzijaResource {
             @RequestBody @Valid final RecenzijaDTO recenzijaDTO) {
         recenzijaService.update(recenzijaId, recenzijaDTO);
         return ResponseEntity.ok(recenzijaId);
+    }
+
+    // koristite za lako dodavanje odgovora na receziju
+    @PutMapping("/odgovor/{recenzijaId}")
+    public ResponseEntity<Void> dodajOdgovorNaRecenziju(@PathVariable(name = "recenzijaId") Integer recenzijaId,
+                                                        @RequestBody String odgovor) {
+        recenzijaService.dodajOdgovorNaRecenziju(recenzijaId, odgovor);
+        return ResponseEntity.ok().build();
+    }
+
+    // koristite kad je recenziju odobrio moderator za promjenu zastavice
+    @PutMapping("/odobrioModerator/{recenzijaId}")
+    public ResponseEntity<Void> promijeniZastavicu(@PathVariable(name = "recenzijaId") Integer recenzijaId) {
+        recenzijaService.promijeniZastavicu(recenzijaId);
+        return ResponseEntity.ok().build();
     }
 
     //UC9, koristite api/recenzijas/{recenzijaId} za brisanje recenzija

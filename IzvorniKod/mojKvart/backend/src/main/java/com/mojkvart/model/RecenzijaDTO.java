@@ -13,6 +13,7 @@ public class RecenzijaDTO {
 
     private Integer recenzijaId;
 
+    @NotNull
     @Size(max = 500)
     private String recenzijaOpis;
 

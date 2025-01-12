@@ -37,11 +37,27 @@ public class RecenzijaService {
                 .toList();
     }
 
+    public List<RecenzijaDTO> getAllApproved() {
+        final List<Recenzija> recenzijas = recenzijaRepository.findAll(Sort.by("recenzijaId"));
+        return recenzijas.stream().filter(recenzija -> recenzija.getOdobrioModerator() == true)
+                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))
+                .toList();
+    }
+
+    public List<RecenzijaDTO> getAllNotApproved() {
+        final List<Recenzija> recenzijas = recenzijaRepository.findAll(Sort.by("recenzijaId"));
+        return recenzijas.stream().filter(recenzija -> recenzija.getOdobrioModerator() == false)
+                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))
+                .toList();
+    }
+
     public RecenzijaDTO get(final Integer recenzijaId) {
         return recenzijaRepository.findById(recenzijaId)
                 .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))
                 .orElseThrow(NotFoundException::new);
     }
+
+
 
     public Integer create(final RecenzijaDTO recenzijaDTO) {
         final Recenzija recenzija = new Recenzija();
@@ -53,6 +69,20 @@ public class RecenzijaService {
         final Recenzija recenzija = recenzijaRepository.findById(recenzijaId)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(recenzijaDTO, recenzija);
+        recenzijaRepository.save(recenzija);
+    }
+
+    public void dodajOdgovorNaRecenziju(Integer recenzijaId, String odgovor){
+        Recenzija recenzija = recenzijaRepository.findById(recenzijaId)
+        .orElseThrow(() -> new NotFoundException("Recenzija s ID " + recenzijaId + " nije pronađena"));
+        recenzija.setRecenzijaOdgovor(odgovor);
+        recenzijaRepository.save(recenzija);
+    }
+
+    public void promijeniZastavicu(Integer recenzijaId){
+        Recenzija recenzija = recenzijaRepository.findById(recenzijaId)
+        .orElseThrow(() -> new NotFoundException("Recenzija s ID " + recenzijaId + " nije pronađena"));
+        recenzija.setOdobrioModerator(true);
         recenzijaRepository.save(recenzija);
     }
 
