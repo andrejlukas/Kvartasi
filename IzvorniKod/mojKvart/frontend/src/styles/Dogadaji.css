@@ -11,9 +11,15 @@
   flex-wrap: wrap; 
   gap: 20px;
 }
-
+.dogadaj-dogadaj-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+  align-items: flex-start; 
+  justify-content: flex-start; 
+}
 .filteri-dogadaji {
-  flex: 0 0 20%; 
   margin-left: 20px; 
   margin-right: 20px;
   width: 20%; 
@@ -29,14 +35,6 @@
   align-items: center;
 }
 
-.dogadaj-dogadaj-row {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 20px;
-  align-items: flex-start; 
-  justify-content: flex-start; 
-}
 .dogadaj-card {
   width: 100%; 
   background-color: #fff;
@@ -112,7 +110,7 @@
 
   .filteri-dogadaji {
     margin-top: 20px;
-    width: 100%;
+    width: 90%;
     margin-bottom: 20px;
   }
 

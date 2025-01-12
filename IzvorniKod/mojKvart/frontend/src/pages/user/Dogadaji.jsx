@@ -26,26 +26,31 @@ export function Dogadaji() {
       })
          .then((data) => {
             setDogadaji(data);
-            data.forEach(dog => fetchTrgovinaName(dog.trgovinaId));
+            data.forEach(dog => fetchTrgovinaName(dog.trgovina));
+            
       })
          .catch((error) => {
          setError(error.message);
-      });
+         });
+      
+         const fetchTrgovinaName = async (trgovinaId) => {
+      // console.log(trgovinaId)
+      try {
+         const response = await fetch(`/api/trgovinas/getById/${trgovinaId}`, options);
+         if (!response.ok) {
+            throw new Error(`Failed to fetch store with id ${trgovinaId}`);
+         }
+         const name = await response.json();
+         // console.log(name.trgovinaNaziv)
+         setTrgovinaNames(prevNames => ({ ...prevNames, [trgovinaId]: name.trgovinaNaziv }));
+      } catch (error) {
+         console.error(`Error fetching store name for id ${trgovinaId}:`, error);
+      }
+   };
       
    }, []);
 
-   const fetchTrgovinaName = async (trgovinaId) => {
-         try {
-            const response = await fetch(`/api/trgovinas/${trgovinaId}`);
-            if (!response.ok) {
-               throw new Error(`Failed to fetch trgovina with id ${trgovinaId}`);
-            }
-            const name = await response.text();
-            setTrgovinaNames(prevNames => ({ ...prevNames, [trgovinaId]: name }));
-         } catch (error) {
-            console.error(error);
-         }
-      };
+
 
    return (
       <div>
@@ -53,7 +58,7 @@ export function Dogadaji() {
          <div className="container-dogadaji">
             {error ? (
                <p className="text-danger">{error}</p>
-            ) : !dogadaji.length ? (
+            ) : !dogadaji ? (
                <p>Loading...</p>
             ) : (
                <div className="dogadaj-dogadaj-row">
@@ -73,12 +78,15 @@ export function Dogadaji() {
 
                                     <div className="card-body-dogadaj">
                                        <div className="card-title"> {dog.dogadajNaziv}</div>
-                                       {/* <div className="card-text">{console.log(trgovinaNames[dog.trgovinaId]) }</div> */}
-                                       <div className="card-text"> {dog.dogadajOpis}</div>
                                        <div className="items-dogadaji">
-                                          <div className="card-text"> {dog.dogadajVrijeme}</div>
+                                          <div className="card-text">{trgovinaNames[dog.trgovina]}</div>
                                           <button className="confirm-button">Dolazim</button>
                                        </div>
+                                       <div className="card-text"> {dog.dogadajOpis}</div>
+                                       
+                                       <div className="card-text"> {dog.dogadajVrijeme}</div>
+                                          
+                                       
                                     </div>
                                  </div>
                               </div>
