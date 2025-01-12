@@ -6,6 +6,7 @@ import QRCode from "qrcode";
 
 export function PonudeiPromocije() {
    const [popusti, setPopusti] = useState([]);
+   const [ponude, setPonude] = useState([]);
    const [qrCodes, setQrCodes] = useState({});
    const [error, setError] = useState(null);
 
@@ -21,13 +22,26 @@ export function PonudeiPromocije() {
       fetch(`/api/popusts/flag-true`, options)
          .then((response) => {
          if (!response.ok) {
-            throw new Error("Neuspješno dohvaćanje ponuda.");
+            throw new Error("Neuspješno dohvaćanje popusta.");
          }
          return response.json();
       })
          .then((data) => {
             setPopusti(data);
             generateQRCodes(data);
+      })
+         .catch((error) => {
+         setError(error.message);
+      });
+      fetch(`/api/ponudas/flag-true`, options)
+         .then((response) => {
+         if (!response.ok) {
+            throw new Error("Neuspješno dohvaćanje ponuda.");
+         }
+         return response.json();
+      })
+         .then((data) => {
+            setPonude(data);
       })
          .catch((error) => {
          setError(error.message);
@@ -63,48 +77,63 @@ export function PonudeiPromocije() {
                <p>Loading...</p>
             ) : (
                <div className="popust-popust-row">
-                  
                   <div className="banner">
                      Pronađite najbolje ponude i popuste uz samo par klikova!
                   </div>
-                        
+                  <div className="ponuda-popust-wrapper"> 
                   <div id="popusti" className="popusti-section">
-                     {popusti.length > 0 ? (
-                        popusti.map((pop)=>(
-                           <div key={pop.popustId} className="my-popust-wrapper"> 
+                     {popusti.length > 0 && (
+                        popusti.map((pop) => (
+                           <div key={pop.popustId} className="my-popust-wrapper">
                               <div className="popust-card">
                                  <div className="popust-header">
                                     <p>{pop.popustNaziv}</p>
                                     <hr />
                                  </div>
-                                 
                                  <div className="popust-body">
                                     <div className="popust-info">
-                                       {/* <p className="popust-store">{pop.store}</p>*/}
                                        <p className="popust-details">{pop.popustOpis}</p>
-                                       {/* <p className="popust-code">Kod: {pop.code}</p>  */}
                                     </div>
                                     <div className="popust-actions">
-                                       
-                                    {qrCodes[pop.popustId] && (
+                                       {qrCodes[pop.popustId] && (
                                           <img
                                              src={qrCodes[pop.popustId]}
                                              alt="QR Code"
                                              className="qr-code"
                                           />
                                        )}
-                                       <button className="save-button">Spremi ponudu</button> 
+                                       <button className="save-button">Spremi popust</button>
                                     </div>
                                  </div>
                               </div>
                            </div>
                         ))
-                       ) : (
-                        <p>No deals available.</p>      
                      )}
                   </div>
+                  <div id="ponude" className="popusti-section">
+                     {ponude.length > 0 && (
+                        ponude.map((ponuda) => (
+                           <div key={ponuda.ponudaId} className="my-popust-wrapper">
+                              <div className="popust-card">
+                                 <div className="popust-header">
+                                    <p>{ponuda.ponudaNaziv}</p>
+                                    <hr />
+                                 </div>
+                                 <div className="popust-body">
+                                    <div className="popust-info">
+                                       <p className="popust-details">{ponuda.ponudaOpis}</p>
+                                    </div>
+                                    <div className="popust-actions">
+                                       <button className="save-button">Spremi ponudu</button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        ))
+                     )}
+                     </div>
+                     </div>
                </div>
-               
             )}
          </div>
       </div>
