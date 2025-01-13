@@ -1,11 +1,12 @@
 .moje-recenzije-container {
 
-    width: 100%;
+    width: 70%;
     height: 100%;
     text-align: left;
+    margin: 20px;
     padding: 20px;
     background-color: #ffffff;
-    border-radius: 8px;
+    border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     position: relative;
     flex-direction: column;
@@ -22,7 +23,7 @@ body {
 
 
 .recenzija-info-plus-button{
-    gap:8px;
+    gap:15px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -30,80 +31,85 @@ body {
     
 }
 
-  .stupac:nth-child(1) {
+  .stupac-recenzija:nth-child(1) {
     padding: 0px;
+    display: flex;
+    align-items: center;
+    align-items: center;
+    min-height: 70px ;
 
-    width: 30%;
+
+    width: 60%;
     text-align: start;
   }
 
-  .stupac:nth-child(2) {
-    width: 10%;
-    text-align: start;
-  }
-
-  .stupac:nth-child(3) {
-    width: 15%;
+  .stupac-recenzija:nth-child(2) {
+    width: 40%;
     text-align: start;
     display: flex;
     flex-direction: column;
-  color:rgb(0, 0, 0, 0.6) ;
+    color:rgb(0, 0, 0, 0.6);
+    padding: 15px;
 
-    
   }
 
-  .stupac:nth-child(4) {
-    width: 25%;
-    text-align: start;
-  }
-  .stupac:nth-child(5) {
-    width: 15%;
-    text-align: start;
-    margin-left: 5px;
-  }
-  
+  .stupac-recenzija:nth-child(2) div{
 
-  .stupac{
     display: flex;
-    min-height: 70px ;
+    flex-direction: row;
     align-items: center;
-    width: 100%;
-    padding: 10px;
-    
-align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
   }
-   
+
+  .stupac-recenzija:nth-child(2) div p{
+    font-size: 15px;
+    box-sizing: border-box;
+  }
   #odebrenotekst{
+    width: 100%;
+  }
+ 
+
+  
+   
+  #odobrenotekst-recenzija{
     color: rgba(40, 134, 33,0.8) ;
     font-weight: 400;
     
   }
 
   #recenzija-opisIOdgovor div:nth-child(2) {
-    background-color: rgba(40, 134, 33,0.2); /* Stilizacija drugog diva */
     width:  100%;
     height: 100%;
-    padding-left: 5px;
+    border-top:rgb(40, 134, 33,0.8) ;
+    border-top: 1px rgb(40, 134, 33,0.8);
+    border-style: solid;
+    border-bottom: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    padding: 15px 10px;
+    box-sizing: border-box;
   }
 
   #recenzija-opisIOdgovor div:nth-child(1) {
-    padding: 10px 5px; 
+    padding: 15px 10px; 
     display: flex;
     align-items: center; /* Vertikalno centriranje */
     text-align: start;
-    background-color: rgba(40, 134, 33,0.1); /* Stilizacija drugog diva */
     width:  100%;
+    box-sizing: border-box;
   }
 
   #recenzija-opisIOdgovor{
     display: flex;
+    box-sizing: border-box;
     flex-direction: column;
     align-items: flex-start;
-    /* border-radius: 30px; */
-    border-style: dotted;
+    border-radius: 30px; 
+    border-style: solid;
     border-color: rgba(40, 134, 33,0.8);
     border-width: 2px;
-    width: 100%;
   }
 
 
@@ -123,7 +129,7 @@ align-items: center;
 .recenzija-list{
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
 }
 
 .recenzijanaslov{
@@ -147,12 +153,7 @@ align-items: center;
 
 }
 
-#brojzvjezdica p:nth-child(2){
-  background-color: rgb(255, 255, 0, 0.5);
-  border-radius: 50px;
-  padding: 10px;
-}
-#brojzvjezdica p:nth-child(1){
+.recenzija-ocjena p:nth-child(1){
   color:rgb(0, 0, 0, 0.6) ;
 }
 
@@ -167,43 +168,33 @@ align-items: center;
         align-items: stretch; /* Osigurava da svaki stupac zauzima cijelu širinu */
     }
 
-    .stupac:nth-child(1) {
+    .stupac-recenzija:nth-child(1) {
         width: 100%;
         text-align: start;
       }
     
-      .stupac:nth-child(2) {
-        width: 100%;
-        text-align: center;
-      }
-    
-      .stupac:nth-child(3) {
-        width: 100%;
-        text-align: center;
+      .stupac-recenzija:nth-child(2) div {
+        padding: 0px;
         display: flex;
-        flex-direction: column;
-        
-      }
-      .stupac:nth-child(4) {
         width: 100%;
-        text-align: center;
-        display: flex;
-        justify-content: center
-
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
       }
-      .stupac:nth-child(5) {
+      
+      .stupac-recenzija:nth-child(2){
         width: 100%;
-        text-align: center;
-      }
-
-      .stupac{
+      }     
+      .stupac-recenzija{
         min-height: 80px;
       }
 
     .brisanjeRec {
         width: 100%; /* Gumb također zauzima cijelu širinu */
     }
-    
-
+    .moje-recenzije-container {
+       width: auto;
+    }
     
 }

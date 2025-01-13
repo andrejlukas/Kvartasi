@@ -40,11 +40,12 @@ body {
     color: rgb(0, 0, 0, 0.5);
     border-style: none;
     border-radius: 20px;
-    font-size: 20px;
+    font-size: 24px;
 }
 
 .idracun-button:hover{
-    background-color: rgb(0, 0, 0, 0.1);
+    background-color: rgb(0, 0, 0,0.6);
+    color: white;
     
 }
 
@@ -76,16 +77,29 @@ body {
 .racun-proizvod-element p{
     width: 20%;
 }
-.racun-proizvod-element button{
-    
-    align-self: flex-start; /* Izbacuje ga iz poravnanja ostalih elemenata */
-    order: -1;
-    
+
+
+.racun-ostavi-recenziju-gumb {
+    width: 100%;
+
+    padding: 5px 10px;
+    background-color:#ffffff ; 
+    color: black; 
+    border-style: solid;
+    border-width: 2px; 
+    border-color: #4caf50;
+    border-radius: 20px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
+}
+
+.racun-ostavi-recenziju-gumb:hover {
+    background-color: #45a049; 
+    color: white;
 }
 
 .ispisRacuna {
     margin-top: 10px;
-    border-top: 1px solid #ddd;
     padding-top: 10px;
 }
 
@@ -99,8 +113,7 @@ body {
     }
 
     .moji-racuni-container {
-        width: 100%;
-        padding: 15px;
+        width: 500px;
         margin: 10px 0;
     }
 
@@ -119,18 +132,11 @@ body {
         width: 100%;
         margin: 5px 0;
     }
+    
 
-    .racun-proizvod-element {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding: 10px 0;
-    }
+    
 
-    .racun-proizvod-element p {
-        width: 100%;
-        margin: 5px 0;
-    }
+    
 
     .idracun-button {
         font-size: 16px;

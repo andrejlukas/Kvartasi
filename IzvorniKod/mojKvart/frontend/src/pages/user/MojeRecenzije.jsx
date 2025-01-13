@@ -158,14 +158,14 @@ function brisanjeRecenzije(poslanId) {
                   recenzije.map((recenzija, index) => 
                   (
                      <div key = {recenzija.recenzijaId}className="recenzija-list">
-                        <div className="recenzijanaslov">Recenzija za trgovinu {recenzija.trgovinaId}</div>
+                        <div className="recenzijanaslov">Recenzija za trgovinu NASLOV TRGOVINE</div>
                         <div className="recenzija-info-plus-button">
                             
                             {/* <div className="stupac">
                             <p>{recenzija.recenzijaId}</p>
                             </div> */}
                             
-                            <div className="stupac" id="recenzija-opisIOdgovor">
+                            <div className="stupac-recenzija" id="recenzija-opisIOdgovor">
                                 <div >
                                     <p>{recenzija.recenzijaOpis}</p>
 
@@ -182,26 +182,19 @@ function brisanjeRecenzije(poslanId) {
                                 
                             
                             </div>
-                            <div className="stupac" id="brojzvjezdica">
-                           <p>Ocjena:</p>
-                           <p>{recenzija.recenzijaZvjezdice}</p>
+                            <div className="stupac-recenzija" id="recenzija-dodatne-info" >
+                                <div className="recenzija-ocjena">
+                                    <p>Ocjena:</p>
+                                    <p id="brojzvjezdica">{recenzija.recenzijaZvjezdice}</p>
+                                </div>
+                                <div>
+                                    <p>Vrijeme kreiranja:</p>
+                                    <p>{recenzija.vrijemeKreiranja}</p></div>
+                                <div id="odobrenotekst-recenzija">
+                                    {recenzija.odobrioModerator && (<p id="odebrenotekst">Odobrio moderator!</p>)}
+                                </div>
+                                <button className="brisanjeRec" onClick={() => brisanjeRecenzije(recenzija.recenzijaId)}>Izbriši recenziju!</button>
                             </div>
-                            {/* <div className="stupac">
-                            <p>{recenzija.trgovinaId}</p>{/*  fali zahtjev za dohvačanje imena trgovine prek id-a *
-                            </div>  */}
-                            <div className="stupac" >
-                            <p>Vrijeme kreiranja:</p>
-                            <p>{recenzija.vrijemeKreiranja}</p>
-                            </div>
-                            <div className="stupac">
-                            {recenzija.odobrioModerator && (<p id="odebrenotekst">Odobrio moderator!</p>)}
-                            </div>
-                          
-                            <div className="stupac">
-                            <button className="brisanjeRec" onClick={() => brisanjeRecenzije(recenzija.recenzijaId)}>Izbriši recenziju!</button>
-
-                            </div>
-
                         </div>
                         {
                             index !== recenzije.length - 1 && <hr />
