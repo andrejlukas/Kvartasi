@@ -74,6 +74,12 @@ public class TrgovinaResource {
         return ResponseEntity.ok(trgovinaService.get(trgovinaId));
     }
 
+    // tu promjeniti na samo potvrdene trgovine kasnije
+    @GetMapping("/getBySearch/{input}")
+    public ResponseEntity<List<TrgovinaDTO>> getSearchedTrgovinas(@PathVariable(name = "input") String input) {
+        return ResponseEntity.ok(trgovinaService.getAllTrgovinasBySearch(input));
+    }
+
     //UC5, koristite api/trgovinas za kreiranje nove trgovine
     @PostMapping("/signup")
     public ResponseEntity<Object> createTrgovina(@RequestBody @Valid final TrgovinaDTO trgovinaDTO) {

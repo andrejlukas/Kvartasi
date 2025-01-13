@@ -124,7 +124,11 @@ public class KupacResource {
 
     @PostMapping("/verification")
     public ResponseEntity<Object> verifyKupac(@RequestBody @Valid final VerificationDTO verificationDTO) {
-        KupacDTO kupacDTO = kupacService.findByKupacEmail(verificationDTO.getEmail()).get();
+        KupacDTO kupacDTO = new KupacDTO();
+        if(kupacService.findByKupacEmail(verificationDTO.getEmail()).isPresent())
+            kupacDTO = kupacService.findByKupacEmail(verificationDTO.getEmail()).get();
+        else
+            return ResponseEntity.badRequest().body("Pričekaj da mail dođe!");
 
         if(kupacDTO.getKodValidanDo().isBefore(LocalDateTime.now()))
             return ResponseEntity.badRequest().body("Vrijeme za verifikaciju je isteklo.\nPokušajte se ponovno registrirati!");

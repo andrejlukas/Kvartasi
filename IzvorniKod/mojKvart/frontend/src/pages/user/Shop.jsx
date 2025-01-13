@@ -31,7 +31,6 @@ export function Shop() {
           setShop(data);
         })
         .catch((error) => {
-          console.log("definitivno nije do ovog");
           setError(error.message);
         });
     }
@@ -59,7 +58,6 @@ export function Shop() {
           setProducts(data);
         })
         .catch((error) => {
-          console.log("do ovog je");
           setError(error.message);
         });
     }

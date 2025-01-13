@@ -7,16 +7,12 @@ import L from 'leaflet';
 export function PopisTrgovina() {
   const [shops, setShops] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [atributs, setAtributs] = useState([]);
-
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedAtributs, setSelectedAtributs] = useState([]);
   const [shopsToRenderOut, setShopsToRenderOut] = useState([]);
 
   const [email, setEmail] = useState(null);
   const [address, setAddress] = useState(null);
   const [activePopover, setActivePopover] = useState(null);
-
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -30,29 +26,16 @@ export function PopisTrgovina() {
     };
 
     fetch(`/api/trgovinas`, options)
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok) {
-          return response.text().then(text => {throw new Error(text)});
+          const text = await response.text();
+          throw new Error(text);
         }
         return response.json();
       })
       .then((data) => {
         setShops(data);
         setCategories([...new Set(data.map(trgovina => trgovina.trgovinaKategorija))]);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-    
-    fetch("/api/atributs", options)
-      .then((response) => {
-        if (!response.ok) {
-          return response.text().then(text => {throw new Error(text)});
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setAtributs(new Set(data));
       })
       .catch((error) => {
         setError(error.message);
@@ -68,9 +51,10 @@ export function PopisTrgovina() {
     }
 
     fetch('/api/tokens/claims', options)
-        .then(response => {
+        .then(async response => {
             if (!response.ok) {
-              return response.text().then(text => {throw new Error(text)});
+              const text = await response.text();
+              throw new Error(text);
             }
             return response.json();
         })
@@ -93,9 +77,10 @@ export function PopisTrgovina() {
     }
     
     fetch(`/api/kupacs/${email}`, options)
-      .then((response) => {
+      .then(async (response) => {
           if (!response.ok) {
-              return response.text().then(text => {throw new Error(text)});
+              const text = await response.text();
+            throw new Error(text);
           }
           return response.json();
       })
@@ -109,15 +94,16 @@ export function PopisTrgovina() {
 
   useEffect(() => {
     if(categories.length > 0 && localStorage.getItem("filter") === null) {
-      localStorage.setItem("filter", JSON.stringify({ distance: false, categories, atributs: [] }));
+      localStorage.setItem("filter", JSON.stringify({ distance: false, categories: categories }));
       return;
     }
   }, [categories]);
 
   useEffect(() => {
     if(!address) return;
+    if(!shops) return;
     if(localStorage.getItem("filter") !== null) applyFilters();
-  }, [shops]);
+  }, [address, shops]);
   
 
   const isShopOpen = (openingTime, closingTime) => {
@@ -151,55 +137,36 @@ export function PopisTrgovina() {
       return prev;
     });
   };
-  
-  const handleAtributChange = (event) => {
-    const { value, checked } = event.target;
-    setSelectedAtributs((prev) => checked ? [...prev, value] : prev.filter((atribut) => atribut !== value));
-  };
 
-  function openTheFilter(popoverDiv) {
+  const openTheFilter = (popoverDiv) => {
     const element = document.getElementById("window");
     element.style.cursor = "not-allowed";
     element.style.opacity = 0.5;
     setActivePopover(activePopover === popoverDiv ? null : popoverDiv);
-  }
+  };
 
-  function closeTheFilter() {
+  const closeTheFilter = () => {
     const element = document.getElementById("window");
     element.style.cursor = "auto";
     element.style.opacity = 1;
     setActivePopover(null);
-  }
+  };
 
-  function startFiltering(by) {
+  const startFiltering = (by) => {
     var data = JSON.parse(localStorage.getItem("filter"));
     if(by === "distanceYes") data.distance = true;
     else if(by === "distanceNo") data.distance = false;
-    else if(by == "categories") data.categories = selectedCategories;
-    else data.atributs = selectedAtributs;
+    else  data.categories = selectedCategories;
     localStorage.setItem("filter", JSON.stringify(data));
     closeTheFilter();
     window.location.reload();
   }
 
-  function compareShopsByDistance(shop1, shop2) {
-    return shop1.distance - shop2.distance;
-  }
-
-  function checkAtributs(shopAtributs, chosenAtributs) {
-    return chosenAtributs.every((elem) => { return shopAtributs.includes(elem) }) // isprobaj i bez return
-  }
-
-  function applyFilters() { // nije odrađen dio s atributima, filtrira samo po kategorijama i udaljenosti
+  const applyFilters= () => {
     const distanceYesNo = JSON.parse(localStorage.getItem("filter")).distance;
     const chosenCategories = JSON.parse(localStorage.getItem("filter")).categories;
-    const chosenAtributs = JSON.parse(localStorage.getItem("filter")).atributs;
 
     let filteredShops = chosenCategories.length === 0 ? [] : shops;
-    /*
-    if(chosenAtributs.length > 0) {
-      filteredShops = filteredShops.filter((shop) => chosenCategories.indexOf(shop.trgovinaKategorija) > -1);
-    }*/
     if(filteredShops.length > 0) 
       filteredShops = filteredShops.filter((shop) => chosenCategories.indexOf(shop.trgovinaKategorija) > -1);
 
@@ -207,11 +174,15 @@ export function PopisTrgovina() {
       filteredShops = filteredShops.map((shop) => ({...shop, "distance": distanceToShop(address, shop.trgovinaLokacija)})).sort(compareShopsByDistance);
     
     setShopsToRenderOut(filteredShops);
-  }
+  };
 
-  function resetFilters() {
-    localStorage.setItem("filter", JSON.stringify({ distance: false, categories: categories, atributs: [] }));
+  const resetFilters = () => {
+    localStorage.setItem("filter", JSON.stringify({ distance: false, categories: categories }));
     window.location.reload();
+  };
+
+  function compareShopsByDistance(shop1, shop2) {
+    return shop1.distance - shop2.distance;
   }
 
   return (
@@ -225,14 +196,13 @@ export function PopisTrgovina() {
                 <strong><p>FILTRIRAJ</p></strong>
                 <button onClick={() => openTheFilter("distanceDiv")}>Po udaljenosti</button>
                 <button onClick={() => openTheFilter("categoryDiv")}>Po kategorijama</button>
-                <button onClick={() => openTheFilter("atributsDiv")}>Po dodatnim značajkama</button>
                 <button onClick={() => resetFilters()}>Po početnim postavkama</button>
               </div>
 
               {error ? (
                 <p className="text-danger">{error}</p>
               ) : !shopsToRenderOut ? (
-                <p>Loading shops...</p>
+                <p>Učitavanje trgovina...</p>
               ) : (
                 <div id="shops" className="shop-section">
                   <div className="row-shops">
@@ -298,7 +268,7 @@ export function PopisTrgovina() {
                         </div>
                       ))
                     ) : (
-                      <p>No shops available.</p>
+                      <p>Nema trgovina koje odgovaraju vašem filteru.</p>
                     )}
                   </div>
                 </div>
@@ -333,25 +303,6 @@ export function PopisTrgovina() {
             </div>)) : <p>Nema dostupnih kategorija</p> }
           <div className="YesNoButtons">
               <button onClick={() => startFiltering("categories")}>Pretraži</button>
-              <button onClick={() => closeTheFilter()}>Odustani</button>
-            </div>
-        </div>
-      )}
-
-      {activePopover === "atributsDiv" && (
-        <div id="atributsDiv" className="filterPopovers">
-          {atributs.length > 0 ? (atributs.map(atribut => 
-            <div className="filterItem">
-              <input type="checkbox"
-                     name={`${atribut}`}
-                     value={`${atribut}`}
-                     onChange={handleAtributChange}
-              />
-              <label htmlFor={`${atribut}`}>{`${atribut}`}</label>
-              <br/>
-            </div>)) : <p>Nema dostupnih dodatnih atributa</p> }
-          <div className="YesNoButtons">
-              <button onClick={() => startFiltering("atributs")}>Pretraži</button>
               <button onClick={() => closeTheFilter()}>Odustani</button>
             </div>
         </div>

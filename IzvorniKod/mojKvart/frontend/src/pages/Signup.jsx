@@ -44,7 +44,7 @@ export function Signup() {
       };
 
       return fetch('/api/kupacs/signup', options)
-         .then(response => {
+         .then(async (response) => {
             if (response.ok) {
                setErrorMessage('');
                

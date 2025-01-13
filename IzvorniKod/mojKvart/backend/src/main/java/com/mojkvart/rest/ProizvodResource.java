@@ -70,6 +70,12 @@ public class ProizvodResource {
         return ResponseEntity.ok(proizvodService.findRejectedByTrgovina(trgovinaId));
     }
 
+    // to promjeniti u samo potvrdene proizvode kasnije
+    @GetMapping("/getBySearch/{input}")
+    public ResponseEntity<List<ProizvodDTO>> getSearchedProizvods(@PathVariable(name = "input") String input) {
+        return ResponseEntity.ok(proizvodService.getAllTrgovinasBySearch(input));
+    }
+
     // UC11, koristite api/proizvods te pošaljite JSON objekt za kriranje novog
     // proizvoda od strane trgovine
     @PostMapping

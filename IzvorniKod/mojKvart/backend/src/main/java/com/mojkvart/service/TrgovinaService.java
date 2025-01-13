@@ -19,6 +19,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,13 @@ public class TrgovinaService {
         this.proizvodRepository = proizvodRepository;
         this.dogadajRepository = dogadajRepository;
         this.ponudaPopustRepository = ponudaPopustRepository;
-        }
+    }
+
+    public static Boolean containsAnyOfTheseWords(String[] wordsToCheck, String checker) {
+        for(String word : Stream.of(wordsToCheck).filter(s -> !s.isEmpty()).toList())
+            if(word.length() < 2 || !checker.contains(word)) return false;
+        return true;
+    }
 
     public List<TrgovinaDTO> findAll() {
         final List<Trgovina> trgovinas = trgovinaRepository.findAll(Sort.by("trgovinaId"));
@@ -80,6 +87,15 @@ public class TrgovinaService {
 
     public void delete(final Integer trgovinaId) {
         trgovinaRepository.deleteById(trgovinaId);
+    }
+
+    public List<TrgovinaDTO> getAllTrgovinasBySearch(String input) {
+        String[] keyWords = input.toLowerCase().split("\\s+");
+        return trgovinaRepository.findAll().stream().filter(
+    t -> containsAnyOfTheseWords(keyWords, t.getTrgovinaNaziv().toLowerCase()) ||
+            containsAnyOfTheseWords(keyWords, t.getTrgovinaKategorija().toLowerCase()) ||
+            containsAnyOfTheseWords(keyWords, t.getTrgovinaOpis().toLowerCase())
+        ).map(t -> mapToDTO(t, new TrgovinaDTO())).toList();
     }
 
     private TrgovinaDTO mapToDTO(final Trgovina trgovina, final TrgovinaDTO trgovinaDTO) {
