@@ -16,6 +16,7 @@ import { Shop } from './pages/user/Shop';
 import { MojiPodaci } from './pages/user/MojiPodaci';
 import { MojiRacuni } from './pages/user/MojiRacuni';
 import { MojeRecenzije } from './pages/user/MojeRecenzije';
+import { Proizvod } from './pages/user/Proizvod';
 
 import { ShopHome } from './pages/shop/Home';
 import { ShopNarudzbe } from './pages/shop/Narudzbe';
@@ -160,6 +161,11 @@ function App() {
         <Route path='/mojerecenzije' element={
           <SecuredUserRoute>
             <MojeRecenzije />
+          </SecuredUserRoute>
+        } />
+        <Route path='/home/proizvod/:proizvodId' element={
+          <SecuredUserRoute>
+            <Proizvod />
           </SecuredUserRoute>
         } />
 
