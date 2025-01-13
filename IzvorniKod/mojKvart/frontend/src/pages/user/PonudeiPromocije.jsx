@@ -7,10 +7,64 @@ import QRCode from "qrcode";
 export function PonudeiPromocije() {
    const [popusti, setPopusti] = useState([]);
    const [ponude, setPonude] = useState([]);
+   const [email, setEmail]=useState('');
+   const [idKupac, setIdKupac]=useState(null);
    const [qrCodes, setQrCodes] = useState({});
    const [error, setError] = useState(null);
 
+
    useEffect(() => {
+      const token = localStorage.getItem('token');
+      const options = {
+          method: 'POST',
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ oneLiner: token })
+      }
+
+      fetch('/api/tokens/claims', options)
+          .then(response => {
+              if (!response.ok) {
+                  return response.text().then(text => {throw new Error(text)});
+              }
+              return response.json();
+          })
+          .then(data => {
+              setEmail(data.email);
+          })
+          .catch(error => setError(error.message));
+  }, []);
+
+  useEffect(() => {
+   const token = localStorage.getItem('token');
+   const options = {
+      method: 'GET',
+      headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      },
+   };
+
+   if (email) {
+      fetch(`/api/kupacs/${email}`, options)
+            .then(response => {
+               
+               if (!response.ok) {
+                  return response.text().then(text => {throw new Error(text)});
+               }
+               return response.json();
+            })
+            .then(data => {
+               setIdKupac(data.kupacId);
+            })
+            .catch(error => setError(error.message));
+   }
+   }, [email]);
+
+   useEffect(() => {
+      console.log(idKupac)
       const token = localStorage.getItem('token');
       const options = {
          method: 'GET',
@@ -19,7 +73,7 @@ export function PonudeiPromocije() {
          'Content-Type': 'application/json',
          },
       };
-      fetch(`/api/popusts/flag-true`, options)
+      fetch(`/api/popusts/flag-true/${idKupac}`, options)
          .then((response) => {
          if (!response.ok) {
             throw new Error("Neuspješno dohvaćanje popusta.");
@@ -27,13 +81,14 @@ export function PonudeiPromocije() {
          return response.json();
       })
          .then((data) => {
+            console.log(data)
             setPopusti(data);
             generateQRCodes(data);
       })
          .catch((error) => {
          setError(error.message);
       });
-      fetch(`/api/ponudas/flag-true`, options)
+      fetch(`/api/ponudas/flag-true/${idKupac}`, options)
          .then((response) => {
          if (!response.ok) {
             throw new Error("Neuspješno dohvaćanje ponuda.");
@@ -47,9 +102,7 @@ export function PonudeiPromocije() {
          setError(error.message);
       });
       
-
-      
-   }, []);
+   }, [idKupac]);
 
    const generateQRCodes = async (data) => {
       const qrCodePromises = data.map(async (popust) => {
@@ -71,9 +124,7 @@ export function PonudeiPromocije() {
       <div>
          <Navbar/>
          <div className="container-popusti">
-            {error ? (
-               <p className="text-danger">{error}</p>
-            ) : !popusti.length ? (
+            { !popusti && !ponude ? (
                <p>Loading...</p>
             ) : (
                <div className="popust-popust-row">
@@ -87,10 +138,11 @@ export function PonudeiPromocije() {
                            <div key={pop.popustId} className="my-popust-wrapper">
                               <div className="popust-card">
                                  <div className="popust-header">
-                                    <p>{pop.popustNaziv}</p>
+                                    <p>{pop.popustNaziv} - naslov trgovine</p>                               
                                     <hr />
                                  </div>
                                  <div className="popust-body">
+  
                                     <div className="popust-info">
                                        <p className="popust-details">{pop.popustOpis}</p>
                                     </div>
