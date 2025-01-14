@@ -104,6 +104,11 @@ body {
   margin-top: 10px;
 }
 
+.card-link {
+  color: inherit; 
+  text-decoration: none; 
+}
+
 
 
 .add-to-cart-btn {

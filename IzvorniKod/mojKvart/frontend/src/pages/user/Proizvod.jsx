@@ -112,7 +112,7 @@ export function Proizvod() {
       stars.push(<span key={`half-${i}`} className="star half">★</span>);
     }
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<span key={`empty-${i}`} className="star empty">☆</span>);
+      stars.push(<span key={`empty-${i}`} className="star empty">★</span>);
     }
       return <div className="stars">{stars}</div>;
   };
