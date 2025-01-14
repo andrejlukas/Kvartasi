@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
+.stars {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    color: #f5a623; /* Zlata boja za popunjene zvjezdice */
+  }
+  
+  .star.full {
+    color: #f5a623;
+  }
+  
+  .star.half {
+    background: linear-gradient(90deg, #f5a623 50%, #e0e0e0 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .star.empty {
+    color: #e0e0e0; /* Siva boja za prazne zvjezdice */
+  }
+
+  #prozorOut{
+    margin: 20px;
+  }
+
+  #slika{
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center; 
+    justify-content: space-around ;
+    gap: 20px; 
+  }
+
+  #pojedinosti{
+    font-family: Raleway;
+  }
+
+  #nas{
+    font-weight: bold;
+    color: #323131dc;
+  }
+
+  #trg{
+    font-size: 20px;
+  }
+
+#un{
+    color: #323131;
+    font-size: 16px;
+    padding-left: 5px;
+}
+
+#gumbici {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    gap: 20px; 
+    color: #323131;
+  }
+  
+  #cij {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  #kats{
+    font-weight: bold;
+    color: #323131cc;
+  }
+  
+  
+  #par {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  #kolicinaa {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  button {
+    padding: 0px 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  #dodaj-kosaricu {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    height:45px;
+    border-radius: 7px;
+    padding: 5px 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #dodaj-kosaricu:hover {
+    background-color: #218838;
+  }
+  
+  #minus, #plus {
+    font-size: 18px;
+    border-radius: 30px;
+    border-color: #32313199;
+  }
+
+  #minus:hover, #plus:hover{
+    background-color: #28a745;
+  }
+
+  #broj-komada{
+    font-size: 20px;
+  }
+
+  @media (max-width: 1000px) {
+    #slika {
+        flex-direction: column;
+        gap: 40px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    #pojedinosti{
+        margin-top: 10px;
+    }
+
+    #dodaj-kosaricu {
+        
+        font-size: 16px;
+    
+      }
+
+  }
+  
