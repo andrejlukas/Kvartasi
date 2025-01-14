@@ -9,7 +9,7 @@ export function MojiRacuni() {
     
     const [racuni,setRacuni] = useState({})
     const [ostavljanjeRec,setOstavljanjeRec] = useState(false)
-    const [trgovine,setTrgovine] = []
+    const [trgovine,setTrgovine] = useState([])
 
     //recenzija
     const [tekstRec,setTekstRec] = useState("")
