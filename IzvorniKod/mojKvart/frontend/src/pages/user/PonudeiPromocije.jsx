@@ -11,7 +11,7 @@ export function PonudeiPromocije() {
    const [idKupac, setIdKupac]=useState(null);
    const [qrCodes, setQrCodes] = useState({});
    const [error, setError] = useState(null);
-
+   const [loading, setLoading]=useState(true);
 
    useEffect(() => {
       const token = localStorage.getItem('token');
@@ -73,6 +73,10 @@ export function PonudeiPromocije() {
          'Content-Type': 'application/json',
          },
       };
+
+      setLoading(true); // Set loading to true when starting fetch
+
+      Promise.all([
       fetch(`/api/popusts/flag-true/${idKupac}`, options)
          .then((response) => {
          if (!response.ok) {
@@ -87,7 +91,7 @@ export function PonudeiPromocije() {
       })
          .catch((error) => {
          setError(error.message);
-      });
+      }),
       fetch(`/api/ponudas/flag-true/${idKupac}`, options)
          .then((response) => {
          if (!response.ok) {
@@ -98,8 +102,12 @@ export function PonudeiPromocije() {
          .then((data) => {
             setPonude(data);
       })
+   ])
          .catch((error) => {
          setError(error.message);
+      })
+      .finally(() => {
+         setLoading(false); 
       });
       
    }, [idKupac]);
@@ -124,7 +132,7 @@ export function PonudeiPromocije() {
       <div>
          <Navbar/>
          <div className="container-popusti">
-            { !popusti && !ponude ? (
+            { loading ? (
                <p>Loading...</p>
             ) : (
                <div className="popust-popust-row">
@@ -138,7 +146,7 @@ export function PonudeiPromocije() {
                            <div key={pop.popustId} className="my-popust-wrapper">
                               <div className="popust-card">
                                  <div className="popust-header">
-                                    <p>{pop.popustNaziv} - naslov trgovine</p>                               
+                                    <p>{pop.popustNaziv} - {pop.trgovinaIme}</p>                               
                                     <hr />
                                  </div>
                                  <div className="popust-body">
@@ -168,7 +176,7 @@ export function PonudeiPromocije() {
                            <div key={ponuda.ponudaId} className="my-popust-wrapper">
                               <div className="popust-card">
                                  <div className="popust-header">
-                                    <p>{ponuda.ponudaNaziv}</p>
+                                    <p>{ponuda.ponudaNaziv} - {ponuda.trgovinaIme}</p>
                                     <hr />
                                  </div>
                                  <div className="popust-body">

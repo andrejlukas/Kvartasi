@@ -92,7 +92,7 @@ export function Dogadaji() {
                               </div>
                            ))
                         ) : (
-                           <p>No events available.</p>      
+                           <p>Nema dostupnih događaja.</p>      
                         )}
                      </div>
                   </div>
