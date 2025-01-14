@@ -170,7 +170,7 @@ export function ShopMojiAtributi() {
         {error && <p style={{"color": "red"}}>{error}</p>}
         <h4>Označite vaše specijalne značajke:</h4>
         {attributes && shopData &&
-            <div>
+            <div className="atributsList">
                 {attributes.map((attribute) => (
                     <div key={attribute.atributId}>
                         <label>
@@ -187,7 +187,7 @@ export function ShopMojiAtributi() {
                 ))}
             </div>
         }
-        <button onClick={saveAttributes}>Ažuriraj dodatne značajke</button>
+        <button id="updateAtributs" onClick={saveAttributes}>Ažuriraj dodatne značajke</button>
       </div>
     );
 }
