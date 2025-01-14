@@ -39,9 +39,11 @@ public class AtributResource {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> createAtribut(@RequestBody @Valid final AtributDTO atributDTO) {
-        final Integer createdAtributId = atributService.create(atributDTO);
-        return new ResponseEntity<>(createdAtributId, HttpStatus.CREATED);
+    public ResponseEntity<String> createAtribut(@RequestBody @Valid final AtributDTO atributDTO) {
+        if(atributDTO.getAtributOpis().length() < 5)
+            return ResponseEntity.badRequest().body("Opis atributa mora biti minimalno duljine 5!");
+        atributService.create(atributDTO);
+        return new ResponseEntity<>("Uspješno dodan atribut!", HttpStatus.CREATED);
     }
 
     @PutMapping("/{atributId}")

@@ -5,6 +5,7 @@ import com.mojkvart.domain.Dogadaj;
 import com.mojkvart.domain.PonudaPopust;
 import com.mojkvart.domain.Proizvod;
 import com.mojkvart.domain.Trgovina;
+import com.mojkvart.model.AtributDTO;
 import com.mojkvart.model.TrgovinaDTO;
 import com.mojkvart.repos.AtributRepository;
 import com.mojkvart.repos.DogadajRepository;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 

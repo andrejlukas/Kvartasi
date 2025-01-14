@@ -4,12 +4,23 @@ import "../../styles/Attributes.css";
 
 
 export function ShopMojiAtributi() {
-    const [shopEmail, setShopEmail] = useState(null);
-    const [shopId, setShopId] = useState(null);
+    const [shopEmail, setShopEmail] = useState("");
+    const [shopData, setShopData] = useState({
+        trgovinaId: null,
+        trgovinaNaziv: "",
+        trgovinaOpis: "",
+        trgovinaKategorija: "",
+        trgovinaLokacija: "",
+        trgovinaSlika: "",
+        trgovinaRadnoVrijemeOd: "",
+        trgovinaRadnoVrijemeDo: "",
+        trgovinaEmail: shopEmail,
+        trgovinaSifra: "",
+        imaAtributeAtributs: []
+    });
     const [error, setError] = useState("");
     const [newAttribute, setNewAttribute] = useState("");
     const [attributes, setAttributes] = useState([]);
-    const [shopAttributes, setShopAttributes] = useState([]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -78,41 +89,12 @@ export function ShopMojiAtributi() {
                 return response.json();
             })
             .then((data) => {
-                setShopId(data.trgovinaId);
+                setShopData(data);
             })
             .catch((error) => {
                 setError(error.message);
             });
     }, [shopEmail]);
-
-    /*useEffect(() => {
-        if(!shopId) return;
-        if(!attributes) return;
-
-        const token = localStorage.getItem('token');
-        const options = {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        }
-        
-        fetch(`/api/trgovinas/${shopEmail}`, options)
-            .then(async (response) => {
-                if (!response.ok) {
-                    const text = await response.text();
-                    throw new Error(text);
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setShopId(data.trgovinaId);
-            })
-            .catch((error) => {
-                setError(error.message);
-            });
-    }, [shopEmail]);*/
     
 
     const handleAttributeAddition = () => {
@@ -134,8 +116,45 @@ export function ShopMojiAtributi() {
                 return response.text();
             })
             .then(resp => { window.location.reload(); })
-            .catch((error) => { setPopupError(error.message); });
+            .catch((error) => { setError(error.message); });
     };
+
+    const handleCheckboxChange = (attributeId, checked) => {
+        setShopData((prev) => {
+            const updatedAttributes = checked
+                ? [...prev.imaAtributeAtributs, attributeId]
+                : prev.imaAtributeAtributs.filter((id) => id !== attributeId);
+                console.log(updatedAttributes);
+            return {
+                ...prev,
+                imaAtributeAtributs: updatedAttributes
+            };
+        });
+    };
+    
+    const saveAttributes = () => {
+        const token = localStorage.getItem("token");
+        const options = {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }, body: JSON.stringify(shopData)
+        };
+    
+        fetch(`/api/trgovinas/${shopData.trgovinaId}`, options)
+            .then(async (response) => {
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(text);
+                }
+                return response.text();
+            })
+            .then((text) => window.location.reload())
+            .catch((error) => setError(error.message));
+    };
+    
+    
    
     return (
       <div>
@@ -148,6 +167,27 @@ export function ShopMojiAtributi() {
             />
             <button onClick={handleAttributeAddition}>Dodaj novu značajku</button>
         </div>
+        {error && <p style={{"color": "red"}}>{error}</p>}
+        <h4>Označite vaše specijalne značajke:</h4>
+        {attributes && shopData &&
+            <div>
+                {attributes.map((attribute) => (
+                    <div key={attribute.atributId}>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={shopData.imaAtributeAtributs.includes(attribute.atributId)}
+                                onChange={(e) =>
+                                    handleCheckboxChange(attribute.atributId, e.target.checked)
+                                }
+                            />
+                            {attribute.atributOpis}
+                        </label>
+                    </div>
+                ))}
+            </div>
+        }
+        <button onClick={saveAttributes}>Ažuriraj dodatne značajke</button>
       </div>
     );
 }
