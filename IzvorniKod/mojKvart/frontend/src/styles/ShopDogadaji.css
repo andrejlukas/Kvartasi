@@ -61,7 +61,7 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-end;
     height: 100%;
 }
 
@@ -176,6 +176,12 @@ body {
 
 #registrationPopup button:hover {
     background-color: rgba(62, 152, 30);
+}
+
+#bottomPairDogadaj {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 @media (max-width: 768px) {

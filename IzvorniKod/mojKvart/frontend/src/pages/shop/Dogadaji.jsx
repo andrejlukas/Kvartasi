@@ -10,7 +10,7 @@ export function ShopDogadaji() {
    const [error, setError] = useState("");
    const [popupError, setPopupError] = useState("");
    const [dogadajData, setDogadajData] = useState({
-      dogadajId: null,
+      dogadajId: "placeholder",
       dogadajNaziv: "",
       dogadajOpis: "",
       dogadajVrijeme: "",
@@ -113,8 +113,8 @@ export function ShopDogadaji() {
       setDogadajData((prevData) => ({ ...prevData, [name]: value }));
    };
 
-   const showDogadajForm = () => {
-      setToUpdate(false);
+   const showDogadajForm = (bool) => {
+      setToUpdate(bool);
       const element = document.getElementById("vani2");
       element.style.cursor = "not-allowed";
       element.style.opacity = 0.5;
@@ -126,9 +126,19 @@ export function ShopDogadaji() {
       element.style.cursor = "auto";
       element.style.opacity = 1;
       document.getElementById("registrationPopup").style.display = "none";
+      setPopupError("");
+      setDogadajData({
+         dogadajId: "placeholder",
+         dogadajNaziv: "",
+         dogadajOpis: "",
+         dogadajVrijeme: "",
+         dogadajSlika: "",
+         trgovina: -1,
+      });
    };
 
    const createDogadaj = () => {
+      dogadajData.dogadajId = null;
       dogadajData.trgovina = shopId;
       const token = localStorage.getItem("token");
       const options = {
@@ -145,9 +155,63 @@ export function ShopDogadaji() {
                const text = await response.text();
                throw new Error(text);
             }
+            return response.text();
+         })
+         .then(resp => {
             closeDogadajForm();
             window.location.reload();
          })
+         .catch((error) => {
+            setPopupError(error.message);
+         });
+   };
+
+   const updateDogadaj = () => {
+      const token = localStorage.getItem("token");
+      const options = {
+         method: "PUT",
+         headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+         }, body: JSON.stringify(dogadajData)
+      }
+
+      fetch(`/api/dogadajs/${dogadajData.dogadajId}`, options)
+         .then(async (response) => {
+            if (!response.ok) {
+               const text = await response.text();
+               throw new Error(text);
+            }
+            return response.text();
+         })
+         .then(resp => {
+            closeDogadajForm();
+            window.location.reload();
+         })
+         .catch((error) => {
+            setPopupError(error.message);
+         });
+   };
+
+   const deleteDogadaj = (dogadajId) => {
+      const token = localStorage.getItem("token");
+      const options = {
+         method: "DELETE",
+         headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+         }
+      }
+
+      fetch(`/api/dogadajs/${dogadajId}`, options)
+         .then(async (response) => {
+            if (!response.ok) {
+               const text = await response.text();
+               throw new Error(text);
+            }
+            return response.text();
+         })
+         .then(resp => { window.location.reload(); })
          .catch((error) => {
             setPopupError(error.message);
          });
@@ -180,7 +244,7 @@ export function ShopDogadaji() {
                      />
                      Prijašnji događaji
                   </label>
-                  <button id="addEvent" onClick={showDogadajForm}>Dodaj događaj</button>
+                  <button id="addEvent" onClick={() => showDogadajForm(false)}>Dodaj događaj</button>
                </div>
                <div className="row">
                   {dogadaji.length > 0 ? (
@@ -192,6 +256,15 @@ export function ShopDogadaji() {
                                  <h5 className="card-title-alt">{dogadaj.dogadajNaziv}</h5>
                                  <p className="card-text-alt">{dogadaj.dogadajOpis}</p>
                                  <p className="date-alt">Datum i vrijeme: {dogadaj.dogadajVrijeme}</p>
+                                 <div id="bottomPairDogadaj">
+                                    <button className="add-to-cart-btn-alt" onClick={() => {
+                                       setDogadajData(dogadaj);
+                                       showDogadajForm(true);
+                                    }}>Ažuriraj događaj</button>
+                                    <button className="add-to-cart-btn-alt" onClick={() => {deleteDogadaj(dogadaj.dogadajId);}}>
+                                       Izbriši događaj
+                                    </button>
+                                 </div>
                               </div>
                            </div>
                         </div>
@@ -234,7 +307,7 @@ export function ShopDogadaji() {
             />
             {popupError && <p style={{"textAlign": "center", "color": "red"}}>{popupError}</p>}
             <div className="YesNoButtons">
-               <button onClick={createDogadaj}>Spremi događaj</button>
+               <button onClick={() => toUpdate ? updateDogadaj() : createDogadaj()}>Spremi događaj</button>
                <button onClick={closeDogadajForm}>Odustani</button>
             </div>
          </div>

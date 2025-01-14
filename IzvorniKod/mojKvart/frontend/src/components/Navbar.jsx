@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import logo from '../assets/MojKvart.png'
-import kosarica from '../assets/kosarica.png'
-import '../styles/NavBar.css'
-import '../styles/Search.css'
+import logo from '../assets/MojKvart.png';
+import kosarica from '../assets/kosarica.png';
+import '../styles/NavBar.css';
+import '../styles/Search.css';
 
 export function Navbar() { 
     const [resultsType, setResultsType] = useState("shops");
@@ -125,7 +125,7 @@ export function Navbar() {
                                 <a href="/home/kvart" className="nav-link">Kvart</a>
                             </li>
                             <li className="nav-item">
-                                <a href="/home/popisTrgovina" className="nav-link">Popis trgovina</a>
+                                <a href="/home/popistrgovina" className="nav-link">Popis trgovina</a>
                             </li>
                             <li className="nav-item">
                                 <a href="/home/ponude" className="nav-link">Ponude i promocije</a>

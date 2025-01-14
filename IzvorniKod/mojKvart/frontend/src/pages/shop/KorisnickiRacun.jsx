@@ -14,14 +14,14 @@ export function ShopKorisnickiRacun(){
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ "oneLiner": token }),
-            };
+            }, body: JSON.stringify({ "oneLiner": token })
+        };
         
         fetch('/api/tokens/claims', options)
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
-                    return response.text().then(text => {throw new Error(text)});
+                    const text = await response.text();
+                    throw new Error(text);
                 }
                 return response.json();
             })
@@ -29,7 +29,7 @@ export function ShopKorisnickiRacun(){
                 setShopEmail(data.email);
             })
             .catch(error => setError(error.message));
-        }, []);
+    }, []);
 
     useEffect(() => {
         if (!shopEmail) return;
@@ -44,9 +44,10 @@ export function ShopKorisnickiRacun(){
         }
         
         fetch(`/api/trgovinas/${shopEmail}`, options)
-            .then((response) => {
+            .then(async (response) => {
                 if (!response.ok) {
-                    return response.text().then(text => {throw new Error(text)});
+                    const text = await response.text();
+                    throw new Error(text);
                 }
                 return response.json();
             })
@@ -56,7 +57,7 @@ export function ShopKorisnickiRacun(){
             .catch((error) => {
                 setError(error.message);
             });
-        }, [shopEmail]);
+    }, [shopEmail]);
 
     function deleteAccountPopUp() {
         const element = document.getElementById("toBlur");
@@ -83,9 +84,10 @@ export function ShopKorisnickiRacun(){
         }
         
         fetch(`/api/trgovinas/${shopId}`, options)
-            .then((response) => {
+            .then(async (response) => {
                 if (!response.ok) {
-                    return response.text().then(text => {throw new Error(text)});
+                    const text = await response.text();
+                    throw new Error(text);
                 }
                 return response.json();
             })
@@ -116,7 +118,10 @@ export function ShopKorisnickiRacun(){
                         <h1 className="mojracun-naslov">Moj račun:</h1>
                         <ul>
                             <li>
-                                <a href="/podacitrgovine" className="korisnicki-racun-link">Moji podaci</a>
+                                <a href="/podacitrgovine" className="korisnicki-racun-link">Podaci trgovine</a>
+                            </li>
+                            <li>
+                                <a href="/atributitrgovine" className="korisnicki-racun-link">Dodatne značajke trgovine</a>
                             </li>
                             <li>
                                 <a href="/recenzijetrgovine" className="korisnicki-racun-link">Recenzije</a>

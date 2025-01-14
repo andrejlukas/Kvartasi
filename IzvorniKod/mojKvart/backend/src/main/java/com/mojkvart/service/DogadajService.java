@@ -47,6 +47,12 @@ public class DogadajService {
         return LocalDateTime.of(year, month, day, hour, minutes);
     }
 
+    public DogadajDTO get(final Integer dogadajId) {
+        return dogadajRepository.findById(dogadajId)
+                .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
+                .orElseThrow(NotFoundException::new);
+    }
+
     // svi nadolazeci dogadaji
     public List<DogadajDTO> findAllUpcoming() {
         final List<Dogadaj> dogadajs = dogadajRepository.findAll(Sort.by("dogadajId"));
@@ -65,10 +71,26 @@ public class DogadajService {
                 .toList();
     }
 
-    public DogadajDTO get(final Integer dogadajId) {
-        return dogadajRepository.findById(dogadajId)
+    public List<DogadajDTO> getUpcomingTrgovinasDogadajs(Integer trgovinaId) {
+        if (!trgovinaRepository.existsById(trgovinaId)) {
+            throw new NotFoundException("Trgovina sa ID " + trgovinaId + " nije pronađena");
+        }
+        List<Dogadaj> listaDogadaja = dogadajRepository.findByTrgovina_TrgovinaId(trgovinaId);
+        return listaDogadaja.stream()
                 .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
-                .orElseThrow(NotFoundException::new);
+                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
+    }
+
+    public List<DogadajDTO> getFinishedTrgovinasDogadajs(Integer trgovinaId) {
+        if (!trgovinaRepository.existsById(trgovinaId)) {
+            throw new NotFoundException("Trgovina sa ID " + trgovinaId + " nije pronađena");
+        }
+        List<Dogadaj> listaDogadaja = dogadajRepository.findByTrgovina_TrgovinaId(trgovinaId);
+        return listaDogadaja.stream()
+                .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
+                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
     }
 
     public Integer create(final DogadajDTO dogadajDTO) {
@@ -86,30 +108,6 @@ public class DogadajService {
 
     public void delete(final Integer dogadajId) {
         dogadajRepository.deleteById(dogadajId);
-    }
-
-    public List<DogadajDTO> getUpcomingTrgovinasDogadaj(Integer trgovinaId) {
-        // Provera postojanja trgovine
-        if (!trgovinaRepository.existsById(trgovinaId)) {
-            throw new NotFoundException("Trgovina sa ID " + trgovinaId + " nije pronađena");
-        }
-        List<Dogadaj> listaDogadaja = dogadajRepository.findByTrgovina_TrgovinaId(trgovinaId);
-        return listaDogadaja.stream()
-                .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
-                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isAfter(LocalDateTime.now()))
-                .collect(Collectors.toList());  
-    }
-
-    public List<DogadajDTO> getFinishedTrgovinasDogadaj(Integer trgovinaId) {
-        // Provera postojanja trgovine
-        if (!trgovinaRepository.existsById(trgovinaId)) {
-            throw new NotFoundException("Trgovina sa ID " + trgovinaId + " nije pronađena");
-        }
-        List<Dogadaj> listaDogadaja = dogadajRepository.findByTrgovina_TrgovinaId(trgovinaId);
-        return listaDogadaja.stream()
-                .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
-                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isBefore(LocalDateTime.now()))
-                .collect(Collectors.toList());
     }
 
     private DogadajDTO mapToDTO(final Dogadaj dogadaj, final DogadajDTO dogadajDTO) {
@@ -145,5 +143,4 @@ public class DogadajService {
         }
         return null;
     }
-
 }

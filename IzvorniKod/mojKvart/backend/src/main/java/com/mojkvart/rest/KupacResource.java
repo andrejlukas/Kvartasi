@@ -98,7 +98,8 @@ public class KupacResource {
         if(administratorService.findByAdministratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
                 moderatorService.findByModeratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
                 trgovinaService.findByTrgovinaEmail(kupacDTO.getKupacEmail()).isPresent() ||
-                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isPresent()) {
+                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isPresent() &&
+                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).get().getKupacStatus().equals("V")){
             return ResponseEntity.badRequest().body("Imate već postojeći korisnički račun?");
         }
 

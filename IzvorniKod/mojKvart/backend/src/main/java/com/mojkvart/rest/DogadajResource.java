@@ -31,6 +31,11 @@ public class DogadajResource {
         this.dogadajService = dogadajService;
     }
 
+    @GetMapping("/{dogadajId}")
+    public ResponseEntity<DogadajDTO> getDogadaj(@PathVariable(name = "dogadajId") final Integer dogadajId) {
+        return ResponseEntity.ok(dogadajService.get(dogadajId));
+    }
+
     //UC10, koristite api/dogadajs za dohvacanje svih dogadaja od strane moderatora
     //UC17, koristite api/dogadajs za dohvacanje svih dogadaja od strane korisnika
     @GetMapping
@@ -38,33 +43,21 @@ public class DogadajResource {
         return ResponseEntity.ok(dogadajService.findAllUpcoming());
     }
 
-    // API za dohvacanje svih dogadaja odredene trgovine
-    @GetMapping("/trgovina/{trgovinaId}")
-    public ResponseEntity<List<DogadajDTO>> getTrgovinasDogadajs(@PathVariable(name = "trgovinaId") final Integer id) {
-        return ResponseEntity.ok(dogadajService.getUpcomingTrgovinasDogadaj(id));
-    }
-
     // API za dohvacanje svih nadolazecih dogadaja odredene trgovine
     @GetMapping("/upcoming/{trgovinaId}")
     public ResponseEntity<List<DogadajDTO>> getUpcomingTrgovinasDogadajs(@PathVariable(name = "trgovinaId") final Integer id) {
-        return ResponseEntity.ok(dogadajService.getUpcomingTrgovinasDogadaj(id));
+        return ResponseEntity.ok(dogadajService.getUpcomingTrgovinasDogadajs(id));
     }
 
     // API za dohvacanje svih prijasnjih dogadaja odredene trgovine
     @GetMapping("/finished/{trgovinaId}")
     public ResponseEntity<List<DogadajDTO>> getFinishedTrgovinasDogadajs(@PathVariable(name = "trgovinaId") final Integer id) {
-        return ResponseEntity.ok(dogadajService.getFinishedTrgovinasDogadaj(id));
-    }
-
-    @GetMapping("/{dogadajId}")
-    public ResponseEntity<DogadajDTO> getDogadaj(
-            @PathVariable(name = "dogadajId") final Integer dogadajId) {
-        return ResponseEntity.ok(dogadajService.get(dogadajId));
+        return ResponseEntity.ok(dogadajService.getFinishedTrgovinasDogadajs(id));
     }
 
     //UC12, koristite api/dogadajs i posaljite JSON objekt za kreiranje novog dogadaja od strane trgovine
     @PostMapping
-    public ResponseEntity<Object> createDogadaj(@RequestBody @Valid final DogadajDTO dogadajDTO) {
+    public ResponseEntity<String> createDogadaj(@RequestBody @Valid final DogadajDTO dogadajDTO) {
         if(dogadajDTO.getDogadajNaziv().length() < 2)
             return ResponseEntity.badRequest().body("Naziv događaja mora biti minimalno duljine 2!");
         if(dogadajDTO.getDogadajOpis().length() < 10)
@@ -78,18 +71,30 @@ public class DogadajResource {
             return ResponseEntity.badRequest().body("Datum i vrijeme događaja mora biti u formatu \"dd.MM.gggg. ss:mm\"!");
         }
         if(dogadajDTO.getDogadajSlika().isEmpty())
-            return ResponseEntity.badRequest().body("URL slike proizvoda ne smije biti prazna!");
+            return ResponseEntity.badRequest().body("URL slike proizvoda ne smije biti prazan!");
 
         dogadajService.create(dogadajDTO);
         return new ResponseEntity<>("Uspješno kreiran događaj.", HttpStatus.CREATED);
     }
 
     @PutMapping("/{dogadajId}")
-    public ResponseEntity<Integer> updateDogadaj(
-            @PathVariable(name = "dogadajId") final Integer dogadajId,
-            @RequestBody @Valid final DogadajDTO dogadajDTO) {
+    public ResponseEntity<String> updateDogadaj(@PathVariable(name = "dogadajId") final Integer dogadajId, @RequestBody @Valid final DogadajDTO dogadajDTO) {
+        if(dogadajDTO.getDogadajNaziv().length() < 2)
+            return ResponseEntity.badRequest().body("Naziv događaja mora biti minimalno duljine 2!");
+        if(dogadajDTO.getDogadajOpis().length() < 10)
+            return ResponseEntity.badRequest().body("Opis događaja mora biti minimalno duljine 10!");
+        try {
+            LocalDateTime vrijemeDogadaja = DogadajService.getVrijeme(dogadajDTO.getDogadajVrijeme());
+            if(vrijemeDogadaja.isBefore(LocalDateTime.now()))
+                throw new RuntimeException("Datum mora biti u budućnosti!");
+        } catch(Exception e) {
+            if(e.getMessage().startsWith("Datum")) return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Datum i vrijeme događaja mora biti u formatu \"dd.MM.gggg. ss:mm\"!");
+        }
+        if(dogadajDTO.getDogadajSlika().isEmpty())
+            return ResponseEntity.badRequest().body("URL slike proizvoda ne smije biti prazan!");
         dogadajService.update(dogadajId, dogadajDTO);
-        return ResponseEntity.ok(dogadajId);
+        return ResponseEntity.ok("Uspješno ažuriran događaj!");
     }
 
     //UC10, koristite api/dogadajs/{dogadajId} za brisanje nekog dogadaja od strane moderatora

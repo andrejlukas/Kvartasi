@@ -25,6 +25,7 @@ import { ShopDogadaji } from './pages/shop/Dogadaji';
 import { ShopKorisnickiRacun } from './pages/shop/KorisnickiRacun';
 import { ShopMojiPodaci } from './pages/shop/MojiPodaci';
 import { ShopMojeRecenzije } from './pages/shop/MojeRecenzije';
+import { ShopMojiAtributi } from './pages/shop/MojiAtributi';
 
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(null);
@@ -123,19 +124,19 @@ function App() {
             <Home />
           </SecuredUserRoute>
         } />
-        <Route path="/home/popisTrgovina" element={
+        <Route path="/home/popistrgovina" element={
           <SecuredUserRoute>
             <PopisTrgovina />
+          </SecuredUserRoute>
+        } />
+        <Route path="/home/popistrgovina/:email" element={
+          <SecuredUserRoute>
+            <Shop />
           </SecuredUserRoute>
         } />
         <Route path="/home/ponude" element={
           <SecuredUserRoute>
             <PonudeiPromocije />
-          </SecuredUserRoute>
-        } />
-        <Route path="/home/popisTrgovina/:email" element={
-          <SecuredUserRoute>
-            <Shop />
           </SecuredUserRoute>
         } />
         <Route path="/home/dogadaji" element={
@@ -210,7 +211,11 @@ function App() {
             <ShopMojeRecenzije />
           </SecuredShopRoute>
         } />
-
+        <Route path="/atributitrgovine" element={
+          <SecuredShopRoute>
+            <ShopMojiAtributi />
+          </SecuredShopRoute>
+        } />
 
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
