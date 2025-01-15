@@ -114,6 +114,7 @@ export function Kosarica(){
             })
             .then(data => {
                 setKosarica(data);
+                console.log(data)
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation: ', error);
@@ -122,6 +123,7 @@ export function Kosarica(){
     }
     }, [id]);
 
+    useEffect(() => console.log(kosarica), [kosarica])
 
     return(
         <div className="kosarica-wrappper">
@@ -136,13 +138,35 @@ export function Kosarica(){
                     </div>
                     <div className="prikaz-kosarice">
                     {
-                        kosarica && kosarica.length > 0 ? (
-                            kosarica.map((element, index) => (
-                                element.stanje != 'P' &&
-                                (<div key={index}>
-                                    {element}
-                                </div>)
-                            ))
+                        (kosarica) ? (
+                            Object.entries(kosarica).map(([key, proizvodi]) => (
+                                
+                                /* console.log(key) */
+                                <div className={key}>
+                                    
+                                    <h3>Proizvodi : {proizvodi[0].trgovinaNaziv}</h3>
+                                    <div className="kosarica-proizvodi-ispis">
+                                        {
+                                            proizvodi.map((proizvod)=>
+                                            <div className={proizvod.proizvodNaziv}>
+                                                <p>{proizvod.proizvodNaziv}</p>
+                                                <p>Kol: {proizvod.proizvodKolicina}</p>
+                                                <p>Cijena: {proizvod.proizvodCijena}</p>
+                                                
+                                            </div>
+                                            )
+                                        }
+                                    </div>
+                                    <p>ukupno novca za ovu trgovinu: {
+                                        proizvodi.reduce(
+                                            (sum, proizvod) =>
+                                                sum + proizvod.proizvodKolicina * proizvod.proizvodCijena,
+                                            0
+                                        )
+                                        }</p>
+                                </div>
+                            )
+                            )
                         ) : (
                             <div>Kosarica je prazna.</div>
                         )
