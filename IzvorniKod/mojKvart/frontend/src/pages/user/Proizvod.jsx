@@ -9,6 +9,9 @@ export function Proizvod() {
   const [srednjaOcjena, setSrednjaOcjena] = useState(null);
   const [error, setError] = useState(null);
   const [kolicina, setKolicina] = useState(1);
+  const [trgovinaNames, setTrgovinaNames] = useState({});
+  const [email, setEmail] = useState("");
+  const [kupacId, setKupacId] = useState(null);
 
   const povecajKolicinu = () => {
     setKolicina(kolicina + 1);
@@ -20,66 +23,142 @@ export function Proizvod() {
       setKolicina(kolicina - 1); 
     }
   };
-  
 
+  
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Nedostaje token za autorizaciju.");
-      return;
+    const token = localStorage.getItem('token');
+    const options = {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ oneLiner: token })
     }
 
-    const options = {
-      method: "GET",
+    fetch('/api/tokens/claims', options)
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => {throw new Error(text)});
+            }
+            return response.json();
+        })
+        .then(data => {
+            setEmail(data.email);
+        })
+        .catch(error => setError(error.message));
+}, []);
+
+
+useEffect(() => {
+  const token = localStorage.getItem('token');
+  const options = {
+      method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      },
+  };
+
+  if (email) {
+      fetch(`/api/kupacs/${email}`, options)
+            .then(response => {
+               
+               if (!response.ok) {
+                  return response.text().then(text => {throw new Error(text)});
+               }
+               return response.json();
+            })
+            .then(data => {
+               setKupacId(data.kupacId);
+            })
+            .catch(error => setError(error.message));
+  }
+}, [email]);
+
+
+  
+  
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    setError("Nedostaje token za autorizaciju.");
+    return;
+  }
+
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  // Dohvaćanje podataka o proizvodu
+  fetch(`/api/proizvods/${proizvodId}`, options)
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Greška: ${response.status} - ${text}`);
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Product data:", data);
+      setProizvod(data);
+      // Ensure that trgovinaId is valid before fetching store name
+      if (data.trgovina) {
+        fetchTrgovinaName(data.trgovina, token); // Pass the token to the fetchTrgovinaName function
+      } else {
+        setError("Store ID is undefined or invalid.");
+      }
+    })
+    .catch((err) => {
+      setError(err.message);
+    });
+
+  // Fetch the product's average rating
+  fetch(`/api/ocjenaProizvodKupacs/ocjena/${proizvodId}`, options)
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(`Greška pri dohvaćanju ocjene: ${response.status} - ${text}`);
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data) {
+        setSrednjaOcjena(data);
+      }
+    })
+    .catch((err) => {
+      setSrednjaOcjena(null);
+    });
+}, [proizvodId]);
+
+// Function to fetch the store name
+const fetchTrgovinaName = async (trgovina, token) => {
+  try {
+    const options3 = {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     };
-
-    // Dohvaćanje podataka o proizvodu
-    fetch(`/api/proizvods/${proizvodId}`, options)
-      .then((response) => {
-        if (!response.ok) {
-          return response.text().then((text) => {
-            throw new Error(`Greška: ${response.status} - ${text}`);
-          });
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setProizvod(data);
-      })
-      .catch((err) => {
-        setError(err.message);
-      });
-
-      fetch(`/api/ocjenaProizvodKupacs/ocjena/${proizvodId}`, options)
-      .then((response) => {
-        console.log("Ocjena API odgovor:", response);  
-
-        if (!response.ok) {
-          return response.text().then((text) => {
-            throw new Error(`Greška pri dohvaćanju ocjene: ${response.status} - ${text}`);
-          });
-        }
-
-        return response.json();  
-      })
-      .then((data) => {
-        console.log("Dohvaćena ocjena:", data);  
-        if (data) {
-          setSrednjaOcjena(data);
-        }
-      })
-      .catch((err) => {
-        console.error("Greška u dohvaćanju ocjene:", err);  
-        setSrednjaOcjena(null);  
-      });
-
-
-      
-  }, [proizvodId]);
+    const response = await fetch(`/api/trgovinas/getById/${trgovina}`, options3);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch store with id ${trgovina}`);
+    }
+    const name = await response.json();
+    setTrgovinaNames(prevNames => ({ ...prevNames, [trgovina]: name.trgovinaNaziv }));
+  } catch (error) {
+    console.error(`Error fetching store name for id ${trgovina}:`, error);
+    setError(error.message); // Set the error message if needed
+  }
+};
 
   const renderStars = (srednjaOcjena) => {
     if (srednjaOcjena === null) {
@@ -137,9 +216,10 @@ export function Proizvod() {
                 </div>
                 <div id="pojedinosti"> 
                   <h2 id="nas">{proizvod.proizvodNaziv}</h2>
-                  <p id = "trg">{proizvod.trgovina} </p>
+                  <p id = "trg">{trgovinaNames[proizvod.trgovina]} </p>
                   <p id = "kat"><span id="kats">Kategorija:</span> {proizvod.proizvodKategorija}</p>
-                  <p id = "op">{proizvod.proizvodOpis}</p>
+                  <p id = "op">{proizvod.proizvodOpis} </p>
+                  <p></p>
                   <div>
                     {srednjaOcjena !== null ? (
                         <>
