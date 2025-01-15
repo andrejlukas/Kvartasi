@@ -2,10 +2,8 @@ package com.mojkvart.service;
 
 import com.mojkvart.domain.Dogadaj;
 import com.mojkvart.domain.KupacDogadaj;
-import com.mojkvart.domain.Recenzija;
 import com.mojkvart.domain.Trgovina;
 import com.mojkvart.model.DogadajDTO;
-import com.mojkvart.model.RecenzijaDTO;
 import com.mojkvart.repos.DogadajRepository;
 import com.mojkvart.repos.KupacDogadajRepository;
 import com.mojkvart.repos.TrgovinaRepository;
@@ -14,7 +12,6 @@ import com.mojkvart.util.ReferencedWarning;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -58,8 +55,8 @@ public class DogadajService {
         final List<Dogadaj> dogadajs = dogadajRepository.findAll(Sort.by("dogadajId"));
         return dogadajs.stream()
                 .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
-                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isAfter(LocalDateTime.now()))
-                .toList();
+                .filter(d -> getVrijeme(d.getDogadajPocetak()).isAfter(LocalDateTime.now()) &&
+                        getVrijeme(d.getDogadajKraj()).isAfter(LocalDateTime.now())).toList();
     }
 
     // svi prijsanji dogadaji
@@ -67,8 +64,8 @@ public class DogadajService {
         final List<Dogadaj> dogadajs = dogadajRepository.findAll(Sort.by("dogadajId"));
         return dogadajs.stream()
                 .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
-                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isBefore(LocalDateTime.now()))
-                .toList();
+                .filter(d -> getVrijeme(d.getDogadajPocetak()).isBefore(LocalDateTime.now()) &&
+                        getVrijeme(d.getDogadajKraj()).isBefore(LocalDateTime.now())).toList();
     }
 
     public List<DogadajDTO> getUpcomingTrgovinasDogadajs(Integer trgovinaId) {
@@ -78,8 +75,8 @@ public class DogadajService {
         List<Dogadaj> listaDogadaja = dogadajRepository.findByTrgovina_TrgovinaId(trgovinaId);
         return listaDogadaja.stream()
                 .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
-                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isAfter(LocalDateTime.now()))
-                .collect(Collectors.toList());
+                .filter(d -> getVrijeme(d.getDogadajPocetak()).isAfter(LocalDateTime.now()) &&
+                        getVrijeme(d.getDogadajKraj()).isAfter(LocalDateTime.now())).toList();
     }
 
     public List<DogadajDTO> getFinishedTrgovinasDogadajs(Integer trgovinaId) {
@@ -89,8 +86,8 @@ public class DogadajService {
         List<Dogadaj> listaDogadaja = dogadajRepository.findByTrgovina_TrgovinaId(trgovinaId);
         return listaDogadaja.stream()
                 .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
-                .filter(d -> getVrijeme(d.getDogadajVrijeme()).isBefore(LocalDateTime.now()))
-                .collect(Collectors.toList());
+                .filter(d -> getVrijeme(d.getDogadajPocetak()).isBefore(LocalDateTime.now()) &&
+                        getVrijeme(d.getDogadajKraj()).isBefore(LocalDateTime.now())).toList();
     }
 
     public Integer create(final DogadajDTO dogadajDTO) {
@@ -114,7 +111,8 @@ public class DogadajService {
         dogadajDTO.setDogadajId(dogadaj.getDogadajId());
         dogadajDTO.setDogadajOpis(dogadaj.getDogadajOpis());
         dogadajDTO.setDogadajNaziv(dogadaj.getDogadajNaziv());
-        dogadajDTO.setDogadajVrijeme(dogadaj.getDogadajVrijeme());
+        dogadajDTO.setDogadajPocetak(dogadaj.getDogadajPocetak());
+        dogadajDTO.setDogadajKraj(dogadaj.getDogadajKraj());
         dogadajDTO.setDogadajSlika(dogadaj.getDogadajSlika());
         dogadajDTO.setTrgovina(dogadaj.getTrgovina() == null ? null : dogadaj.getTrgovina().getTrgovinaId());
         return dogadajDTO;
@@ -123,7 +121,8 @@ public class DogadajService {
     private Dogadaj mapToEntity(final DogadajDTO dogadajDTO, final Dogadaj dogadaj) {
         dogadaj.setDogadajOpis(dogadajDTO.getDogadajOpis());
         dogadaj.setDogadajNaziv(dogadajDTO.getDogadajNaziv());
-        dogadaj.setDogadajVrijeme(dogadajDTO.getDogadajVrijeme());
+        dogadaj.setDogadajPocetak(dogadajDTO.getDogadajPocetak());
+        dogadaj.setDogadajKraj(dogadajDTO.getDogadajKraj());
         dogadaj.setDogadajSlika(dogadajDTO.getDogadajSlika());
         final Trgovina trgovina = dogadajDTO.getTrgovina() == null ? null : trgovinaRepository.findById(dogadajDTO.getTrgovina())
                 .orElseThrow(() -> new NotFoundException("trgovina not found"));

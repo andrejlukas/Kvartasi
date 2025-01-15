@@ -26,14 +26,14 @@
     top: 10vh;
     left: 50%;
     transform: translateX(-50%);
-    width: 80vw;
+    width: 90vw;
     min-height: 80vh;
-    max-height: auto; 
+    max-height: 80vh; 
     background-color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 3;
     padding: 20px;
 }
 
@@ -74,6 +74,13 @@
 #searchOptions input[type="radio"] {
     margin-right: 5px;
     accent-color: #2c8c2c;
+}
+
+#searchResults {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
 }
   
 #closeSearch {

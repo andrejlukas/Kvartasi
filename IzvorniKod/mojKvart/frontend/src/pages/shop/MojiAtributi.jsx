@@ -167,8 +167,7 @@ export function ShopMojiAtributi() {
             />
             <button onClick={handleAttributeAddition}>Dodaj novu značajku</button>
         </div>
-        {error && <p style={{"color": "red"}}>{error}</p>}
-        <h4>Označite vaše specijalne značajke:</h4>
+        {error && <p style={{"color": "red"}} id="errorPopup">{error}</p>}
         {attributes && shopData &&
             <div className="atributsList">
                 {attributes.map((attribute) => (
@@ -181,7 +180,7 @@ export function ShopMojiAtributi() {
                                     handleCheckboxChange(attribute.atributId, e.target.checked)
                                 }
                             />
-                            {attribute.atributOpis}
+                            {"   " + attribute.atributOpis}
                         </label>
                     </div>
                 ))}

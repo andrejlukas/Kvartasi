@@ -63,9 +63,14 @@ public class DogadajResource {
         if(dogadajDTO.getDogadajOpis().length() < 10)
             return ResponseEntity.badRequest().body("Opis događaja mora biti minimalno duljine 10!");
         try {
-            LocalDateTime vrijemeDogadaja = DogadajService.getVrijeme(dogadajDTO.getDogadajVrijeme());
-            if(vrijemeDogadaja.isBefore(LocalDateTime.now()))
-                throw new RuntimeException("Datum mora biti u budućnosti!");
+            LocalDateTime pocetakDogadaja = DogadajService.getVrijeme(dogadajDTO.getDogadajPocetak());
+            LocalDateTime krajDogadaja = DogadajService.getVrijeme(dogadajDTO.getDogadajKraj());
+            if(pocetakDogadaja.isBefore(LocalDateTime.now()))
+                throw new RuntimeException("Datum početka događaja mora biti u budućnosti!");
+            if(krajDogadaja.isBefore(LocalDateTime.now()))
+                throw new RuntimeException("Datum kraja događaja mora biti u budućnosti!");
+            if(krajDogadaja.isBefore(pocetakDogadaja))
+                throw new RuntimeException("Datum kraja mora biti poslije datuma početka događaja!");
         } catch(Exception e) {
             if(e.getMessage().startsWith("Datum")) return ResponseEntity.badRequest().body(e.getMessage());
             return ResponseEntity.badRequest().body("Datum i vrijeme događaja mora biti u formatu \"dd.MM.gggg. ss:mm\"!");
@@ -84,9 +89,14 @@ public class DogadajResource {
         if(dogadajDTO.getDogadajOpis().length() < 10)
             return ResponseEntity.badRequest().body("Opis događaja mora biti minimalno duljine 10!");
         try {
-            LocalDateTime vrijemeDogadaja = DogadajService.getVrijeme(dogadajDTO.getDogadajVrijeme());
-            if(vrijemeDogadaja.isBefore(LocalDateTime.now()))
-                throw new RuntimeException("Datum mora biti u budućnosti!");
+            LocalDateTime pocetakDogadaja = DogadajService.getVrijeme(dogadajDTO.getDogadajPocetak());
+            LocalDateTime krajDogadaja = DogadajService.getVrijeme(dogadajDTO.getDogadajKraj());
+            if(pocetakDogadaja.isBefore(LocalDateTime.now()))
+                throw new RuntimeException("Datum početka događaja mora biti u budućnosti!");
+            if(krajDogadaja.isBefore(LocalDateTime.now()))
+                throw new RuntimeException("Datum kraja događaja mora biti u budućnosti!");
+            if(krajDogadaja.isBefore(pocetakDogadaja))
+                throw new RuntimeException("Datum kraja mora biti poslije datuma početka događaja!");
         } catch(Exception e) {
             if(e.getMessage().startsWith("Datum")) return ResponseEntity.badRequest().body(e.getMessage());
             return ResponseEntity.badRequest().body("Datum i vrijeme događaja mora biti u formatu \"dd.MM.gggg. ss:mm\"!");
@@ -108,5 +118,4 @@ public class DogadajResource {
         dogadajService.delete(dogadajId);
         return ResponseEntity.noContent().build();
     }
-
 }

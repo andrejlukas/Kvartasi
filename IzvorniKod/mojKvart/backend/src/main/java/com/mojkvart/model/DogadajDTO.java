@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -21,7 +23,11 @@ public class DogadajDTO {
 
     @NotNull
     @Size(max = 500)
-    private String dogadajVrijeme;
+    private String dogadajPocetak;
+
+    @NotNull
+    @Size(max = 500)
+    private String dogadajKraj;
 
     @NotNull
     @Size(max = 500)

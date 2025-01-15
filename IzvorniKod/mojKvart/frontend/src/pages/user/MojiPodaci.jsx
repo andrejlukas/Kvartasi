@@ -29,9 +29,10 @@ export function MojiPodaci(){
         }
 
         fetch('/api/tokens/claims', options)
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
-                    return response.text().then(text => {throw new Error(text)});
+                    const text = await response.text();
+                    throw new Error(text);
                 }
                 return response.json();
             })
@@ -53,9 +54,10 @@ export function MojiPodaci(){
     
         if (emailAddress) {
             fetch(`/api/kupacs/${emailAddress}`, options)
-                .then(response => {
+                .then(async response => {
                     if (!response.ok) {
-                        return response.text().then(text => {throw new Error(text)});
+                        const text = await response.text();
+                        throw new Error(text);
                     }
                     return response.json();
                 })

@@ -95,12 +95,12 @@ public class ProizvodService {
         proizvodRepository.deleteById(proizvodId);
     }
 
-    public List<ProizvodDTO> getAllTrgovinasBySearch(String input) {
+    public List<ProizvodDTO> getAllProizvodsBySearch(String input) {
         String[] keyWords = input.toLowerCase().split("\\s+");
         return proizvodRepository.findAll().stream().filter(
-    p -> TrgovinaService.containsAnyOfTheseWords(keyWords, p.getProizvodNaziv().toLowerCase()) ||
-            TrgovinaService.containsAnyOfTheseWords(keyWords, p.getProizvodKategorija().toLowerCase()) ||
-            TrgovinaService.containsAnyOfTheseWords(keyWords, p.getProizvodOpis().toLowerCase())
+    p -> TrgovinaService.containsAllOfTheseWords(keyWords, p.getProizvodNaziv().toLowerCase()) ||
+            TrgovinaService.containsAllOfTheseWords(keyWords, p.getProizvodKategorija().toLowerCase()) ||
+            TrgovinaService.containsAllOfTheseWords(keyWords, p.getProizvodOpis().toLowerCase())
         ).map(p -> mapToDTO(p, new ProizvodDTO())).toList();
     }
 

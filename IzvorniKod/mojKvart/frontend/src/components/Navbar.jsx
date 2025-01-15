@@ -34,9 +34,7 @@ export function Navbar() {
                 setResultShops(data);
                 setError("");
             })
-            .catch((error) => {
-                setError("Error fetching search results: ", error);
-            });
+            .catch((error) => {});
 
         fetch(`/api/proizvods/getBySearch/${searchInput}`, options)
             .then(async (response) => {
@@ -50,9 +48,7 @@ export function Navbar() {
                 setResultProducts(data);
                 setError("");
             })
-            .catch((error) => {
-                setError("Error fetching search results: ", error);
-            });
+            .catch((error) => {});
 
     }, [searchInput])
 
