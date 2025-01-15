@@ -1,5 +1,6 @@
 import { Navbar } from "../../components/Navbar";
 import React, { useEffect, useState } from "react";
+import { gapi } from "gapi-script";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/Dogadaji.css";
 
@@ -11,6 +12,20 @@ export function Dogadaji() {
    const [trgovinaNames, setTrgovinaNames] = useState({});
    const [error, setError] = useState(null);
    
+   const CLIENT_ID = import.meta.env.VITE_GOOGLE_CALENDAR_CLIENT_ID;
+   const API_KEY = import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY;
+   const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"]
+   const SCOPES = "https://www.googleapis.com/auth/calendar.events";
+
+   const [tokenClient, setTokenClient] = useState(null);
+   const [gapiInited, setGapiInited] = useState(false);
+   const [gisInited, setGisInited] = useState(false);
+
+   useEffect(() => {
+      gapi.load('client', gapiInit);
+      gisLoad();
+   }, [])
+
    useEffect(() => {
       const token = localStorage.getItem('token');
       const options1 = {
@@ -126,14 +141,72 @@ export function Dogadaji() {
          .catch(error => setError(error.message));
    }, [kupacId]);
 
-   const comingToEvent = (dogadajId) => {
+   async function gapiInit() {
+      await gapi.client.init({
+        apiKey: API_KEY,
+        discoveryDocs: DISCOVERY_DOCS,
+      });
+      setGapiInited(true);
+   }
+
+   function gisLoad() {
+      setTokenClient(google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: SCOPES,
+        callback: '',
+      }));
+      setGisInited(true);
+   }
+
+   async function insertEvent(event) {
+      let response;
+      try {
+         response = await gapi.client.calendar.events.insert({
+            calendarId: 'primary',
+            resource: event,
+         });
+      } catch (err) {
+        document.getElementById('content').innerText = err.message;
+        return;
+      }
+      console.log(response);
+      document.getElementById('content').innerText = response.result.htmlLink;
+   }
+
+   const parseStringToISOString = (dateString) => {
+      const [datePart, timePart] = dateString.split(" ");
+      const [day, month, year] = datePart.split(".").map(Number);
+      const [hours, minutes] = timePart.split(":").map(Number);
+      const date = new Date(year, month - 1, day, hours, minutes);
+      return date.toISOString();
+   };
+
+   const comingToEvent = (dogadaj) => {
+      const event = {
+         summary: dogadaj.dogadajNaziv,
+         description: dogadaj.dogadajOpis,
+         start: {
+           dateTime: parseStringToISOString(dogadaj.dogadajPocetak),
+           timeZone: "Europe/Zagreb",
+         },
+         end: {
+           dateTime: parseStringToISOString(dogadaj.dogadajKraj),
+           timeZone: "Europe/Zagreb",
+         },
+         attendees: [{ email: kupacEmail }],
+         reminders: {
+            useDefault: false,
+            overrides: [{method: "email", minutes: 24 * 60}]
+         }
+      };
+
       const token = localStorage.getItem('token');
       const options = {
          method: 'POST',
          headers: {
          'Authorization': `Bearer ${token}`,
          'Content-Type': 'application/json',
-         }, body: JSON.stringify({ kupacDogadajFlag: true, kupac: kupacId, dogadaj: dogadajId })
+         }, body: JSON.stringify({ kupacDogadajFlag: true, kupac: kupacId, dogadaj: dogadaj.dogadajId })
       };
       fetch(`/api/kupacDogadajs`, options)
          .then(async response => {
@@ -144,11 +217,23 @@ export function Dogadaji() {
             return response.json();
          })
          .then(resp => {
-            window.location.reload();
+            if (gapiInited && gisInited) {
+               tokenClient.callback = async (resp) => {
+                  if (resp.error !== undefined) throw resp;
+                  await insertEvent(event);
+               };
+      
+               if (gapi.client.getToken() === null) {
+                  tokenClient.requestAccessToken({prompt: 'consent'});
+               } else {
+                  tokenClient.requestAccessToken({prompt: ''});
+               }
+            } else {
+               throw new Error('Google API client or Identity Service is not properly initialized.');
+            }
          })
          .catch(error => setError(error.message));
-   };
-
+   };   
 
 
    return (
@@ -163,8 +248,9 @@ export function Dogadaji() {
                <div className="dogadaj-dogadaj-row">
                   
                   <div className="filteri-dogadaji">
-                           <p>filteri1</p>
-                           <p>filter2 </p>
+                     <p>filteri1</p>
+                     <p>filter2 </p>
+                     <p id="content"></p>
                   </div>
                         
                   <div className="dogadaji-section">
@@ -180,7 +266,7 @@ export function Dogadaji() {
                                        <div className="items-dogadaji">
                                           <div className="card-text">{trgovinaNames[dog.trgovina]}</div>
                                           {kupacAtending.indexOf(dog.dogadajId) === -1 ?
-                                             (<button className="confirm-button" onClick={() => comingToEvent(dog.dogadajId)}>Potvrdi dolazak</button>) :
+                                             (<button className="confirm-button" onClick={() => comingToEvent(dog)}>Potvrdi dolazak</button>) :
                                              (<button className="confirm-button" id="replyOver">Dolazim!</button>)
                                           }
                                        </div>
@@ -198,11 +284,11 @@ export function Dogadaji() {
                         )}
                      </div>
                   </div>
-               </div>
-               
+               </div>     
             )}
-
          </div>
+
+         
       </div>
    );
 }
