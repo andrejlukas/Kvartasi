@@ -5,7 +5,8 @@ import '../../styles/MojePonudeiPromocije.css'
 
 
 export function MojePonudeiPromocije(){
-    const [ponudapopust,setponudaPopust] = useState([])
+    const [ponuda,setponuda] = useState([])
+    const [popust,setPopust] = useState([])
     const [email, setEmail] = useState("")
     const [idKupac, setIdKupac]=useState(null);
     const [error,setError] = useState("")
@@ -64,51 +65,10 @@ export function MojePonudeiPromocije(){
         }
     }, [email]);
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        const options = {
-            method: 'GET',
-            headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            },
-        };
-      
-        if (email) {
-            fetch(`/api/kupacPonudaPopusts`, options)
-                  .then(response => {
-                     
-                     if (!response.ok) {
-                        return response.text().then(text => {throw new Error(text)});
-                     }
-                     return response.json();
-                  })
-                  .then(data => {
-                    //console.log(data)
-                    data.forEach(element => {
-                        if (element.kupac === idKupac) { // Provjera uvjeta
-                            fetchPonudaiPromocija(element.ponudaPopust); // Pozovi samo ako uvjet odgovara
-                        }
-                    });
-                })
-                  .catch(error => setError(error.message));
-        }
+    
+  
 
-        const fetchPonudaiPromocija = async (ponudaPopust) => {
-            //console.log(ponudaPopust)
-            try {
-               const response = await fetch(`/api/ponudaPopusts/${ponudaPopust}`, options);
-               if (!response.ok) {
-                  throw new Error(`Failed to fetch ponudapopust with id ${ponudaPopust}`);
-               }
-               const idponudapopust = await response.json();
-               setponudaPopust(prev => [...prev, idponudapopust]);
-            } catch (error) {
-               console.error(`Error fetching store name for id ${ponudaPopust}:`, error);
-            }
-        }
-       
-    }, [idKupac]);
+      
 
    /*  useEffect(()=>{ console.log(ponudapopust)}, [ponudapopust]
    ) */
