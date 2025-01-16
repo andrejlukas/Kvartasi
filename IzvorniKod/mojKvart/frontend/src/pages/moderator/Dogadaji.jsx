@@ -7,6 +7,6 @@ export function ModeratorDogadaji(){
 
     return <div>
         <Navbar />
-        dogadaji
+        
     </div>
 }

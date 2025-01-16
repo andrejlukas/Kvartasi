@@ -36,7 +36,7 @@ export function Navbar() {
                                     <a href="/moderator/home/ponude" className="nav-link">Ponude i promocije</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a href="/moderator/home/dogadaji" className="nav-link">Događaji</a>
+                                    <a href="/moderator/home/dogadaji" className="nav-link">Upravljanje kupcima</a>
                                 </li>
                             </ul>
                         </div>

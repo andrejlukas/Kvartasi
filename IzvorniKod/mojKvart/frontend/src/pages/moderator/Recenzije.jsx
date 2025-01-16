@@ -7,6 +7,6 @@ export function ModeratorRecenzije(){
 
     return <div>
         <Navbar />
-        recenzije
+        <h1>Nema recenzija</h1>
     </div>
 }
