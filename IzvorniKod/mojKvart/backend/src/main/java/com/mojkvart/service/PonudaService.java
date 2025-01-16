@@ -127,7 +127,7 @@ public class PonudaService {
         ponudaDTO.setPonudaId(ponuda.getPonudaId());
         ponudaDTO.setPonudaNaziv(ponuda.getPonudaNaziv());
         ponudaDTO.setPonudaOpis(ponuda.getPonudaOpis());
-        ponudaDTO.setPonudaRok(ponuda.getPonudaRok());
+        ponudaDTO.setPonudaRok(PopustService.setVrijeme(ponuda.getPonudaRok()));
         ponudaDTO.setPonudaPopust(ponuda.getPonudaPopust() == null ? null : ponuda.getPonudaPopust().getPonudaPopustId());
         // Dohvati PonudaPopust objekt preko ponudaPopust ID-a
         PonudaPopust ponudaPopust = ponuda.getPonudaPopust();
@@ -145,7 +145,7 @@ public class PonudaService {
     private Ponuda mapToEntity(final PonudaDTO ponudaDTO, final Ponuda ponuda) {
         ponuda.setPonudaNaziv(ponudaDTO.getPonudaNaziv());
         ponuda.setPonudaOpis(ponudaDTO.getPonudaOpis());
-        ponuda.setPonudaRok(ponudaDTO.getPonudaRok());
+        ponuda.setPonudaRok(DogadajService.getVrijeme(ponudaDTO.getPonudaRok()));
         final PonudaPopust ponudaPopust = ponudaDTO.getPonudaPopust() == null ? null : ponudaPopustRepository.findById(ponudaDTO.getPonudaPopust())
                 .orElseThrow(() -> new NotFoundException("ponudaPopust not found"));
         ponuda.setPonudaPopust(ponudaPopust);
