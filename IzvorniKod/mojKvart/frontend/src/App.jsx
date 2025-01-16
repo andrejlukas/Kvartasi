@@ -31,6 +31,10 @@ import { ShopMojiPodaci } from './pages/shop/MojiPodaci';
 import { ShopMojeRecenzije } from './pages/shop/MojeRecenzije';
 import { ShopMojiAtributi } from './pages/shop/MojiAtributi';
 
+import { ModeratorHome } from './pages/moderator/Home';
+import { ModeratorPonude } from './pages/moderator/PonudeiPromocije';
+import { ModeratorRecenzije } from './pages/moderator/Recenzije';
+import { ModeratorDogadaji } from './pages/moderator/Dogadaji';
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(null);
   const [role, setRole] = useState(null);
@@ -229,6 +233,32 @@ function App() {
           <SecuredShopRoute>
             <ShopMojiAtributi />
           </SecuredShopRoute>
+        } />
+
+        <Route path="/moderator/home" element={
+          <SecuredModeratorRoute>
+            <ModeratorHome />
+          </SecuredModeratorRoute>
+        } />
+        <Route path="/moderator/home/proizvodi" element={
+          <SecuredModeratorRoute>
+            <ModeratorHome />
+          </SecuredModeratorRoute>
+        } />
+          <Route path="/moderator/home/recenzije" element={
+          <SecuredModeratorRoute>
+            <ModeratorRecenzije />
+          </SecuredModeratorRoute>
+        } />
+          <Route path="/moderator/home/ponude" element={
+          <SecuredModeratorRoute>
+            <ModeratorPonude />
+          </SecuredModeratorRoute>
+        } />
+          <Route path="/moderator/home/dogadaji" element={
+          <SecuredModeratorRoute>
+            <ModeratorDogadaji />
+          </SecuredModeratorRoute>
         } />
 
         <Route path="/" element={<Login />} />
