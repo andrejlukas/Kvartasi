@@ -1,5 +1,6 @@
 package com.mojkvart.repos;
 
+import com.mojkvart.domain.KupacProizvod;
 import com.mojkvart.domain.Proizvod;
 import com.mojkvart.domain.Trgovina;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ProizvodRepository extends JpaRepository<Proizvod, Integer> {
@@ -27,5 +29,7 @@ public interface ProizvodRepository extends JpaRepository<Proizvod, Integer> {
 
     @Query("SELECT p FROM Proizvod p WHERE p.proizvodFlag = 'N'")
     List<Proizvod> findAllNotApproved();
+
+    Proizvod findByProizvodId(Integer proizvodId);
 
 }

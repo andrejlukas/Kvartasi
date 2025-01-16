@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -63,6 +64,35 @@ public class KupacProizvodResource {
             @RequestBody @Valid final KupacProizvodDTO kupacProizvodDTO) {
         final Long createdId = kupacProizvodService.create(kupacProizvodDTO);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
+    }
+
+    // API koji povecaje kolicinu proizvoda u kosarici
+    @PostMapping("/povecaj/{kupacId}/{proizvodId}")
+    public ResponseEntity<String> povecajKolicinu(@PathVariable Long kupacId, @PathVariable Long proizvodId) {
+        kupacProizvodService.povecajKolicinu(kupacId, proizvodId);
+        return ResponseEntity.ok("Količina proizvoda uspješno povećana.");
+    }
+
+    // API koji smanjuje kolicinu proizvoda u kosarici
+    @PostMapping("/smanji/{kupacId}/{proizvodId}")
+    public ResponseEntity<String> smanjiKolicinu(@PathVariable Long kupacId, @PathVariable Long proizvodId) {
+        kupacProizvodService.smanjiKolicinu(kupacId, proizvodId);
+        return ResponseEntity.ok("Količina proizvoda uspješno smanjena.");
+    }
+
+    // iskreno mozda najludi API ikad koji provjerava je li dani proizvod u kosarici, ako nije, radi novi KupacProizvod
+    // i dodaje ga racunu (ako racun ne postoji isto ga radi), ako je, povecaje kolicinu proizvoda za 1
+    @PostMapping("/dodaj/{kupacId}/{trgovinaId}/{proizvodId}")
+    public ResponseEntity<String> dodajIliAzurirajProizvodUKosarici(
+            @PathVariable Integer kupacId,
+            @PathVariable Integer trgovinaId,
+            @PathVariable Integer proizvodId) {
+        try {
+            kupacProizvodService.dodajIliAzurirajProizvodUKosarici(kupacId, trgovinaId, proizvodId);
+            return ResponseEntity.ok("Proizvod je uspješno dodan ili ažuriran u košarici.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Greška: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")

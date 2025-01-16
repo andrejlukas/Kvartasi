@@ -10,6 +10,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class KupacProizvodInfoDTO {
+
+    @NotNull
+    private Integer proizvodId;
+    
     @NotNull
     private String proizvodNaziv;
 
