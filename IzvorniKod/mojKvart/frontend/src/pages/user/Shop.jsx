@@ -117,9 +117,7 @@ export function Shop() {
                 </div>
                 <div className="divider"></div>
 
-                <p>
-                  <strong>Adresa:</strong> {shop.trgovinaLokacija || "Nije specifirano"}
-                </p>
+               
                 <p>
                   <strong>Radno vrijeme: </strong>
                   {shop.trgovinaRadnoVrijemeOd && shop.trgovinaRadnoVrijemeDo
