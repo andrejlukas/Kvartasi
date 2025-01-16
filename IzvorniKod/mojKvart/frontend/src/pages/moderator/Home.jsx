@@ -7,8 +7,6 @@ export function ModeratorHome(){
 
     const [productsType, setProductsType] = useState("approved");
     const [error, setError] = useState("");
-    const [popupError, setPopupError] = useState("Proizvod će biti poslan na odobravanje!");
-
     const [approvedProducts, setApprovedProducts] = useState([]);
     const [notApprovedProducts, setNotApprovedProducts] = useState([]);
 
