@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Navbar } from "../../components/Navbar";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 import "../../styles/Shop.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -8,7 +10,7 @@ export function Shop() {
   const { email } = useParams();
   const [shop, setShop] = useState(null);
   const [products, setProducts] = useState([]);
-  const [attributes, setAttributes] = useState([]); // Novo stanje za atribute
+  const [attributes, setAttributes] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -62,7 +64,6 @@ export function Shop() {
           setError(error.message);
         });
 
-      // Dohvati atribute trgovine
       fetch(`/api/atributs`, options)
         .then((response) => {
           if (!response.ok) {
@@ -71,7 +72,6 @@ export function Shop() {
           return response.json();
         })
         .then((data) => {
-          // Filtriraj atribute za trenutnu trgovinu
           const trgovinaAtributi = data.filter((atribut) =>
             shop.imaAtributeAtributs.includes(atribut.atributId)
           );
@@ -82,6 +82,15 @@ export function Shop() {
         });
     }
   }, [shop]);
+
+  // Parse the location coordinates
+  const getCoordinates = () => {
+    if (!shop || !shop.trgovinaLokacija) return null;
+    const [lat, lng] = shop.trgovinaLokacija.split(",").map(Number);
+    return { lat, lng };
+  };
+
+  const coordinates = getCoordinates();
 
   return (
     <div>
@@ -124,20 +133,36 @@ export function Shop() {
                   <strong>Email: </strong> {shop.trgovinaEmail || "Nije dostupan"}
                 </p>
 
-                <div id="atributs">
-                {attributes.length > 0 && (
-                  <>
-                    <div id="dividerr"></div>
-                    <ul className="no-bullets">
-                      {attributes.map((atribut) => (
-                        <li key={atribut.atributId}>
-                          <strong>{atribut.atributNaziv}</strong> {atribut.atributOpis}
-                        </li>
-                      ))}
-                    </ul>
-                  </>
+                {coordinates && (
+                  <div className="shop-map">
+                    <MapContainer
+                      center={[coordinates.lat, coordinates.lng]}
+                      zoom={15}
+                      style={{ height: "400px", width: "100%" }}
+                    >
+                      <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      />
+                      <Marker position={[coordinates.lat, coordinates.lng]} />
+                    </MapContainer>
+                  </div>
                 )}
-              </div>
+
+                <div id="atributs">
+                  {attributes.length > 0 && (
+                    <>
+                      <div id="dividerr"></div>
+                      <ul className="no-bullets">
+                        {attributes.map((atribut) => (
+                          <li key={atribut.atributId}>
+                            <strong>{atribut.atributNaziv}</strong> {atribut.atributOpis}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </div>
               </div>
 
               <div id="products" className="product-section">
