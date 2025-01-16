@@ -10,6 +10,88 @@ export function Kosarica(){
 
     const [kosarica,setKosarica] = useState({})
 
+    function uvecajKolicinuProizvoda  (proizvodID) {
+
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setError("Nedostaje token za autorizaciju.");
+          return;
+        }
+      
+        // Provjerite jesu li potrebne varijable postavljene
+        if (!id || !proizvodID) {
+          setError("Podaci za kupca, trgovinu ili proizvod nisu dostupni.");
+          console.log(id)
+          console.log(proizvodID)
+    
+          return;
+        }
+      
+    
+    
+        const options = {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        };
+      
+        
+          fetch(`/api/kupacProizvods/povecaj/${id}/${proizvodID}`, options)
+        .then(response => response.ok && console.log("uspjela smanjit"))
+        .then(updated => {
+          console.log(updated)
+        })
+        .catch(error => {
+            console.error('Error updating data:', error);
+        })
+        window.location.reload();
+
+      
+        
+    }
+    function smanjiKolicinuProizvoda (proizvodID) {
+
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setError("Nedostaje token za autorizaciju.");
+          return;
+        }
+      
+        // Provjerite jesu li potrebne varijable postavljene
+        if (!id || !proizvodID) {
+          setError("Podaci za kupca, trgovinu ili proizvod nisu dostupni.");
+          console.log(id)
+          console.log(proizvodID)
+    
+          return;
+        }
+      
+    
+    
+        const options = {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        };
+      
+        
+          fetch(`/api/kupacProizvods/smanji/${id}/${proizvodID}`, options)
+        .then(response => response.ok && console.log("uspjela smanjit"))
+        .then(updated => {
+          console.log(updated)
+        })
+        .catch(error => {
+            console.error('Error updating data:', error);
+        })
+        window.location.reload();
+      
+        
+    }
+
     //dohvacanje mail-a
    useEffect(() => {
     const token = localStorage.getItem('token');
@@ -142,15 +224,17 @@ export function Kosarica(){
                             Object.entries(kosarica).map(([key, proizvodi]) => (
                                 
                                 /* console.log(key) */
-                                <div className={key}>
+                                <div className={key} >
                                     
                                     <h3>Proizvodi : {proizvodi[0].trgovinaNaziv}</h3>
                                     <div className="kosarica-proizvodi-ispis">
                                         {
                                             proizvodi.map((proizvod)=>
-                                            <div className={proizvod.proizvodNaziv}>
+                                            <div className={proizvod.proizvodNaziv}  id="kosarica-proizvod">
                                                 <p>{proizvod.proizvodNaziv}</p>
+                                                <button onClick={() =>smanjiKolicinuProizvoda(proizvod.proizvodId)}>-</button>
                                                 <p>Kol: {proizvod.proizvodKolicina}</p>
+                                                <button onClick={() => uvecajKolicinuProizvoda(proizvod.proizvodId)}>+</button>
                                                 <p>Cijena: {proizvod.proizvodCijena}</p>
                                                 
                                             </div>

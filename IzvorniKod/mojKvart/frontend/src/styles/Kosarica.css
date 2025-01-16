@@ -38,4 +38,12 @@
 .kosarica-odabir ul a:hover{
     color: rgba(50, 49, 49, 0.8);
 }
-
+#kosarica-proizvod{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center
+}
+#kosarica-proizvod p{
+    width: 20%;
+}

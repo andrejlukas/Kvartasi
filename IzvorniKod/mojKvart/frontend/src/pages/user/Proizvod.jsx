@@ -14,7 +14,10 @@ export function Proizvod() {
   const [kupacId, setKupacId] = useState(null);
   const [userOcjena, setUserOcjena] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
+  const [trgovinaId, setTrgovinaId] = useState(null);
+  const [racunId, setRacunId] = useState(null);
+  const [kupacProizvodId, setKupacProizvodId] = useState(null);
 
   const povecajKolicinu = () => {
     setKolicina(kolicina + 1);
@@ -25,6 +28,51 @@ export function Proizvod() {
       setKolicina(kolicina - 1);
     }
   };
+
+ 
+  
+
+  const dodajUKosaricu = () => {
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Nedostaje token za autorizaciju.");
+      return;
+    }
+  
+    // Provjerite jesu li potrebne varijable postavljene
+    if (!kupacId || !trgovinaId || !proizvodId) {
+      setError("Podaci za kupca, trgovinu ili proizvod nisu dostupni.");
+      console.log(kupacId)
+      console.log(trgovinaId)
+      console.log(proizvodId)
+
+      return;
+    }
+  
+
+
+    const options = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+  
+    
+      fetch(`/api/kupacProizvods/dodaj/${kupacId}/${trgovinaId}/${proizvodId}/${kolicina}`, options)
+    .then(response => response.ok && console.log("uspjela"))
+    .then(updated => {
+      console.log(updated)
+    })
+    .catch(error => {
+        console.error('Error updating data:', error);
+    })
+
+  
+    
+  }
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -54,6 +102,7 @@ export function Proizvod() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log(token)
     const options = {
       method: "GET",
       headers: {
@@ -106,6 +155,7 @@ export function Proizvod() {
       .then((data) => {
         setProizvod(data);
         if (data.trgovina) {
+          setTrgovinaId(data.trgovina)
           fetchTrgovinaName(data.trgovina, token);
         } else {
           setError("Store ID is undefined or invalid.");
@@ -341,7 +391,7 @@ export function Proizvod() {
                       </button>
                     </div>
                     <div>
-                      <button id="dodaj-kosaricu">Dodaj u košaricu</button>
+                      <button id="dodaj-kosaricu" onClick={dodajUKosaricu}>Dodaj u košaricu</button>
                     </div>
                   </div>
                 </div>
