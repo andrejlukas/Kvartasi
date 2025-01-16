@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 export function Home() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState("");
+  const [trgovinaNames, setTrgovinaNames] = useState({});
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -26,10 +27,31 @@ export function Home() {
       })
       .then((data) => {
         setProducts(data);
+        data.forEach(dog => fetchTrgovinaName(dog.trgovina));
       })
       .catch((error) => {
         setError(error.message);
       });
+
+      const fetchTrgovinaName = async (trgovinaId) => {
+        try {
+           const options3 = {
+              method: 'GET',
+              headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+              },
+           };
+           const response = await fetch(`/api/trgovinas/getById/${trgovinaId}`, options3);
+           if (!response.ok) {
+              throw new Error(`Failed to fetch store with id ${trgovinaId}`);
+           }
+           const name = await response.json();
+           setTrgovinaNames(prevNames => ({ ...prevNames, [trgovinaId]: name.trgovinaNaziv }));
+        } catch (error) {
+           console.error(`Error fetching store name for id ${trgovinaId}:`, error);
+        }
+     };
   }, []);
 
   return (
@@ -55,6 +77,7 @@ export function Home() {
                     />
                     <div className="card-body-alt">
                       <h5 className="card-title-alt">{product.proizvodNaziv}</h5>
+                      <p id = "trgov">{trgovinaNames[product.trgovina]}</p>
                       <p className="card-text-alt">{product.proizvodOpis}</p>
                       <div id="gumbcijena-alt">
                         <p className="price-alt">€{product.proizvodCijena}</p>
