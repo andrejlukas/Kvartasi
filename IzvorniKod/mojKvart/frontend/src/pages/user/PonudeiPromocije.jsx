@@ -74,7 +74,7 @@ export function PonudeiPromocije() {
          },
       };
 
-      setLoading(true); // Set loading to true when starting fetch
+      setLoading(true); 
 
       Promise.all([
       fetch(`/api/popusts/flag-true/${idKupac}`, options)
