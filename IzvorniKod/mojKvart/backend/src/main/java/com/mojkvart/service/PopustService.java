@@ -12,7 +12,10 @@ import com.mojkvart.repos.PonudaPopustRepository;
 import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.repos.PopustRepository;
 import com.mojkvart.util.NotFoundException;
+
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,31 +43,59 @@ public class PopustService {
 
     // prikazi sve popuste koje je moderator odobrio i kupac nije jos spremio
     public List<PopustDTO> findAllWithFlagTrue(Integer kupacId) {
-    final List<Popust> popusts = popustRepository.findAll(Sort.by("popustId"));
-    final List<KupacPonudaPopust> kupacPonudaPopusts = kupacPonudaPopustRepository.findAll(Sort.by("kupac"));
+        final List<Popust> popusts = popustRepository.findAll(Sort.by("popustId"));
+        final List<KupacPonudaPopust> kupacPonudaPopusts = kupacPonudaPopustRepository.findAll(Sort.by("kupac"));
 
-    // Pronađi sve ponudaPopuste koje je kupac već spremio
-    final Set<Integer> spremljeniPopustiIds = kupacPonudaPopusts.stream()
-            .filter(kpp -> kpp.getKupac().getKupacId().equals(kupacId))
-            .map(kpp -> kpp.getPonudaPopust().getPonudaPopustId())
-            .collect(Collectors.toSet());
+        // Pronađi sve ponudaPopuste koje je kupac već spremio
+        final Set<Integer> spremljeniPopustiIds = kupacPonudaPopusts.stream()
+                .filter(kpp -> kpp.getKupac().getKupacId().equals(kupacId))
+                .map(kpp -> kpp.getPonudaPopust().getPonudaPopustId())
+                .collect(Collectors.toSet());
 
-    // Filtriraj ponude koje imaju flag true i nisu spremljene od strane kupca
-    return popusts.stream()
-            .filter(popust -> popust.getPonudaPopust() != null &&
-                    popust.getPonudaPopust().getPonudaPopustFlag() != null &&
-                    popust.getPonudaPopust().getPonudaPopustFlag() &&
-                    !spremljeniPopustiIds.contains(popust.getPonudaPopust().getPonudaPopustId()))
-            .map(popust -> mapToDTO(popust, new PopustDTO()))
-            .toList();
-}
+        // Filtriraj ponude koje imaju flag true i nisu spremljene od strane kupca
+        return popusts.stream()
+                .filter(popust -> popust.getPonudaPopust() != null &&
+                        popust.getPonudaPopust().getPonudaPopustFlag() != null &&
+                        popust.getPonudaPopust().getPonudaPopustFlag() &&
+                        popust.getPopustRok().isAfter(LocalDateTime.now()) &&
+                        !spremljeniPopustiIds.contains(popust.getPonudaPopust().getPonudaPopustId()))
+                .map(popust -> mapToDTO(popust, new PopustDTO()))
+                .toList();
+    }
 
+    // popusti koje moderator treba odobriti, a nisu istekli
     public List<PopustDTO> findAllWithFlagFalse() {
         final List<Popust> popusti = popustRepository.findAll(Sort.by("popustId"));
         return popusti.stream()
                 .filter(popust -> popust.getPonudaPopust() != null &&
                         popust.getPonudaPopust().getPonudaPopustFlag() != null &&
-                        !popust.getPonudaPopust().getPonudaPopustFlag())
+                        !popust.getPonudaPopust().getPonudaPopustFlag() &&
+                        popust.getPopustRok().isAfter(LocalDateTime.now()))
+                .map(popust -> mapToDTO(popust, new PopustDTO()))
+                .toList();
+    }
+
+
+    public List<PopustDTO> findAllTrgovinaValidPopusts(Integer trgovinaId) {
+        final List<Popust> popusti = popustRepository.findAll(Sort.by("popustId"));
+        return popusti.stream()
+                .filter(popust -> popust.getPonudaPopust() != null &&
+                        popust.getPonudaPopust().getPonudaPopustFlag() != null &&
+                        Objects.equals(popust.getPonudaPopust().getTrgovina().getTrgovinaId(), trgovinaId) &&
+                        popust.getPonudaPopust().getPonudaPopustFlag() &&
+                        popust.getPopustRok().isAfter(LocalDateTime.now()))
+                .map(popust -> mapToDTO(popust, new PopustDTO()))
+                .toList();
+    }
+
+    public List<PopustDTO> findAllTrgovinaNonValidPopusts(Integer trgovinaId) {
+        final List<Popust> popusti = popustRepository.findAll(Sort.by("popustId"));
+        return popusti.stream()
+                .filter(popust -> popust.getPonudaPopust() != null &&
+                        popust.getPonudaPopust().getPonudaPopustFlag() != null &&
+                        Objects.equals(popust.getPonudaPopust().getTrgovina().getTrgovinaId(), trgovinaId) &&
+                        (!popust.getPonudaPopust().getPonudaPopustFlag() ||
+                        popust.getPopustRok().isBefore(LocalDateTime.now())))
                 .map(popust -> mapToDTO(popust, new PopustDTO()))
                 .toList();
     }
@@ -98,6 +129,7 @@ public class PopustService {
         popustDTO.setPopustQrkod(popust.getPopustQrkod());
         popustDTO.setPopustNaziv(popust.getPopustNaziv());
         popustDTO.setPopustOpis(popust.getPopustOpis());
+        popustDTO.setPopustRok(popust.getPopustRok());
         popustDTO.setPonudaPopust(popust.getPonudaPopust() == null ? null : popust.getPonudaPopust().getPonudaPopustId());
         PonudaPopust ponudaPopust2 = popust.getPonudaPopust();
         Trgovina trgovina2 = trgovinaRepository.findById(ponudaPopust2.getTrgovina().
@@ -111,6 +143,7 @@ public class PopustService {
         popust.setPopustQrkod(popustDTO.getPopustQrkod());
         popust.setPopustNaziv(popustDTO.getPopustNaziv());
         popust.setPopustOpis(popustDTO.getPopustOpis());
+        popust.setPopustRok(popustDTO.getPopustRok());
         final PonudaPopust ponudaPopust = popustDTO.getPonudaPopust() == null ? null : ponudaPopustRepository.findById(popustDTO.getPonudaPopust())
                 .orElseThrow(() -> new NotFoundException("ponudaPopust not found"));
         popust.setPonudaPopust(ponudaPopust);
