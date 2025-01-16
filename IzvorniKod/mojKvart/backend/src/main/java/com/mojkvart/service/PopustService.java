@@ -93,7 +93,7 @@ public class PopustService {
         popustRepository.deleteById(popustId);
     }
 
-    private PopustDTO mapToDTO(final Popust popust, final PopustDTO popustDTO) {
+    PopustDTO mapToDTO(final Popust popust, final PopustDTO popustDTO) {
         popustDTO.setPopustId(popust.getPopustId());
         popustDTO.setPopustQrkod(popust.getPopustQrkod());
         popustDTO.setPopustNaziv(popust.getPopustNaziv());

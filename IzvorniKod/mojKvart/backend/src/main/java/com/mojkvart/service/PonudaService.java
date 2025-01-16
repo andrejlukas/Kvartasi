@@ -95,7 +95,7 @@ public List<PonudaDTO> findAllWithFlagTrue(Integer kupacId) {
         ponudaRepository.deleteById(ponudaId);
     }
 
-    private PonudaDTO mapToDTO(final Ponuda ponuda, final PonudaDTO ponudaDTO) {
+    PonudaDTO mapToDTO(final Ponuda ponuda, final PonudaDTO ponudaDTO) {
         ponudaDTO.setPonudaId(ponuda.getPonudaId());
         ponudaDTO.setPonudaNaziv(ponuda.getPonudaNaziv());
         ponudaDTO.setPonudaOpis(ponuda.getPonudaOpis());
