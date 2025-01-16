@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -82,13 +81,14 @@ public class KupacProizvodResource {
 
     // iskreno mozda najludi API ikad koji provjerava je li dani proizvod u kosarici, ako nije, radi novi KupacProizvod
     // i dodaje ga racunu (ako racun ne postoji isto ga radi), ako je, povecaje kolicinu proizvoda za 1
-    @PostMapping("/dodaj/{kupacId}/{trgovinaId}/{proizvodId}")
+    @PostMapping("/dodaj/{kupacId}/{trgovinaId}/{proizvodId}/{kolicina}")
     public ResponseEntity<String> dodajIliAzurirajProizvodUKosarici(
             @PathVariable Integer kupacId,
             @PathVariable Integer trgovinaId,
-            @PathVariable Integer proizvodId) {
+            @PathVariable Integer proizvodId,
+            @PathVariable Integer kolicina) {
         try {
-            kupacProizvodService.dodajIliAzurirajProizvodUKosarici(kupacId, trgovinaId, proizvodId);
+            kupacProizvodService.dodajIliAzurirajProizvodUKosarici(kupacId, trgovinaId, proizvodId, kolicina);
             return ResponseEntity.ok("Proizvod je uspješno dodan ili ažuriran u košarici.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Greška: " + e.getMessage());

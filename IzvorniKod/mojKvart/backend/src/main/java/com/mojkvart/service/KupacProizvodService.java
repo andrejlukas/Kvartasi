@@ -35,7 +35,7 @@ public class KupacProizvodService {
                 this.trgovinaRepository = trgovinaRepository;
         }
 
-        public void dodajIliAzurirajProizvodUKosarici(Integer kupacId, Integer trgovinaId, Integer proizvodId) {
+        public void dodajIliAzurirajProizvodUKosarici(Integer kupacId, Integer trgovinaId, Integer proizvodId, Integer kolicina) {
     // Pronađi postojeći račun u stanju 'K' za danog kupca i trgovinu
     Racun racun = racunRepository.findByKupac_KupacIdAndTrgovina_TrgovinaIdAndStanje(kupacId, trgovinaId, 'K')
             .orElseGet(() -> {
@@ -54,7 +54,7 @@ public class KupacProizvodService {
     if (kupacProizvodOptional.isPresent()) {
         // Ako zapis postoji, povećaj količinu
         KupacProizvod kupacProizvod = kupacProizvodOptional.get();
-        kupacProizvod.setKolicinaProizvoda(kupacProizvod.getKolicinaProizvoda() + 1);
+        kupacProizvod.setKolicinaProizvoda(kupacProizvod.getKolicinaProizvoda() + kolicina);
         kupacProizvodRepository.save(kupacProizvod);
     } else {
         // Ako zapis ne postoji, kreiraj novi
@@ -62,7 +62,7 @@ public class KupacProizvodService {
         noviKupacProizvod.setRacun(racun);
         noviKupacProizvod.setKupac(racun.getKupac());
         noviKupacProizvod.setProizvod(proizvodRepository.findByProizvodId(proizvodId));
-        noviKupacProizvod.setKolicinaProizvoda(1);
+        noviKupacProizvod.setKolicinaProizvoda(kolicina);
         kupacProizvodRepository.save(noviKupacProizvod);
     }
 }
@@ -145,33 +145,33 @@ public class KupacProizvodService {
         }
 
         public void povecajKolicinu(Long kupacId, Long proizvodId) {
-
                 KupacProizvod kupacProizvod = kupacProizvodRepository
-                                .findByKupac_KupacIdAndProizvod_ProizvodId(kupacId, proizvodId)
-                                .orElseThrow(() -> new NotFoundException("KupacProizvod not found"));
-
+                        .findByKupacIdAndProizvodIdAndStanjeKosarica(kupacId, proizvodId)
+                        .orElseThrow(() -> new NotFoundException("KupacProizvod not found in kosarica"));
+            
                 kupacProizvod.setKolicinaProizvoda(kupacProizvod.getKolicinaProizvoda() + 1);
-
+            
                 kupacProizvodRepository.save(kupacProizvod);
-        }
+            }
+            
 
-        public void smanjiKolicinu(Long kupacId, Long proizvodId) {
-
+            public void smanjiKolicinu(Long kupacId, Long proizvodId) {
+                
                 KupacProizvod kupacProizvod = kupacProizvodRepository
-                                .findByKupac_KupacIdAndProizvod_ProizvodId(kupacId, proizvodId)
-                                .orElseThrow(() -> new NotFoundException("KupacProizvod not found"));
-
+                        .findByKupacIdAndProizvodIdAndStanjeKosarica(kupacId, proizvodId)
+                        .orElseThrow(() -> new NotFoundException("KupacProizvod not found in kosarica"));
+            
                 int novaKolicina = kupacProizvod.getKolicinaProizvoda() - 1;
-
-                // ako je nova kolicina 0, ukloni kupacProizvod objekt
+            
+                // Ako je nova količina 0 ili manje, ukloni KupacProizvod objekt
                 if (novaKolicina <= 0) {
-                        delete(kupacProizvod.getId());
+                    kupacProizvodRepository.deleteById(kupacProizvod.getId());
                 } else {
-                        kupacProizvod.setKolicinaProizvoda(novaKolicina);
-                        kupacProizvodRepository.save(kupacProizvod);
+                    kupacProizvod.setKolicinaProizvoda(novaKolicina);
+                    kupacProizvodRepository.save(kupacProizvod);
                 }
-
-        }
+            }
+            
 
         public KupacProizvodDTO get(final Long id) {
                 return kupacProizvodRepository.findById(id)
