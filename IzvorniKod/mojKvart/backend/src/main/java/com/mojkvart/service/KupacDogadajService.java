@@ -37,11 +37,11 @@ public class KupacDogadajService {
                 .toList();
     }
 
-    // funkcija koja vraca sve kupacDogadaje za odredenog kupca na kojima jos kupac nije bio
+    // funkcija koja vraca sve kupacDogadaje za odredenog kupca na koje će kupac ići ili je išao
     public List<KupacDogadajDTO> getDogadajiZaKupca(Integer kupacId) {
     List<KupacDogadaj> kupacDogadaji = kupacDogadajRepository.findByKupac_KupacId(kupacId);
-    return kupacDogadaji.stream().filter(kd -> kd.getKupacDogadajFlag() == false)
-            .map(kd -> mapToDTO(kd, new KupacDogadajDTO())) // Ispravljen drugi parametar
+    return kupacDogadaji.stream().filter(KupacDogadaj::getKupacDogadajFlag)
+            .map(kd -> mapToDTO(kd, new KupacDogadajDTO()))
             .collect(Collectors.toList());
 }
 

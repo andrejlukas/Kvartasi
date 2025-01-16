@@ -8,6 +8,8 @@ export function MojeRecenzije() {
     const navigate = useNavigate();
    const [id, setId] = useState("")
    const [emailAddress, setEmailAddress] = useState('')
+    const [trgovina, setTrgovina] = useState({});
+   
 
 
    const [recenzije, SetRecenzije] = useState([])
@@ -64,7 +66,6 @@ export function MojeRecenzije() {
            })
            .then(data => {
                setId(data.kupacId);
-               console.log(token)
            })
            .catch(error => {
                console.error('There was a problem with the fetch operation: ', error);
@@ -96,12 +97,30 @@ useEffect(() => {
            .then(data => {
                console.log(data)
                SetRecenzije(data)
+               data.forEach((element) =>
+                fetchTrgovinaName(element.trgovinaId)
+                
+            )
            })
            .catch(error => {
                console.error('There was a problem with the fetch operation: ', error);
                setError(error.message);
            });
    }
+   const fetchTrgovinaName = async (trgovinaId) => {
+    // console.log(trgovinaId)
+    try {
+       const response = await fetch(`/api/trgovinas/getById/${trgovinaId}`, options);
+       if (!response.ok) {
+          throw new Error(`Failed to fetch store with id ${trgovinaId}`);
+       }
+       const name = await response.json();
+       // console.log(name.trgovinaNaziv)
+       setTrgovina(prevNames => ({ ...prevNames, [trgovinaId]: name.trgovinaNaziv }));
+    } catch (error) {
+       console.error(`Error fetching store name for id ${trgovinaId}:`, error);
+    }
+ };
 }, [id]);
 
 /* odobrioModerator
@@ -111,7 +130,8 @@ recenzijaOpis
 recenzijaZvjezdice
 trgovinaId
 vrijemeKreiranja */
- 
+  useEffect(()=>{ console.log(trgovina)}, [trgovina]
+   )
 
 //brisanje recenzije
 function brisanjeRecenzije(poslanId) {
@@ -158,7 +178,9 @@ function brisanjeRecenzije(poslanId) {
                   recenzije.map((recenzija, index) => 
                   (
                      <div key = {recenzija.recenzijaId}className="recenzija-list">
-                        <div className="recenzijanaslov">Recenzija za trgovinu NASLOV TRGOVINE</div>
+                        <div className="recenzijanaslov">Recenzija za trgovinu {
+                            trgovina[recenzija.trgovinaId]
+                            }</div>
                         <div className="recenzija-info-plus-button">
                             
                             {/* <div className="stupac">

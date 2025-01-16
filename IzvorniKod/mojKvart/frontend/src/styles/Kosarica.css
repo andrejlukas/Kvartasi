@@ -1,0 +1,41 @@
+.kosarica-glavni-div{
+    height: 100%;
+    text-align: left;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: relative;
+    flex-direction: column;
+    box-sizing: border-box;
+    margin: 20px;
+    display: flex;
+    width: 70%;
+}
+
+.kosarica-glavni-div ul{
+    display: flex;
+    flex-direction: row;
+    padding: 0px;
+    justify-content: space-around;
+    list-style-type: none; 
+}
+
+.kosarica-odabir {
+    border-bottom-style: solid;
+    border-bottom-style: solid;
+    border-bottom-color: rgba(50, 49, 49, 0.5);
+    border-bottom-width: 2px;
+}
+
+.kosarica-odabir ul  a{
+    text-decoration: none; 
+    color: rgba(50, 49, 49, 0.5);
+    font-weight: 700; 
+    font-size: 24px;
+}
+
+.kosarica-odabir ul a:hover{
+    color: rgba(50, 49, 49, 0.8);
+}
+

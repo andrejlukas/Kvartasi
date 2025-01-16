@@ -34,9 +34,7 @@ export function Navbar() {
                 setResultShops(data);
                 setError("");
             })
-            .catch((error) => {
-                setError("Error fetching search results: ", error);
-            });
+            .catch((error) => {});
 
         fetch(`/api/proizvods/getBySearch/${searchInput}`, options)
             .then(async (response) => {
@@ -50,9 +48,7 @@ export function Navbar() {
                 setResultProducts(data);
                 setError("");
             })
-            .catch((error) => {
-                setError("Error fetching search results: ", error);
-            });
+            .catch((error) => {});
 
     }, [searchInput])
 
@@ -113,7 +109,8 @@ export function Navbar() {
                         <div id="obruc" className="d-flex align-items-center ms-auto">
                             <a href="/korisnickiRacun" className="me-3" id="MojRacun">Moj račun</a>
                             <a href="#" onClick={handleLogout} className="me-3" id="OdjaviSe">Odjava</a>
-                            <img  id='kosarica' className="img-fluid" src={kosarica} alt="Shopping Cart" />
+                            <a href='/kosarica'><img  id='kosarica' className="img-fluid" src={kosarica} alt="Shopping Cart" /></a>
+                            
                         </div>
                     </div>
                 </nav>

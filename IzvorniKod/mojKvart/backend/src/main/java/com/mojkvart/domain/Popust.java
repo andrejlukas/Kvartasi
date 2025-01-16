@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.Transient;
 
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -44,11 +45,13 @@ public class Popust {
     @Column(nullable = false, length = 200)
     private String popustOpis;
 
+    @Column(nullable = false)
+    private LocalDateTime popustRok;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ponuda_popust_id", nullable = false)
     private PonudaPopust ponudaPopust;
 
     @Transient
     private String trgovinaIme;
-
 }

@@ -13,6 +13,8 @@ import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -38,6 +40,9 @@ public class Ponuda {
 
     @Column(nullable = false, length = 200)
     private String ponudaOpis;
+
+    @Column(nullable = false)
+    private LocalDateTime ponudaRok;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ponuda_popust_id", nullable = false)

@@ -50,9 +50,9 @@ public class TrgovinaService {
         this.ponudaPopustRepository = ponudaPopustRepository;
     }
 
-    public static Boolean containsAnyOfTheseWords(String[] wordsToCheck, String checker) {
+    public static Boolean containsAllOfTheseWords(String[] wordsToCheck, String checker) {
         for(String word : Stream.of(wordsToCheck).filter(s -> !s.isEmpty()).toList())
-            if(word.length() < 2 || !checker.contains(word)) return false;
+            if (!checker.contains(word)) return false;
         return true;
     }
 
@@ -94,9 +94,9 @@ public class TrgovinaService {
     public List<TrgovinaDTO> getAllTrgovinasBySearch(String input) {
         String[] keyWords = input.toLowerCase().split("\\s+");
         return trgovinaRepository.findAll().stream().filter(
-    t -> containsAnyOfTheseWords(keyWords, t.getTrgovinaNaziv().toLowerCase()) ||
-            containsAnyOfTheseWords(keyWords, t.getTrgovinaKategorija().toLowerCase()) ||
-            containsAnyOfTheseWords(keyWords, t.getTrgovinaOpis().toLowerCase())
+    t -> containsAllOfTheseWords(keyWords, t.getTrgovinaNaziv().toLowerCase()) ||
+            containsAllOfTheseWords(keyWords, t.getTrgovinaKategorija().toLowerCase()) ||
+            containsAllOfTheseWords(keyWords, t.getTrgovinaOpis().toLowerCase())
         ).map(t -> mapToDTO(t, new TrgovinaDTO())).toList();
     }
 

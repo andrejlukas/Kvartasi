@@ -47,6 +47,16 @@ public class PonudaResource {
         return ResponseEntity.ok(ponudaService.get(ponudaId));
     }
 
+    @GetMapping("/valid/{trgovinaId}")
+    public ResponseEntity<List<PonudaDTO>> getTrgovinasValidPonudas(@PathVariable(name = "trgovinaId") final Integer trgovinaId) {
+        return ResponseEntity.ok(ponudaService.findAllTrgovinaValidPonudas(trgovinaId));
+    }
+
+    @GetMapping("/invalid/{trgovinaId}")
+    public ResponseEntity<List<PonudaDTO>> getTrgovinasNonValidPonudas(@PathVariable(name = "trgovinaId") final Integer trgovinaId) {
+        return ResponseEntity.ok(ponudaService.findAllTrgovinaNonValidPonudas(trgovinaId));
+    }
+
     @PostMapping
     public ResponseEntity<Integer> createPonuda(@RequestBody @Valid final PonudaDTO ponudaDTO) {
         final Integer createdPonudaId = ponudaService.create(ponudaDTO);

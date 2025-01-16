@@ -99,6 +99,8 @@
   justify-content: space-between;
 }
 
+#replyOver { background-color: grey;}
+
 @media (max-width: 868px) {
   .dogadaji-section {
     width: 100%;

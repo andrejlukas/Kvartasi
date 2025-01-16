@@ -13,7 +13,8 @@ export function ShopDogadaji() {
       dogadajId: "placeholder",
       dogadajNaziv: "",
       dogadajOpis: "",
-      dogadajVrijeme: "",
+      dogadajPocetak: "",
+      dogadajKraj: "",
       dogadajSlika: "",
       trgovina: -1,
    });
@@ -131,7 +132,8 @@ export function ShopDogadaji() {
          dogadajId: "placeholder",
          dogadajNaziv: "",
          dogadajOpis: "",
-         dogadajVrijeme: "",
+         dogadajPocetak: "",
+         dogadajKraj: "",
          dogadajSlika: "",
          trgovina: -1,
       });
@@ -255,7 +257,7 @@ export function ShopDogadaji() {
                               <div className="card-body-alt">
                                  <h5 className="card-title-alt">{dogadaj.dogadajNaziv}</h5>
                                  <p className="card-text-alt">{dogadaj.dogadajOpis}</p>
-                                 <p className="date-alt">Datum i vrijeme: {dogadaj.dogadajVrijeme}</p>
+                                 <p className="date-alt">Datum i vrijeme: {dogadaj.dogadajPocetak + " - " + dogadaj.dogadajKraj}</p>
                                  <div id="bottomPairDogadaj">
                                     <button className="add-to-cart-btn-alt" onClick={() => {
                                        setDogadajData(dogadaj);
@@ -291,10 +293,18 @@ export function ShopDogadaji() {
             />
             <input
                type="text"
-               placeholder="Vrijeme događaja (DD.MM.GGGG SS:mm)"
+               placeholder="Vrijeme početka događaja (DD.MM.GGGG SS:mm)"
                className="dogadaj-inputs"
-               name="dogadajVrijeme"
-               value={dogadajData.dogadajVrijeme}
+               name="dogadajPocetak"
+               value={dogadajData.dogadajPocetak}
+               onChange={handleDogadajChange}
+            />
+            <input
+               type="text"
+               placeholder="Vrijeme kraja događaja (DD.MM.GGGG SS:mm)"
+               className="dogadaj-inputs"
+               name="dogadajKraj"
+               value={dogadajData.dogadajKraj}
                onChange={handleDogadajChange}
             />
             <input

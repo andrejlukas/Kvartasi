@@ -16,6 +16,10 @@ import { Shop } from './pages/user/Shop';
 import { MojiPodaci } from './pages/user/MojiPodaci';
 import { MojiRacuni } from './pages/user/MojiRacuni';
 import { MojeRecenzije } from './pages/user/MojeRecenzije';
+import { MojePonudeiPromocije } from './pages/user/MojePonudeiPromocije';
+import { Kosarica } from './pages/user/Kosarica';
+
+
 import { Proizvod } from './pages/user/Proizvod';
 
 import { ShopHome } from './pages/shop/Home';
@@ -166,6 +170,16 @@ function App() {
         <Route path='/mojerecenzije' element={
           <SecuredUserRoute>
             <MojeRecenzije />
+          </SecuredUserRoute>
+        } />
+        <Route path='/mojeponudeipromocije' element={
+          <SecuredUserRoute>
+            <MojePonudeiPromocije />
+          </SecuredUserRoute>
+        } />
+        <Route path='/kosarica' element={
+          <SecuredUserRoute>
+            <Kosarica />
           </SecuredUserRoute>
         } />
         <Route path='/home/proizvod/:proizvodId' element={

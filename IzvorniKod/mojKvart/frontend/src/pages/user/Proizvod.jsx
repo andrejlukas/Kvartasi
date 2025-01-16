@@ -9,18 +9,75 @@ export function Proizvod() {
   const [srednjaOcjena, setSrednjaOcjena] = useState(null);
   const [error, setError] = useState(null);
   const [kolicina, setKolicina] = useState(1);
+  const [trgovinaNames, setTrgovinaNames] = useState({});
+  const [email, setEmail] = useState("");
+  const [kupacId, setKupacId] = useState(null);
+  const [userOcjena, setUserOcjena] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
 
   const povecajKolicinu = () => {
     setKolicina(kolicina + 1);
   };
 
-
   const smanjiKolicinu = () => {
     if (kolicina > 1) {
-      setKolicina(kolicina - 1); 
+      setKolicina(kolicina - 1);
     }
   };
-  
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const options = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ oneLiner: token }),
+    };
+
+    fetch("/api/tokens/claims", options)
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(text);
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setEmail(data.email);
+      })
+      .catch((error) => setError(error.message));
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const options = {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    if (email) {
+      fetch(`/api/kupacs/${email}`, options)
+        .then((response) => {
+          if (!response.ok) {
+            return response.text().then((text) => {
+              throw new Error(text);
+            });
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setKupacId(data.kupacId);
+        })
+        .catch((error) => setError(error.message));
+    }
+  }, [email]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -37,7 +94,6 @@ export function Proizvod() {
       },
     };
 
-    // Dohvaćanje podataka o proizvodu
     fetch(`/api/proizvods/${proizvodId}`, options)
       .then((response) => {
         if (!response.ok) {
@@ -49,134 +105,251 @@ export function Proizvod() {
       })
       .then((data) => {
         setProizvod(data);
+        if (data.trgovina) {
+          fetchTrgovinaName(data.trgovina, token);
+        } else {
+          setError("Store ID is undefined or invalid.");
+        }
       })
-      .catch((err) => {
-        setError(err.message);
-      });
+      .catch((err) => setError(err.message));
 
-      fetch(`/api/ocjenaProizvodKupacs/ocjena/${proizvodId}`, options)
+    fetch(`/api/ocjenaProizvodKupacs/ocjena/${proizvodId}`, options)
       .then((response) => {
-        console.log("Ocjena API odgovor:", response);  
-
         if (!response.ok) {
           return response.text().then((text) => {
-            throw new Error(`Greška pri dohvaćanju ocjene: ${response.status} - ${text}`);
+            throw new Error(
+              `Greška pri dohvaćanju ocjene: ${response.status} - ${text}`
+            );
           });
         }
-
-        return response.json();  
+        return response.json();
       })
       .then((data) => {
-        console.log("Dohvaćena ocjena:", data);  
-        if (data) {
-          setSrednjaOcjena(data);
-        }
+        setSrednjaOcjena(data);
       })
-      .catch((err) => {
-        console.error("Greška u dohvaćanju ocjene:", err);  
-        setSrednjaOcjena(null);  
+      .catch(() => {
+        setSrednjaOcjena(null);
       });
-
-
-      
   }, [proizvodId]);
 
+  const fetchTrgovinaName = async (trgovina, token) => {
+    try {
+      const options3 = {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      };
+      const response = await fetch(`/api/trgovinas/getById/${trgovina}`, options3);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch store with id ${trgovina}`);
+      }
+      const name = await response.json();
+      setTrgovinaNames((prevNames) => ({
+        ...prevNames,
+        [trgovina]: name.trgovinaNaziv,
+      }));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+
+
+  const submitRating = async () => {
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      setError("Nedostaje token za autentifikaciju. Prijavite se ponovo.");
+      return;
+    }
+  
+    if (!kupacId) {
+      setError("Kupac ID nije pronađen. Molimo pokušajte ponovo.");
+      return;
+    }
+  
+    if (!userOcjena) {
+      setError("Molimo odaberite ocjenu prije slanja.");
+      return;
+    }
+  
+    setIsSubmitting(true);
+  
+    // Generiramo jedinstveni ID ocjene
+    const idOcjene = Date.now();
+  
+    // Pripremamo payload
+    const payload = {
+      id: idOcjene,
+      proizvodId,
+      kupacId,
+      ocjena: userOcjena,
+    };
+  
+    try {
+      // Validacija tokena prije slanja zahtjeva (možete dodati endpoint za validaciju na serveru)
+      const validateTokenResponse = await fetch("/api/tokens/validate", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+  
+      if (!validateTokenResponse.ok) {
+        const errorText = await validateTokenResponse.text();
+        throw new Error(`Token nije valjan: ${errorText}`);
+      }
+  
+      // Ako je token validan, nastavljamo sa slanjem ocjene
+      const response = await fetch(`/api/ocjenaProizvodKupacs`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Greška pri slanju ocjene: ${response.status} - ${errorText}`);
+      }
+  
+      // Uspješna akcija
+      setIsSubmitting(false);
+      alert(`Vaša ocjena je uspješno zabilježena! ID ocjene: ${idOcjene}`);
+      setUserOcjena(null); // Resetiramo ocjenu
+    } catch (error) {
+      // Obrada greške
+      setIsSubmitting(false);
+      setError(error.message);
+    }
+  };
+  
   const renderStars = (srednjaOcjena) => {
     if (srednjaOcjena === null) {
-        return (
-          <div className="stars">
-            <span className="star empty">☆</span>
-            <span className="star empty">☆</span>
-            <span className="star empty">☆</span>
-            <span className="star empty">☆</span>
-            <span className="star empty">☆</span>
-          </div>
-        );
-      }
-
-    if (typeof srednjaOcjena !== "number" || isNaN(srednjaOcjena)) {
-      return <span>Ocjena nije dostupna</span>;
+      return (
+        <div className="stars">
+          {[...Array(5)].map((_, i) => (
+            <span key={i} className="star empty">
+              ☆
+            </span>
+          ))}
+        </div>
+      );
     }
-  
+
     const totalStars = 5;
-    const fullStars = Math.floor(srednjaOcjena);  
-    const halfStars = srednjaOcjena % 1 >= 0.5 ? 1 : 0;  
-    const emptyStars = totalStars - fullStars - halfStars;  
-  
-    let stars = [];
+    const fullStars = Math.floor(srednjaOcjena);
+    const halfStars = srednjaOcjena % 1 >= 0.5 ? 1 : 0;
+    const emptyStars = totalStars - fullStars - halfStars;
 
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<span key={`full-${i}`} className="star full">★</span>);
-    }
-    for (let i = 0; i < halfStars; i++) {
-      stars.push(<span key={`half-${i}`} className="star half">★</span>);
-    }
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(<span key={`empty-${i}`} className="star empty">★</span>);
-    }
-      return <div className="stars">{stars}</div>;
+    return (
+      <div className="stars">
+        {[...Array(fullStars)].map((_, i) => (
+          <span key={`full-${i}`} className="star full">
+            ★
+          </span>
+        ))}
+        {[...Array(halfStars)].map((_, i) => (
+          <span key={`half-${i}`} className="star half">
+            ★
+          </span>
+        ))}
+        {[...Array(emptyStars)].map((_, i) => (
+          <span key={`empty-${i}`} className="star empty">
+            ☆
+          </span>
+        ))}
+      </div>
+    );
   };
 
   return (
-      <div id="prozorProizvod">
-        <Navbar />
-        <div id="prozorOut">
-          <div id="infor">
-            {error ? (
-              <p style={{ color: "red" }}>{error}</p>
-            ) : !proizvod ? (
-              <p>Učitavanje podataka o proizvodu...</p>
-            ) : (
-              <div id="slika">
-                <div id="slikica">
+    <div id="prozorProizvod">
+      <Navbar />
+      <div id="prozorOut">
+        <div id="infor">
+          {error ? (
+            <p style={{ color: "red" }}>{error}</p>
+          ) : !proizvod ? (
+            <p>Učitavanje podataka o proizvodu...</p>
+          ) : (
+            <div id="slika">
+              <div id="slikica">
                 <img
                   src={proizvod.proizvodSlika}
                   alt={proizvod.proizvodNaziv}
                   className="card-img-top-alt"
                 />
+              </div>
+              <div id="pojedinosti">
+                <h2 id="nas">{proizvod.proizvodNaziv}</h2>
+                <p id="trg">{trgovinaNames[proizvod.trgovina]} </p>
+                <p id="kat">
+                  <span id="kats">Kategorija:</span> {proizvod.proizvodKategorija}
+                </p>
+                <p id="op">{proizvod.proizvodOpis} </p>
+                <div>
+                  {srednjaOcjena !== null ? (
+                    <>
+                      <div className="stars">
+                        {renderStars(srednjaOcjena)}{" "}
+                        <span id="un"> {srednjaOcjena.toFixed(2)} </span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="stars">{renderStars(null)}</div>
+                      <span>Proizvod još nije ocijenjen.</span>
+                    </>
+                  )}
                 </div>
-                <div id="pojedinosti"> 
-                  <h2 id="nas">{proizvod.proizvodNaziv}</h2>
-                  <p id = "trg">{proizvod.trgovina} </p>
-                  <p id = "kat"><span id="kats">Kategorija:</span> {proizvod.proizvodKategorija}</p>
-                  <p id = "op">{proizvod.proizvodOpis}</p>
-                  <div>
-                    {srednjaOcjena !== null ? (
-                        <>
-                        <div className="stars">
-                            {renderStars(srednjaOcjena)}  <span id="un"> {srednjaOcjena.toFixed(2)} </span>
-                        </div>
-                        
-                        </>
-                    ) : (
-                        <>
-                        <div className="stars">
-                            {renderStars(null)} 
-                        </div>
-                        <span>Proizvod još nije ocijenjen.</span>
-                        </>
-                    )}
-                    </div>
-                    <div id="gumbici">
-                    <div id="cij">
-                     {proizvod.proizvodCijena} €/kom
-                    </div>
-                    <div id="par">
-                        <div id="kolicinaa">
-                        <button id="minus" onClick={smanjiKolicinu}>-</button>
-                        <span id="broj-komada">{kolicina}</span> 
-                        <button id="plus" onClick={povecajKolicinu}>+</button>
-                        </div>
-                        <div>
-                        <button id="dodaj-kosaricu">Dodaj u košaricu</button>
-                        </div>
-                    </div>
-                    </div>
-                    </div>
+                <div>
+                  <p>Ocijenite proizvod:</p>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      className={`star-button ${userOcjena === star ? "selected" : ""}`}
+                      onClick={() => setUserOcjena(star)}
+                    >
+                      {star} ★
+                    </button>
+                  ))}
                 </div>
-            )}
-          </div>
+                <button
+                  id="submit-rating"
+                  onClick={submitRating}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Slanje..." : "Pošalji ocjenu"}
+                </button>
+                <div id="gumbici">
+                  <div id="cij">{proizvod.proizvodCijena} €/kom</div>
+                  <div id="par">
+                    <div id="kolicinaa">
+                      <button id="minus" onClick={smanjiKolicinu}>
+                        -
+                      </button>
+                      <span id="broj-komada">{kolicina}</span>
+                      <button id="plus" onClick={povecajKolicinu}>
+                        +
+                      </button>
+                    </div>
+                    <div>
+                      <button id="dodaj-kosaricu">Dodaj u košaricu</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
+    </div>
   );
 }

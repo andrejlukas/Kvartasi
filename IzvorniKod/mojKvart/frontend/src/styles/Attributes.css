@@ -13,7 +13,7 @@
     border: 1px solid #ccc;
     font-size: 16px;
     transition: background-color 0.3s ease;
-    width: 70%;
+    width: 60%;
 }
 
 #addAttributesController input[type="text"]:focus {
@@ -47,9 +47,15 @@
     font-weight: 500;
     color: rgba(50, 49, 49, 0.7);
     margin-bottom: 10px;
+    width: 80%;
+    justify-self: center;
 }
 
 .atributsList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
     background: #ffffff;
     border-radius: 20px;
     padding: 20px;
@@ -96,6 +102,8 @@
     justify-self: center;
 }
 
+#errorPopup{ justify-self: center;}
+
 
 @media (max-width: 768px) {
     #addAttributesController {
@@ -107,19 +115,11 @@
         width: 90%;
     }
 
-    #addAttributesController button {
-        width: 80%;
-    }
-
     .atributsList {
         padding: 15px;
     }
 
     .atributsList label {
         font-size: 16px;
-    }
-
-    .atributsList button, #updateAtributs {
-        width: 80%;
     }
 }

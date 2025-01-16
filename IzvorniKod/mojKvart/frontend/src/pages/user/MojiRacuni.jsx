@@ -9,7 +9,7 @@ export function MojiRacuni() {
     
     const [racuni,setRacuni] = useState({})
     const [ostavljanjeRec,setOstavljanjeRec] = useState(false)
-    const [trgovine,setTrgovine] = []
+    const [trgovine,setTrgovine] = useState([])
 
     //recenzija
     const [tekstRec,setTekstRec] = useState("")
@@ -215,7 +215,9 @@ export function MojiRacuni() {
                                             <div key={key} className="racun-element">
                 
                                                 
-                                                    <button className="idracun-button"onClick={() => prikazracuna(key)}>Račun: {key} </button>
+                                                    <button className="idracun-button"onClick={() => prikazracuna(key)}>Račun :  {key} : {
+                                                        racuni[key][0].trgovinaNaziv
+                                                        } </button>
                                                 {openedRacuni.includes(key) && <div className="ispisRacuna">
 
                                                     <button className="racun-ostavi-recenziju-gumb" onClick={() => ostaviRecenziju()} >Ostavi recenziju!</button>
@@ -225,7 +227,6 @@ export function MojiRacuni() {
                                                         <p>Cijena</p>
                                                         <p>Kolicina</p>
                                                         <p>Ukupna cijena:</p>
-                                                        <p>Trgovina</p>
                 
                                                     </div >
                                                     
@@ -240,7 +241,6 @@ export function MojiRacuni() {
                                                                 <p>{proizvod.proizvodCijena}</p>
                                                                 <p>{proizvod.proizvodKolicina}</p>
                                                                 <p>{proizvod.proizvodKolicina * proizvod.proizvodCijena}</p>
-                                                                <p>{proizvod.trgovinaNaziv}</p>
                                                                 
                                                             </div>
                                                             
