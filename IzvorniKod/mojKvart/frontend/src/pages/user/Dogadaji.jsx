@@ -11,6 +11,9 @@ export function Dogadaji() {
    const [dogadaji, setDogadaji] = useState([]);
    const [trgovinaNames, setTrgovinaNames] = useState({});
    const [error, setError] = useState(null);
+   const [chosenEvent, setChosenEvent] = useState(null);
+   const [popupPhase, setPopupPhase] = useState("1");
+   const [calendarLink, setCalendarLink] = useState(null);
    
    const CLIENT_ID = import.meta.env.VITE_GOOGLE_CALENDAR_CLIENT_ID;
    const API_KEY = import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY;
@@ -169,8 +172,8 @@ export function Dogadaji() {
         document.getElementById('content').innerText = err.message;
         return;
       }
-      console.log(response);
-      document.getElementById('content').innerText = response.result.htmlLink;
+      setCalendarLink(response.result.htmlLink);
+      setPopupPhase("3");
    }
 
    const parseStringToISOString = (dateString) => {
@@ -179,6 +182,11 @@ export function Dogadaji() {
       const [hours, minutes] = timePart.split(":").map(Number);
       const date = new Date(year, month - 1, day, hours, minutes);
       return date.toISOString();
+   };
+
+   const comingToEventCheck = (dogadaj) => {
+      setChosenEvent(dogadaj);
+      document.getElementById("confirmDogadaj").style.display = "flex";
    };
 
    const comingToEvent = (dogadaj) => {
@@ -217,6 +225,7 @@ export function Dogadaji() {
             return response.json();
          })
          .then(resp => {
+            setPopupPhase("2");
             if (gapiInited && gisInited) {
                tokenClient.callback = async (resp) => {
                   if (resp.error !== undefined) throw resp;
@@ -266,7 +275,7 @@ export function Dogadaji() {
                                        <div className="items-dogadaji">
                                           <div className="card-text">{trgovinaNames[dog.trgovina]}</div>
                                           {kupacAtending.indexOf(dog.dogadajId) === -1 ?
-                                             (<button className="confirm-button" onClick={() => comingToEvent(dog)}>Potvrdi dolazak</button>) :
+                                             (<button className="confirm-button" onClick={() => comingToEventCheck(dog)}>Potvrdi dolazak</button>) :
                                              (<button className="confirm-button" id="replyOver">Dolazim!</button>)
                                           }
                                        </div>
@@ -288,7 +297,29 @@ export function Dogadaji() {
             )}
          </div>
 
-         
+         <div id="confirmDogadaj" className="filterPopovers">
+            {popupPhase === "1" && <p>Želite li potvrditi dolazak na događaj</p>}
+            {popupPhase === "1" && chosenEvent && <p>"{chosenEvent.dogadajNaziv}"?</p>}
+            {popupPhase === "1" && 
+               <div className="YesNoButtons">
+                  <button onClick={() => comingToEvent(chosenEvent)}>Da</button>
+                  <button onClick={() => document.getElementById("confirmDogadaj").style.display = "none"}>Ne</button>
+               </div>}
+
+            {popupPhase === "2" && <p>Vaš dolazak je evidentiran.</p>}
+            {popupPhase === "2" && <p>Možete dodati ovaj događaj u Google kalendar.</p>}
+            {popupPhase === "2" && 
+               <div className="YesNoButtons">
+                  <button onClick={() => window.location.reload()}>Zatvori</button>
+               </div>}
+            
+            {popupPhase === "3" && <p>Događaj je dodan u Google kalendar.</p>}
+            {popupPhase === "3" && calendarLink && <a href={calendarLink}>Vaš Google kalendar</a>}
+            {popupPhase === "3" && 
+               <div className="YesNoButtons">
+                  <button onClick={() => window.location.reload()}>Zatvori</button>
+               </div>}
+         </div>
       </div>
    );
 }

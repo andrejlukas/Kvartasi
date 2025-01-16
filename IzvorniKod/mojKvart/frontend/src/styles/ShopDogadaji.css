@@ -178,6 +178,8 @@ body {
     background-color: rgba(62, 152, 30);
 }
 
+#confirmDogadaj { display: none;}
+
 #bottomPairDogadaj {
     display: flex;
     flex-direction: row;
