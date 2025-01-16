@@ -23,7 +23,7 @@ public class PonudaDTO {
     private String ponudaOpis;
 
     @NotNull
-    private LocalDateTime ponudaRok;
+    private String ponudaRok;
 
     @NotNull
     private Integer ponudaPopust;

@@ -79,8 +79,10 @@ function App() {
 
     try {
       const expirationResponse = await fetch('/api/tokens/expiration', options);
-      if (!expirationResponse.ok) throw new Error('Token expired');
-
+      if (!expirationResponse.ok) {
+        window.location.reload();
+        throw new Error('Token expired');
+      }
       const claimsResponse = await fetch('/api/tokens/claims', options);
       if (!claimsResponse.ok) throw new Error('Failed to fetch claims');
       const claims = await claimsResponse.json();

@@ -27,7 +27,7 @@ public class PopustDTO {
     private String popustOpis;
 
     @NotNull
-    private LocalDateTime popustRok;
+    private String popustRok;
 
     @NotNull
     private Integer ponudaPopust;

@@ -41,6 +41,19 @@ public class PopustService {
         this.kupacPonudaPopustRepository = kupacPonudaPopustRepository;
     }
 
+    private static String reformat(int number) {
+        if(number < 10) return "0" + number;
+        return String.valueOf(number);
+    }
+    public static String setVrijeme(LocalDateTime date) {
+        return String.format("%s.%s.%d. %s:%s",
+                reformat(date.getDayOfMonth()),
+                reformat(date.getMonthValue()),
+                date.getYear(),
+                reformat(date.getHour()),
+                reformat(date.getMinute()));
+    }
+
     // prikazi sve popuste koje je moderator odobrio i kupac nije jos spremio
     public List<PopustDTO> findAllWithFlagTrue(Integer kupacId) {
         final List<Popust> popusts = popustRepository.findAll(Sort.by("popustId"));
@@ -129,7 +142,7 @@ public class PopustService {
         popustDTO.setPopustQrkod(popust.getPopustQrkod());
         popustDTO.setPopustNaziv(popust.getPopustNaziv());
         popustDTO.setPopustOpis(popust.getPopustOpis());
-        popustDTO.setPopustRok(popust.getPopustRok());
+        popustDTO.setPopustRok(setVrijeme(popust.getPopustRok()));
         popustDTO.setPonudaPopust(popust.getPonudaPopust() == null ? null : popust.getPonudaPopust().getPonudaPopustId());
         PonudaPopust ponudaPopust2 = popust.getPonudaPopust();
         Trgovina trgovina2 = trgovinaRepository.findById(ponudaPopust2.getTrgovina().
@@ -143,7 +156,7 @@ public class PopustService {
         popust.setPopustQrkod(popustDTO.getPopustQrkod());
         popust.setPopustNaziv(popustDTO.getPopustNaziv());
         popust.setPopustOpis(popustDTO.getPopustOpis());
-        popust.setPopustRok(popustDTO.getPopustRok());
+        popust.setPopustRok(DogadajService.getVrijeme(popustDTO.getPopustRok()));
         final PonudaPopust ponudaPopust = popustDTO.getPonudaPopust() == null ? null : ponudaPopustRepository.findById(popustDTO.getPonudaPopust())
                 .orElseThrow(() -> new NotFoundException("ponudaPopust not found"));
         popust.setPonudaPopust(ponudaPopust);

@@ -32,10 +32,10 @@ public class ModeratorResource {
         return ResponseEntity.ok(moderatorService.findAll());
     }
 
-    @GetMapping("/{moderatorId}")
+    @GetMapping("/{moderatorEmail}")
     public ResponseEntity<ModeratorDTO> getModerator(
-            @PathVariable(name = "moderatorId") final Integer moderatorId) {
-        return ResponseEntity.ok(moderatorService.get(moderatorId));
+            @PathVariable(name = "moderatorEmail") final String moderatorEmail) {
+        return ResponseEntity.ok(moderatorService.findByModeratorEmail(moderatorEmail).get());
     }
 
     //UC5, koristite api/moderators i pošaljite JSON objekt za kreiranje novog moderatora
