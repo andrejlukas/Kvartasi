@@ -24,9 +24,22 @@ body {
   font-size: 30px;
 }
 
+
+
+#atributs{
+  margin-top: 20px;
+}
+
 .divider {
   height: 1px;
   background-color: #ddd;
+}
+
+#dividerr{
+  height: 2px;
+  background-color: #ddd;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 #opis{

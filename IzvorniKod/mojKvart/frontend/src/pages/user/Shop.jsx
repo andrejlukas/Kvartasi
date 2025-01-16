@@ -1,29 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Navbar } from '../../components/Navbar';
+import { Navbar } from "../../components/Navbar";
 import "../../styles/Shop.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export function Shop() {
   const { email } = useParams();
   const [shop, setShop] = useState(null);
-  const [products, setProducts] = useState([]); 
+  const [products, setProducts] = useState([]);
+  const [attributes, setAttributes] = useState([]); // Novo stanje za atribute
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const options = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    }
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
     if (email) {
       fetch(`/api/trgovinas/${email}`, options)
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Neuspjesno dohvacanje trgovine.");
+            throw new Error("Neuspješno dohvatanje trgovine.");
           }
           return response.json();
         })
@@ -37,25 +38,44 @@ export function Shop() {
   }, [email]);
 
   useEffect(() => {
-    if(shop) {
-      const token = localStorage.getItem('token');
+    if (shop) {
+      const token = localStorage.getItem("token");
       const options = {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      };
 
       fetch(`/api/proizvods/approved/${shop.trgovinaId}`, options)
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Neuspjesno dohvacanje proizvoda.");
+            throw new Error("Neuspješno dohvatanje proizvoda.");
           }
           return response.json();
         })
         .then((data) => {
           setProducts(data);
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+
+      // Dohvati atribute trgovine
+      fetch(`/api/atributs`, options)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Neuspješno dohvatanje atributa.");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Filtriraj atribute za trenutnu trgovinu
+          const trgovinaAtributi = data.filter((atribut) =>
+            shop.imaAtributeAtributs.includes(atribut.atributId)
+          );
+          setAttributes(trgovinaAtributi);
         })
         .catch((error) => {
           setError(error.message);
@@ -75,25 +95,49 @@ export function Shop() {
           ) : (
             <div className="shop-product-row">
               <div id="shops" className="shop-info">
-                <img 
-                  src={shop.trgovinaSlika} 
-                  alt={shop.trgovinaNaziv} 
+                <img
+                  src={shop.trgovinaSlika}
+                  alt={shop.trgovinaNaziv}
                   className="img-fluid mb-3 shop-image"
                 />
                 <div id="pomoc">
-                <h2 id="nazivTrgovine">{shop.trgovinaNaziv || "N/A"}</h2>
-                <p id="opis"><strong></strong> {shop.trgovinaOpis || "Nije dostupan"}</p>
+                  <h2 id="nazivTrgovine">{shop.trgovinaNaziv || "N/A"}</h2>
+                  <p id="opis">
+                    <strong></strong> {shop.trgovinaOpis || "Nije dostupan"}
+                  </p>
                 </div>
                 <div className="divider"></div>
 
-                <p><strong>Adresa:</strong> {shop.trgovinaLokacija || "Nije specifirano"}</p>
-                <p><strong>Radno vrijeme: </strong> 
-                  {shop.trgovinaRadnoVrijemeOd && shop.trgovinaRadnoVrijemeDo 
+                <p>
+                  <strong>Adresa:</strong> {shop.trgovinaLokacija || "Nije specifirano"}
+                </p>
+                <p>
+                  <strong>Radno vrijeme: </strong>
+                  {shop.trgovinaRadnoVrijemeOd && shop.trgovinaRadnoVrijemeDo
                     ? `${shop.trgovinaRadnoVrijemeOd} - ${shop.trgovinaRadnoVrijemeDo}`
                     : "Nije specifirano"}
                 </p>
-                <p><strong>Kategorija: </strong> {shop.trgovinaKategorija || "Nije specifirano"}</p>
-                <p><strong>Email: </strong> {shop.trgovinaEmail || "Nije dostupan"}</p>
+                <p>
+                  <strong>Kategorija: </strong> {shop.trgovinaKategorija || "Nije specifirano"}
+                </p>
+                <p>
+                  <strong>Email: </strong> {shop.trgovinaEmail || "Nije dostupan"}
+                </p>
+
+                <div id="atributs">
+                {attributes.length > 0 && (
+                  <>
+                    <div id="dividerr"></div>
+                    <ul className="no-bullets">
+                      {attributes.map((atribut) => (
+                        <li key={atribut.atributId}>
+                          <strong>{atribut.atributNaziv}</strong> {atribut.atributOpis}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
               </div>
 
               <div id="products" className="product-section">
@@ -102,10 +146,10 @@ export function Shop() {
                     products.map((product) => (
                       <div key={product.proizvodId} className="col-md-6 mb-3">
                         <div className="card product-card">
-                          <img 
-                            src={product.proizvodSlika} 
-                            className="card-img-top" 
-                            alt={product.proizvod_naziv} 
+                          <img
+                            src={product.proizvodSlika}
+                            className="card-img-top"
+                            alt={product.proizvod_naziv}
                           />
                           <div className="card-body">
                             <h5 className="card-title">{product.proizvodNaziv}</h5>
