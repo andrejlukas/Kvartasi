@@ -25,9 +25,10 @@ export function PonudeiPromocije() {
       }
 
       fetch('/api/tokens/claims', options)
-          .then(response => {
+          .then(async response => {
               if (!response.ok) {
-                  return response.text().then(text => {throw new Error(text)});
+                  const text = await response.text();
+                 throw new Error(text);
               }
               return response.json();
           })
@@ -49,10 +50,11 @@ export function PonudeiPromocije() {
 
    if (email) {
       fetch(`/api/kupacs/${email}`, options)
-            .then(response => {
+            .then(async response => {
                
                if (!response.ok) {
-                  return response.text().then(text => {throw new Error(text)});
+                  const text = await response.text();
+                  throw new Error(text);
                }
                return response.json();
             })

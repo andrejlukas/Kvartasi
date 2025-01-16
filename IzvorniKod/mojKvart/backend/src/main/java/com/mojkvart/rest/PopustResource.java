@@ -1,6 +1,5 @@
 package com.mojkvart.rest;
 
-import com.mojkvart.model.PonudaDTO;
 import com.mojkvart.model.PopustDTO;
 import com.mojkvart.service.PopustService;
 import jakarta.validation.Valid;
@@ -45,6 +44,16 @@ public class PopustResource {
     public ResponseEntity<PopustDTO> getPopust(
             @PathVariable(name = "popustId") final Integer popustId) {
         return ResponseEntity.ok(popustService.get(popustId));
+    }
+
+    @GetMapping("/valid/{trgovinaId}")
+    public ResponseEntity<List<PopustDTO>> getTrgovinasValidPopusts(@PathVariable(name = "trgovinaId") final Integer trgovinaId) {
+        return ResponseEntity.ok(popustService.findAllTrgovinaValidPopusts(trgovinaId));
+    }
+
+    @GetMapping("/invalid/{trgovinaId}")
+    public ResponseEntity<List<PopustDTO>> getTrgovinasNonValidPopusts(@PathVariable(name = "trgovinaId") final Integer trgovinaId) {
+        return ResponseEntity.ok(popustService.findAllTrgovinaNonValidPopusts(trgovinaId));
     }
 
     @PostMapping

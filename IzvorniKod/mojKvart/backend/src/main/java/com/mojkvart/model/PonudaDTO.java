@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -19,6 +21,9 @@ public class PonudaDTO {
     @NotNull
     @Size(max = 200)
     private String ponudaOpis;
+
+    @NotNull
+    private LocalDateTime ponudaRok;
 
     @NotNull
     private Integer ponudaPopust;

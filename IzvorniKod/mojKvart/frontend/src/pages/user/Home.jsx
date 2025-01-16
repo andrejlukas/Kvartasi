@@ -18,10 +18,11 @@ export function Home() {
         'Content-Type': 'application/json'
       }
     }
-    fetch('/api/proizvods', options)
-      .then((response) => {
+    fetch('/api/proizvods/approved', options)
+      .then(async (response) => {
         if (!response.ok) {
-          return response.text().then(text => {throw new Error(text)});
+          const text = await response.text();
+          throw new Error(text);
         }
         return response.json();
       })
