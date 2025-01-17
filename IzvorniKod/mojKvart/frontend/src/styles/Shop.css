@@ -24,10 +24,26 @@ body {
   font-size: 30px;
 }
 
+a {
+  text-decoration: none; 
+  color: #323131; 
+}
 
+#linkic{
+  margin-bottom: 30px;
+}
+
+a:hover {
+  color: #007BFF; /* Change the color on hover to indicate interactivity */
+  cursor: pointer; /* Change the cursor to a pointer */
+}
 
 #atributs{
   margin-top: 20px;
+}
+
+#mapica{
+  margin-bottom: 30px;
 }
 
 .divider {

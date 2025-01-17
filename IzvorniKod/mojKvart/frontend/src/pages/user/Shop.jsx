@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "../../styles/Shop.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Link } from "react-router-dom";
 
 export function Shop() {
   const { email } = useParams();
@@ -12,6 +13,7 @@ export function Shop() {
   const [products, setProducts] = useState([]);
   const [attributes, setAttributes] = useState([]);
   const [error, setError] = useState(null);
+  const [kupacId, setKupacId] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -130,9 +132,11 @@ export function Shop() {
                 <p>
                   <strong>Email: </strong> {shop.trgovinaEmail || "Nije dostupan"}
                 </p>
+               <p id="linkic"> <strong> <Link to={`/home/popistrgovina/${email}/recenzije`}>Recenzije</Link> </strong> 
+               </p> 
 
                 {coordinates && (
-                  <div className="shop-map">
+                  <div className="shop-map" id="mapica">
                     <MapContainer
                       center={[coordinates.lat, coordinates.lng]}
                       zoom={15}

@@ -18,8 +18,7 @@ import { MojiRacuni } from './pages/user/MojiRacuni';
 import { MojeRecenzije } from './pages/user/MojeRecenzije';
 import { MojePonudeiPromocije } from './pages/user/MojePonudeiPromocije';
 import { Kosarica } from './pages/user/Kosarica';
-
-
+import { Recenzije } from './pages/user/Recenzije';
 import { Proizvod } from './pages/user/Proizvod';
 
 import { ShopHome } from './pages/shop/Home';
@@ -187,6 +186,11 @@ function App() {
         <Route path='/home/proizvod/:proizvodId' element={
           <SecuredUserRoute>
             <Proizvod />
+          </SecuredUserRoute>
+        } />
+        <Route path="/home/popistrgovina/:email/recenzije" element={
+          <SecuredUserRoute>
+            <Recenzije />
           </SecuredUserRoute>
         } />
 
