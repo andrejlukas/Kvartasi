@@ -207,7 +207,30 @@ export function Proizvod() {
 
 
 
-  const submitRating = async () => {
+  const renderInteractiveStars = (currentRating, setRating) => {
+    const totalStars = 5;
+  
+    const handleStarClick = (rating) => {
+      setRating(rating); // Set the selected rating
+    };
+  
+    return (
+      <div>
+        {Array.from({ length: totalStars }, (_, index) => (
+          <span
+            key={index}
+            className={`interactive-stars ${index < currentRating ? "full-review-stars" : "empty-review-stars"}`}
+            onClick={() => handleStarClick(index + 1)} // Set rating on star click
+            style={{ cursor: "pointer", fontSize: "24px", marginRight: "5px" }}
+          >
+            {index < currentRating ? "★" : "☆"}
+          </span>
+        ))}
+      </div>
+    );
+  };
+  
+  const submitRating = async (userRating) => {
     const token = localStorage.getItem("token");
   
     if (!token) {
@@ -220,7 +243,7 @@ export function Proizvod() {
       return;
     }
   
-    if (!userOcjena) {
+    if (!userRating) {
       setError("Molimo odaberite ocjenu prije slanja.");
       return;
     }
@@ -235,11 +258,10 @@ export function Proizvod() {
       id: idOcjene,
       proizvodId,
       kupacId,
-      ocjena: userOcjena,
+      ocjena: userRating,
     };
   
     try {
-      // Validacija tokena prije slanja zahtjeva (možete dodati endpoint za validaciju na serveru)
       const validateTokenResponse = await fetch("/api/tokens/validate", {
         method: "POST",
         headers: {
@@ -254,7 +276,6 @@ export function Proizvod() {
         throw new Error(`Token nije valjan: ${errorText}`);
       }
   
-      // Ako je token validan, nastavljamo sa slanjem ocjene
       const response = await fetch(`/api/ocjenaProizvodKupacs`, {
         method: "POST",
         headers: {
@@ -269,16 +290,13 @@ export function Proizvod() {
         throw new Error(`Greška pri slanju ocjene: ${response.status} - ${errorText}`);
       }
   
-      // Uspješna akcija
       setIsSubmitting(false);
       alert(`Vaša ocjena je uspješno zabilježena! ID ocjene: ${idOcjene}`);
       setUserOcjena(null); // Resetiramo ocjenu
     } catch (error) {
-      // Obrada greške
       setIsSubmitting(false);
       setError(error.message);
-    }
-  };
+    }};
   
   const renderStars = (srednjaOcjena) => {
     if (srednjaOcjena === null) {
@@ -359,25 +377,7 @@ export function Proizvod() {
                     </>
                   )}
                 </div>
-                <div>
-                  <p>Ocijenite proizvod:</p>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      className={`star-button ${userOcjena === star ? "selected" : ""}`}
-                      onClick={() => setUserOcjena(star)}
-                    >
-                      {star} ★
-                    </button>
-                  ))}
-                </div>
-                <button
-                  id="submit-rating"
-                  onClick={submitRating}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Slanje..." : "Pošalji ocjenu"}
-                </button>
+                
                 <div id="gumbici">
                   <div id="cij">{proizvod.proizvodCijena} €/kom</div>
                   <div id="par">
@@ -395,6 +395,18 @@ export function Proizvod() {
                     </div>
                   </div>
                 </div>
+                <div id="ocjen">
+                <p id="ocjj">Ocijenite proizvod:</p>
+                <div id="zvjez">{renderInteractiveStars(userOcjena, setUserOcjena)} {/* Show the stars */}
+                </div>
+                <button 
+                  id="submit-rating"
+                  onClick={() => submitRating(userOcjena)} // Submit the rating when the button is clicked
+                  disabled={isSubmitting || !userOcjena} // Disable the button if submitting or no rating selected
+                >
+                  {isSubmitting ? "Slanje..." : "Pošaljite ocjenu"} {/* Display loading or submit text */}
+                </button>
+              </div>
               </div>
             </div>
           )}

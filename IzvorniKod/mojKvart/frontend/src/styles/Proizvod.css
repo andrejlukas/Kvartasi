@@ -4,18 +4,58 @@
     display: flex;
     align-items: center;
     font-size: 24px;
-    color: #f5a623; 
+    color: gold; 
   }
   
   .star.full {
-    color: #f5a623;
+    color: gold;
   }
   
   .star.half {
-    background: linear-gradient(90deg, #f5a623 50%, #e0e0e0 50%);
+    background: linear-gradient(90deg, gold 50%, #e0e0e0 50%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
+  .interactive-stars {
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  
+  .full-review-stars {
+    color: gold;
+  }
+  
+  .empty-review-stars {
+    color: lightgray;
+  }
+  
+  /* Submit Button */
+  #submit-rating {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    height:45px;
+    border-radius: 7px;
+    padding: 5px 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  
+
+  #ocjj{
+    
+    margin-top: 20px;
+    margin-bottom: 0px;
+  }
+  
+
 
   .star-button {
     background-color: white;
@@ -98,6 +138,15 @@
     color: #323131cc;
   }
   
+ 
+  
+  #ocjj {
+    margin-bottom: 5px; /* Adds space below the text "Ocijenite proizvod" */
+  }
+  
+  #zvjez{
+    margin-bottom: 10px;
+  }
   
   #par {
     display: flex;
@@ -109,6 +158,11 @@
     display: flex;
     align-items: center;
     gap: 10px;
+  }
+
+  #ocjen {
+    margin-top: 30px;
+    gap: 10px; /* Space between stars and button */
   }
   
   button {
