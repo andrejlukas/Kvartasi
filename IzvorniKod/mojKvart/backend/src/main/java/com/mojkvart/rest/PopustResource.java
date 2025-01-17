@@ -66,7 +66,7 @@ public class PopustResource {
             @RequestBody @Valid final PopustDTO popustDTO) {
         if(popustDTO.getPopustNaziv().length() < 2)
             return ResponseEntity.badRequest().body("Naziv popusta treba biti minimalno duljine 2!");
-        if(popustDTO.getPopustOpis().length() < 10)
+        if(popustDTO.getPopustOpis().length() < 2)
             return ResponseEntity.badRequest().body("Opis popusta treba biti minimalno duljine 2!");
         if(popustDTO.getPopustQrkod().length() < 5)
             return ResponseEntity.badRequest().body("QR kod popusta treba biti minimalno duljine 5!");
@@ -78,7 +78,7 @@ public class PopustResource {
             if(e.getMessage().startsWith("Datum")) return ResponseEntity.badRequest().body(e.getMessage());
             return ResponseEntity.badRequest().body("Datum i vrijeme mora biti u formatu \"dd.MM.gggg. ss:mm\"!");
         }
-        return new ResponseEntity<>("Sve ok", HttpStatus.OK);
+        return ResponseEntity.ok("Sve ok!");
     }
 
     @PostMapping
