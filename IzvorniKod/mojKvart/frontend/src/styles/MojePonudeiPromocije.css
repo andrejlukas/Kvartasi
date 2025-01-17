@@ -39,3 +39,13 @@
     color: rgba(50, 49, 49, 0.8);
 }
 
+.moje-ponude-popusti-zatvori-div{
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(177, 224, 160);
+    padding: 40px;
+    color: white;
+}

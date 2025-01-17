@@ -10,85 +10,127 @@ export function Kosarica(){
 
     const [kosarica,setKosarica] = useState({})
 
-    function uvecajKolicinuProizvoda  (proizvodID) {
-
+    function uvecajKolicinuProizvoda(proizvodID) {
         const token = localStorage.getItem("token");
         if (!token) {
-          setError("Nedostaje token za autorizaciju.");
-          return;
+            setError("Nedostaje token za autorizaciju.");
+            return;
         }
-      
-        // Provjerite jesu li potrebne varijable postavljene
+    
+        // Provjera potrebnih varijabli
         if (!id || !proizvodID) {
-          setError("Podaci za kupca, trgovinu ili proizvod nisu dostupni.");
-          console.log(id)
-          console.log(proizvodID)
-    
-          return;
+            setError("Podaci za kupca ili proizvod nisu dostupni.");
+            console.log("ID kupca:", id);
+            console.log("ID proizvoda:", proizvodID);
+            return;
         }
-      
-    
     
         const options = {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
         };
-      
-        
-          fetch(`/api/kupacProizvods/povecaj/${id}/${proizvodID}`, options)
-        .then(response => response.ok && console.log("uspjela smanjit"))
-        .then(updated => {
-          console.log(updated)
-        })
-        .catch(error => {
-            console.error('Error updating data:', error);
-        })
-        window.location.reload();
-
-      
-        
+    
+        // API poziv za povećanje količine
+        fetch(`/api/kupacProizvods/povecaj/${id}/${proizvodID}`, options)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Greška prilikom povećanja količine.");
+                }
+            })
+            .then(() => {
+                // Ponovno dohvaćanje košarice nakon uspješnog ažuriranja
+                const fetchOptions = {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                };
+    
+                fetch(`/api/kupacProizvods/kosarica/${id}`, fetchOptions)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Greška prilikom dohvaćanja košarice.");
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        setKosarica(data); // Ažuriranje košarice u state
+                        console.log("Ažurirana košarica:", data);
+                    })
+                    .catch((error) => {
+                        console.error("Greška prilikom dohvaćanja košarice:", error);
+                        setError(error.message);
+                    });
+            })
+            .catch((error) => {
+                console.error("Greška prilikom povećanja količine:", error);
+            });
     }
+    
     function smanjiKolicinuProizvoda (proizvodID) {
 
         const token = localStorage.getItem("token");
         if (!token) {
-          setError("Nedostaje token za autorizaciju.");
-          return;
+            setError("Nedostaje token za autorizaciju.");
+            return;
         }
-      
-        // Provjerite jesu li potrebne varijable postavljene
+    
+        // Provjera potrebnih varijabli
         if (!id || !proizvodID) {
-          setError("Podaci za kupca, trgovinu ili proizvod nisu dostupni.");
-          console.log(id)
-          console.log(proizvodID)
-    
-          return;
+            setError("Podaci za kupca ili proizvod nisu dostupni.");
+            console.log("ID kupca:", id);
+            console.log("ID proizvoda:", proizvodID);
+            return;
         }
-      
-    
     
         const options = {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
         };
-      
-        
-          fetch(`/api/kupacProizvods/smanji/${id}/${proizvodID}`, options)
-        .then(response => response.ok && console.log("uspjela smanjit"))
-        .then(updated => {
-          console.log(updated)
-        })
-        .catch(error => {
-            console.error('Error updating data:', error);
-        })
-        window.location.reload();
-      
+    
+        // API poziv za povećanje količine
+        fetch(`/api/kupacProizvods/smanji/${id}/${proizvodID}`, options)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Greška prilikom smanjivanja količine.");
+                }
+            })
+            .then(() => {
+                // Ponovno dohvaćanje košarice nakon uspješnog ažuriranja
+                const fetchOptions = {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                };
+    
+                fetch(`/api/kupacProizvods/kosarica/${id}`, fetchOptions)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Greška prilikom dohvaćanja košarice.");
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        setKosarica(data); // Ažuriranje košarice u state
+                        console.log("Ažurirana košarica:", data);
+                    })
+                    .catch((error) => {
+                        console.error("Greška prilikom dohvaćanja košarice:", error);
+                        setError(error.message);
+                    });
+            })
+            .catch((error) => {
+                console.error("Greška prilikom smanjivanja količine:", error);
+            });
         
     }
 
@@ -229,7 +271,10 @@ export function Kosarica(){
                                     <h3>Proizvodi : {proizvodi[0].trgovinaNaziv}</h3>
                                     <div className="kosarica-proizvodi-ispis">
                                         {
-                                            proizvodi.map((proizvod)=>
+                                            proizvodi
+                                            .slice() //kopiram i sortiram
+                                            .sort((a, b) => a.proizvodNaziv.localeCompare(b.proizvodNaziv))
+                                            .map((proizvod)=>
                                             <div className={proizvod.proizvodNaziv}  id="kosarica-proizvod">
                                                 <p>{proizvod.proizvodNaziv}</p>
                                                 <button onClick={() =>smanjiKolicinuProizvoda(proizvod.proizvodId)}>-</button>
@@ -246,7 +291,8 @@ export function Kosarica(){
                                             (sum, proizvod) =>
                                                 sum + proizvod.proizvodKolicina * proizvod.proizvodCijena,
                                             0
-                                        )
+                                            
+                                        ).toFixed(2)
                                         }</p>
                                 </div>
                             )
