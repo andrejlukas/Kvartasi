@@ -45,6 +45,12 @@ public class PopustResource {
         return ResponseEntity.ok(popustService.findAllWithFlagFalse());
     }
 
+    // vraca sve popuste koje je moderator odobrio
+    @GetMapping("/flag-true")
+    public ResponseEntity<List<PopustDTO>> getAllPopustsWithFlagTrue() {
+        return ResponseEntity.ok(popustService.findAllWithFlagTrue());
+    }
+
     @GetMapping("/{popustId}")
     public ResponseEntity<PopustDTO> getPopust(
             @PathVariable(name = "popustId") final Integer popustId) {

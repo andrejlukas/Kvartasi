@@ -73,6 +73,18 @@ public class PonudaService {
                 .toList();
     }
 
+    // vraća sve ponude koje je moderator odobrio, a da nisu istekle
+    public List<PonudaDTO> findAllWithFlagTrue() {
+        final List<Ponuda> ponudas = ponudaRepository.findAll(Sort.by("ponudaId"));
+        return ponudas.stream()
+                .filter(ponuda -> ponuda.getPonudaPopust() != null &&
+                        ponuda.getPonudaPopust().getPonudaPopustFlag() != null &&
+                        ponuda.getPonudaRok().isAfter(LocalDateTime.now()) &&
+                        ponuda.getPonudaPopust().getPonudaPopustFlag() == true)
+                .map(ponuda -> mapToDTO(ponuda, new PonudaDTO()))
+                .toList();
+    }
+
 
     public List<PonudaDTO> findAllTrgovinaValidPonudas(Integer trgovinaId) {
         final List<Ponuda> ponudas = ponudaRepository.findAll(Sort.by("ponudaId"));

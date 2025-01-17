@@ -88,6 +88,18 @@ public class PopustService {
                 .toList();
     }
 
+    // popusti koje je moderator odobrio, a nisu istekli
+    public List<PopustDTO> findAllWithFlagTrue() {
+        final List<Popust> popusti = popustRepository.findAll(Sort.by("popustId"));
+        return popusti.stream()
+                .filter(popust -> popust.getPonudaPopust() != null &&
+                        popust.getPonudaPopust().getPonudaPopustFlag() != null &&
+                        popust.getPonudaPopust().getPonudaPopustFlag() == true &&
+                        popust.getPopustRok().isAfter(LocalDateTime.now()))
+                .map(popust -> mapToDTO(popust, new PopustDTO()))
+                .toList();
+    }
+
 
     public List<PopustDTO> findAllTrgovinaValidPopusts(Integer trgovinaId) {
         final List<Popust> popusti = popustRepository.findAll(Sort.by("popustId"));

@@ -43,6 +43,11 @@ public class PonudaResource {
         return ResponseEntity.ok(ponudaService.findAllWithFlagFalse());
     }
 
+    // vraća sve ponude koje je moderator odobrio
+    @GetMapping("/flag-true")
+    public ResponseEntity<List<PonudaDTO>> getAllWithFlagTrue() {
+        return ResponseEntity.ok(ponudaService.findAllWithFlagTrue());
+    }
 
     @GetMapping("/{ponudaId}")
     public ResponseEntity<PonudaDTO> getPonuda(
