@@ -39,9 +39,14 @@ function App() {
   const [role, setRole] = useState(null);
 
   const checkTokenExpirationAndRole = async () => {
-    const url = window.location.href;
     const token = localStorage.getItem("token");
-    if (!token && url.includes("?token=")) {
+    if (token === null) {
+      setIsAuthorized(false);
+      return;
+    }
+
+    const url = window.location.href;
+    if (url.includes("?token=")) {
       localStorage.setItem('token', url.split("?token=")[1]);
       setIsAuthorized(true);
 
@@ -62,11 +67,6 @@ function App() {
       }
       return;
     } 
-
-    if (!token) {
-      setIsAuthorized(false);
-      return;
-    }
 
     const options = {
       method: 'POST',
