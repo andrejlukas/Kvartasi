@@ -15,12 +15,12 @@ export default defineConfig(({ mode }) => {
     },
     server: {
     port: 3000,
-    //strictPort: true,
-    //host: true,
-    //origin: "http://0.0.0.0:3000",
+    strictPort: true,
+    host: true,
+    origin: "http://0.0.0.0:3000",
       proxy: {
         '/api': {
-          target: env.VITE_BACKEND_URL,
+          target: "https://kvartasialfabackend.onrender.com",
         },
       },
     },
