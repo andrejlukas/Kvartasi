@@ -21,6 +21,9 @@ export default defineConfig(({ mode }) => {
       proxy: {
         '/api': {
           target: "https://kvartasialfabackend.onrender.com",
+          changeOrigin: true,
+          secure: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
     },
