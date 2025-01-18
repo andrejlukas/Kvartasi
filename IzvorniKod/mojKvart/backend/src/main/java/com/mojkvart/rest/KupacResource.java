@@ -74,6 +74,24 @@ public class KupacResource {
         return ResponseEntity.ok(kupacService.findAll());
     }
 
+    // API za dohvacanje svih suspendiranih kupaca
+    @GetMapping("/suspendirani")
+    public List<KupacDTO> getSuspendedCustomers() {
+        return kupacService.getSuspendedCustomers();
+    }
+
+    // API za dohvacanje svih verificiranih kupaca
+    @GetMapping("/verificirani")
+    public List<KupacDTO> getVerifiedCustomers() {
+        return kupacService.getVerifiedCustomers();
+    }
+
+    // API za dohvacanje svih neverificiranih kupaca
+    @GetMapping("/neverificirani")
+    public List<KupacDTO> getUnverifiedCustomers() {
+        return kupacService.getUnverifiedCustomers();
+    }
+
     @GetMapping("/{kupacEmail}")
     public ResponseEntity<KupacDTO> getKupac(@PathVariable(name = "kupacEmail") final String kupacEmail) {
         if(kupacService.findByKupacEmail(kupacEmail).isEmpty())

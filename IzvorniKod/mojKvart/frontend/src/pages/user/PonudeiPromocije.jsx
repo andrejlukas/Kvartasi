@@ -25,9 +25,10 @@ export function PonudeiPromocije() {
       }
 
       fetch('/api/tokens/claims', options)
-          .then(response => {
+          .then(async response => {
               if (!response.ok) {
-                  return response.text().then(text => {throw new Error(text)});
+                  const text = await response.text();
+                 throw new Error(text);
               }
               return response.json();
           })
@@ -49,10 +50,11 @@ export function PonudeiPromocije() {
 
    if (email) {
       fetch(`/api/kupacs/${email}`, options)
-            .then(response => {
+            .then(async response => {
                
                if (!response.ok) {
-                  return response.text().then(text => {throw new Error(text)});
+                  const text = await response.text();
+                  throw new Error(text);
                }
                return response.json();
             })
@@ -74,7 +76,7 @@ export function PonudeiPromocije() {
          },
       };
 
-      setLoading(true); // Set loading to true when starting fetch
+      setLoading(true); 
 
       Promise.all([
       fetch(`/api/popusts/flag-true/${idKupac}`, options)
@@ -134,7 +136,7 @@ export function PonudeiPromocije() {
          <div className="container-popusti">
             { loading ? (
                <p>Loading...</p>
-            ) : (
+            ) : (popusti.length + ponude.length>0 ? (
                <div className="popust-popust-row">
                   <div className="banner">
                      Pronađite najbolje ponude i popuste uz samo par klikova!
@@ -193,8 +195,10 @@ export function PonudeiPromocije() {
                      )}
                      </div>
                      </div>
-               </div>
-            )}
+                  </div>
+               ) : (
+               <p>Nema dostupnih popusta ili proizvoda</p>      
+            ))}
          </div>
       </div>
    );

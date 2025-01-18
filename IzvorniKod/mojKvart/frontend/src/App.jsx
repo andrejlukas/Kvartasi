@@ -18,8 +18,7 @@ import { MojiRacuni } from './pages/user/MojiRacuni';
 import { MojeRecenzije } from './pages/user/MojeRecenzije';
 import { MojePonudeiPromocije } from './pages/user/MojePonudeiPromocije';
 import { Kosarica } from './pages/user/Kosarica';
-
-
+import { Recenzije } from './pages/user/Recenzije';
 import { Proizvod } from './pages/user/Proizvod';
 
 import { ShopHome } from './pages/shop/Home';
@@ -31,11 +30,16 @@ import { ShopMojiPodaci } from './pages/shop/MojiPodaci';
 import { ShopMojeRecenzije } from './pages/shop/MojeRecenzije';
 import { ShopMojiAtributi } from './pages/shop/MojiAtributi';
 
+import { ModeratorHome } from './pages/moderator/Home';
+import { ModeratorPonude } from './pages/moderator/PonudeiPromocije';
+import { ModeratorRecenzije } from './pages/moderator/Recenzije';
+import { ModeratorDogadaji } from './pages/moderator/Dogadaji';
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(null);
   const [role, setRole] = useState(null);
 
   const checkTokenExpirationAndRole = async () => {
+    const token = localStorage.getItem("token");
     const url = window.location.href;
     if (url.includes("?token=")) {
       localStorage.setItem('token', url.split("?token=")[1]);
@@ -59,8 +63,7 @@ function App() {
       return;
     } 
 
-    const token = localStorage.getItem("token");
-    if (!token) {
+    if (token === null) {
       setIsAuthorized(false);
       return;
     }
@@ -75,8 +78,9 @@ function App() {
 
     try {
       const expirationResponse = await fetch('/api/tokens/expiration', options);
-      if (!expirationResponse.ok) throw new Error('Token expired');
-
+      if (!expirationResponse.ok) {
+        throw new Error('Token expired');
+      }
       const claimsResponse = await fetch('/api/tokens/claims', options);
       if (!claimsResponse.ok) throw new Error('Failed to fetch claims');
       const claims = await claimsResponse.json();
@@ -183,6 +187,11 @@ function App() {
             <Proizvod />
           </SecuredUserRoute>
         } />
+        <Route path="/home/popistrgovina/:email/recenzije" element={
+          <SecuredUserRoute>
+            <Recenzije />
+          </SecuredUserRoute>
+        } />
 
 
         <Route path="/trgovina/home" element={
@@ -229,6 +238,32 @@ function App() {
           <SecuredShopRoute>
             <ShopMojiAtributi />
           </SecuredShopRoute>
+        } />
+
+        <Route path="/moderator/home" element={
+          <SecuredModeratorRoute>
+            <ModeratorHome />
+          </SecuredModeratorRoute>
+        } />
+        <Route path="/moderator/home/proizvodi" element={
+          <SecuredModeratorRoute>
+            <ModeratorHome />
+          </SecuredModeratorRoute>
+        } />
+          <Route path="/moderator/home/recenzije" element={
+          <SecuredModeratorRoute>
+            <ModeratorRecenzije />
+          </SecuredModeratorRoute>
+        } />
+          <Route path="/moderator/home/ponude" element={
+          <SecuredModeratorRoute>
+            <ModeratorPonude />
+          </SecuredModeratorRoute>
+        } />
+          <Route path="/moderator/home/dogadaji" element={
+          <SecuredModeratorRoute>
+            <ModeratorDogadaji />
+          </SecuredModeratorRoute>
         } />
 
         <Route path="/" element={<Login />} />

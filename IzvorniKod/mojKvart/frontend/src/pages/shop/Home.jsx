@@ -274,7 +274,7 @@ export function ShopHome() {
         <div>
             <div id="vani2" style={{"minHeight": "100vh"}}>
                 <Navbar />
-                {error && <p>{error}</p>}
+                {/* {error && <p>{error}</p>} */}
                 <div id="products-alt" className="product-section-alt">
                     <div id="productController">
                         <label>

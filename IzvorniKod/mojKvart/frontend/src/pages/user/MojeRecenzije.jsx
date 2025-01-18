@@ -134,35 +134,95 @@ vrijemeKreiranja */
    )
 
 //brisanje recenzije
-function brisanjeRecenzije(poslanId) {
+async function brisanjeRecenzije(poslanId) {
     console.log(`Brisanje recenzije s ID-jem: ${poslanId}`);
+    const  fetchTrgovinaName = async (trgovinaId) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            setError("Nedostaje token za autorizaciju.");
+            return;
+        }
+    
+        const options = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+    
+        try {
+            const response = await fetch(`/api/trgovinas/getById/${trgovinaId}`, options);
+            if (!response.ok) {
+                throw new Error(`Dohvaćanje trgovine nije uspjelo. ID: ${trgovinaId}`);
+            }
+    
+            const trgovinaData = await response.json();
+            console.log(`Dohvaćena trgovina: ${trgovinaData.trgovinaNaziv}`);
+            setTrgovina((prevNames) => ({
+                ...prevNames,
+                [trgovinaId]: trgovinaData.trgovinaNaziv,
+            }));
+        } catch (error) {
+            console.error(`Pogreška prilikom dohvaćanja trgovine (ID: ${trgovinaId}):`, error);
+        }
+    }
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
+    if (!token) {
+        setError("Nedostaje token za autorizaciju.");
+        return;
+    }
+
     const options = {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
     };
 
-    fetch(`api/recenzijas/${poslanId}`, options)
-        .then((response) => {
-            if (response.ok) {
-                console.log(`Recenzija s ID-jem ${poslanId} uspješno obrisana.`);
-                return; // Nema potrebe za `response.json()` kod brisanja
-            } else {
-                return Promise.reject(`Brisanje nije uspjelo. Status: ${response.status}`);
-            }
-        })
-        .catch((error) => {
-            console.error('Pogreška prilikom brisanja recenzije:', error);
-        });
+    try {
+        // Brisanje recenzije
+        const deleteResponse = await fetch(`/api/recenzijas/${poslanId}`, options);
+        if (!deleteResponse.ok) {
+            throw new Error(`Brisanje recenzije nije uspjelo. Status: ${deleteResponse.status}`);
+        }
+        console.log(`Recenzija s ID-jem ${poslanId} uspješno obrisana.`);
 
-    window.location.reload();
-    return;
+        // Dohvaćanje ažuriranih recenzija
+        const recenzijeOptions = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        const recenzijeResponse = await fetch(`/api/recenzijas/kupacs/${id}`, recenzijeOptions);
+        if (!recenzijeResponse.ok) {
+            throw new Error(`Dohvaćanje recenzija nije uspjelo. Status: ${recenzijeResponse.status}`);
+        }
+
+        const recenzijeData = await recenzijeResponse.json();
+        console.log("Ažurirane recenzije:", recenzijeData);
+
+        // Ažuriranje state-a
+        SetRecenzije(recenzijeData);
+
+        // Dohvaćanje imena trgovina za svaku recenziju
+        await Promise.all(
+            recenzijeData.map((recenzija) => fetchTrgovinaName(recenzija.trgovinaId))
+        );
+    } catch (error) {
+        console.error("Pogreška prilikom obrade recenzija:", error);
+        setError(error.message);
+    }
     
 }
+
+
+
 
 
 

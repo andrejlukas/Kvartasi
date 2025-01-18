@@ -47,7 +47,7 @@ public class PonudaPopustResource {
     public ResponseEntity<Integer> createPonudaPopust(
             @RequestBody @Valid final PonudaPopustDTO ponudaPopustDTO) {
         final Integer createdPonudaPopustId = ponudaPopustService.create(ponudaPopustDTO);
-        return new ResponseEntity<>(createdPonudaPopustId, HttpStatus.CREATED);
+        return new ResponseEntity<>(createdPonudaPopustId, HttpStatus.OK);
     }
 
     @PutMapping("/{ponudaPopustId}")

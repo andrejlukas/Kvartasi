@@ -8,32 +8,109 @@ import "../../styles/MojiRacuni.css";
 export function MojiRacuni() {
     
     const [racuni,setRacuni] = useState({})
-    const [ostavljanjeRec,setOstavljanjeRec] = useState(false)
     const [trgovine,setTrgovine] = useState([])
 
     //recenzija
-    const [tekstRec,setTekstRec] = useState("")
-    const [ocjenaRec,setOcjenaRec] = useState(null)
+    const [tekstRec,setTekstRec] = useState([])
+    const [ocjenaRec,setOcjenaRec] = useState([])
     const [trgovinaRec,setTrgovinaRec] = useState("")
+
+    const [racuniInfo,setRacuniInfo] = useState({})
+    const [error,setError] = useState(null)
+
+    const [errorMessage,setErrorMessage] = useState("")
 
     //potrebno za ispis proizvoda u računu
     const [openedRacuni, setOpenedRacuni] = useState([]); // Čuva ID-ove otvorenih računa
+    const [openedRecenzije, setOpenedRecenzije] = useState([]); // Čuva ID-ove računa otvorenih recenzija
+
 
     const prikazracuna = (key) => {
         if (openedRacuni.includes(key)) {
             // Ako je već otvoren, ukloni ga iz niza
             setOpenedRacuni(openedRacuni.filter((id) => id !== key));
+            setOpenedRecenzije(openedRacuni.filter((id) => id !== key));
+            setTekstRec(prevNames => ({ ...prevNames, [key]: "" }))
+            setOcjenaRec(prevNames => ({ ...prevNames, [key]: 1 }))
         } else {
             // Ako nije otvoren, dodaj ga u niz
             setOpenedRacuni([...openedRacuni, key]);
         }
     };
 
-    const ostaviRecenziju = () => {
-        setOstavljanjeRec(true);
+    const ostaviRecenziju = (key) => {
+        if (openedRecenzije.includes(key)) {
+            // Ako je već otvoren, ukloni ga iz niza
+            setOpenedRecenzije(openedRacuni.filter((id) => id !== key));
+            setTekstRec(prevNames => ({ ...prevNames, [key]: "" }))
+            setOcjenaRec(prevNames => ({ ...prevNames, [key]: 1 }))
+            
+        } else {
+            // Ako nije otvoren, dodaj ga u niz
+            setOpenedRecenzije([...openedRacuni, key]);
+        }
     };
 
-    
+    function dodajRec (e,poslaID,racunIdPoslan)
+
+    {
+        console.log("unutra sa,")
+        e.preventDefault();
+        if (!tekstRec || !ocjenaRec){
+            
+
+            
+            console.log("nijedobro")
+            setErrorMessage("Sva polja moraju biti popunjena.");
+            return;
+        }
+        setErrorMessage("")
+
+        
+        
+            
+
+        const token = localStorage.getItem('token');
+        console.log(ocjenaRec)
+        console.log(ocjenaRec[racunIdPoslan])
+                console.log(tekstRec[racunIdPoslan])
+            if (!token || !poslaID || !ocjenaRec[racunIdPoslan] || !tekstRec[racunIdPoslan] ) {
+                
+                
+                throw new Error("Podaci za recenziju nisu dostupni");
+              }
+          
+            const options4 = {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    odobrioModerator: false,
+                    recenzijaOdgovor: null, 
+                    vrijemeKreiranja: null,
+                    recenzijaZvjezdice: ocjenaRec[racunIdPoslan] ,
+                    recenzijaOpis: tekstRec[racunIdPoslan],
+                    kupacId: id,
+                    trgovinaId:poslaID,
+
+                  }),
+              };
+            fetch(`/api/recenzijas`, options4)
+            .then(response => !response.ok && Promise.reject('Failed to save changes'))
+            .then(updated => {
+                console.log(updated)
+                setTekstRec(prevNames => ({ ...prevNames, [racunIdPoslan]: "" }))
+                setOcjenaRec(prevNames => ({ ...prevNames, [racunIdPoslan]: 1 }))
+            })
+            .catch(error => {
+                console.error('Error updating data:', error);
+            })
+
+       
+
+    }
 
 
 
@@ -67,7 +144,7 @@ export function MojiRacuni() {
         })
         .then(data => {
           setEmailAddress(data.email);
-          console.log(data)
+          //console.log(data)
         })
         .catch(error => console.error('There was a problem with the fetch operation: ', error));
         }, []); //prazno, radi se na pocetku samo
@@ -110,8 +187,8 @@ export function MojiRacuni() {
             }
         };
      
-        // Dohvaćanje recenzija preko id-a
-        console.log(id)
+        // Dohvaćanje raucna preko id-a
+        //console.log(id)
         if (id) {
             fetch(`api/kupacProizvods/prosleNarudzbe/${id}`, options)
                 .then(response => {
@@ -123,13 +200,38 @@ export function MojiRacuni() {
                 .then(data => {
                     console.log(data)
                     setRacuni(data)
+                    Object.keys(data).forEach((key) => fetchRacunInfo(key));
+
                 })
                 .catch(error => {
                     console.error('There was a problem with the fetch operation: ', error);
                     setError(error.message);
                 });
         }
+
+        const fetchRacunInfo = async (racunId) => {
+            try {
+               const options3 = {
+                  method: 'GET',
+                  headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json',
+                  },
+               };
+               const response = await fetch(`/api/racuns/${racunId}`, options3);
+               if (!response.ok) {
+                  throw new Error(`Failed to fetch racun with id ${racunId}`);
+               }
+               const name = await response.json();
+               //console.log(name)
+               setRacuniInfo(prevNames => ({ ...prevNames, [racunId]: [name.trgovina,name.vrijemeDatumNastanka] }));
+            } catch (error) {
+               console.error(`Error fetching store name for id ${racunId}:`, error);
+            }
+         };
      }, [id]);
+
+    useEffect(() => console.log(racuniInfo), [racuniInfo])
 
      // koristit
         /*  <button onClick={handleToggle}>
@@ -144,67 +246,9 @@ export function MojiRacuni() {
         
          <div className="main-container">
                     {
-                        ostavljanjeRec ? 
-                        (
-                            <div className="ostavljanje-recenzije-container">
-                                <h1>Ostavi recenziju</h1>
-                                <form id ="unos-recenziije-form" >
-                                <div>
-                                    <label >Unesite tekst:</label>
-                                    <input
-                                        type="text"
-                                        placeholder={tekstRec}
-                                        value={tekstRec}
-                                        onChange={(e) => setTekstRec(e.target.value)}
-                                        required
-                                    />
-                                </div>
-
-                                <div>
-                                    <label>Odaberite trgovinu:</label>
-                                    <select
-                                        value={trgovinaRec}
-                                        onChange={(e) => setTrgovinaRec(e.target.value)}
-                                        required
-                                    >
-                                        <option value="">Odaberite...</option>
-                                        {
-                                            
-                                            /* option sve trgovine iz racuna */
-                                            
-
-                                        }
-                                        
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label htmlFor="numberInput">Unesite broj (1-5):</label>
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        max="5"
-                                        value={ocjenaRec}
-                                        onChange={(e) => setOcjenaRec(Number(e.target.value))}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-buttons">
-                                    <button /* onClick={dodajRec} */ >Predaj</button>
-                                    <button  /* onClick={zatvoriDodavanjeRec} */>
-                                        Zatvori
-                                    </button>
-                                </div>
-
-                                </form>
-                                
-                            </div>
-
-                            
-                        )
-                        :
-                        (
+                        
+                        
+                        
                             <div className="moji-racuni-container">
                                 <h1>Moji racuni</h1>
                                 <div className="moji-racuni-lista">
@@ -213,14 +257,64 @@ export function MojiRacuni() {
                                             //iteriram po ključevima(idračuna)
                                             
                                             <div key={key} className="racun-element">
-                
+                                               {
+                                                Object.entries(racuniInfo).map(([key2, podaci]) =>
+                                                    key2 === key ? (
+                                                    <button
+                                                        key={key2} // Obavezno dodajte jedinstveni `key` za svaki element
+                                                        className="idracun-button"
+                                                        onClick={() => prikazracuna(key)}
+                                                    >
+                                                        Račun: {key} : {racuni[key][0].trgovinaNaziv} : {racuniInfo[key][1]}
+                                                    </button>
+                                                    ) : null // Ako uvjet nije ispunjen, vraća `null` (ništa)
+                                                )
+                                                }
                                                 
-                                                    <button className="idracun-button"onClick={() => prikazracuna(key)}>Račun :  {key} : {
-                                                        racuni[key][0].trgovinaNaziv
-                                                        } </button>
+                                                
                                                 {openedRacuni.includes(key) && <div className="ispisRacuna">
 
-                                                    <button className="racun-ostavi-recenziju-gumb" onClick={() => ostaviRecenziju()} >Ostavi recenziju!</button>
+                                                    <button className="racun-ostavi-recenziju-gumb" onClick={() => ostaviRecenziju(key)} >Ostavi recenziju!</button>
+                                                    {
+                                                        openedRecenzije.includes(key) && 
+                                                        (
+                                                            <div className="ostavljanje-recenzije-container">
+                                                                <p>Ostavi recenziju</p>
+                                                                <form id ="unos-recenziije-form" onSubmit={(e) => dodajRec(e, racuniInfo[key][0],key)} >
+                                                                <div>
+                                                                    <label >Unesite tekst:</label>
+                                                                    <input id="tekstrecenzija-mojiracuni"
+                                                                        type="text"
+                                                                        placeholder={tekstRec[key]}
+                                                                        value={tekstRec[key] || ""}
+                                                                        onChange={(e) => setTekstRec(prevNames => ({ ...prevNames, [key]: e.target.value }))}
+                                                                        
+                                                                    />
+                                                                </div>
+                                
+                                                                <div>
+                                                                    <label htmlFor="numberInput">Ocjeni:</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        value={ocjenaRec[key]}
+                                                                        placeholder={ocjenaRec[key] || Number(1)}
+
+                                                                        onChange={(e) => setOcjenaRec(prevNames => ({ ...prevNames, [key]: Number(e.target.value) }))}
+                                                                        
+                                                                    />
+                                                                </div>
+                                                                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                                                                <div className="form-buttons">
+                                                                    <button  type="submit" >Predaj</button>
+                                                                </div>
+                                
+                                                                </form>
+                                                                
+                                                            </div>
+                                
+                                                            
+                                                        )
+                                                    }
                                                     <hr></hr>
                                                     <div className="racun-dopunski-tekst">
                                                         <p>Proizvod</p>
@@ -260,7 +354,7 @@ export function MojiRacuni() {
                             </div>
                             
                                 
-                        )
+                        
                     }
                 
             </div>

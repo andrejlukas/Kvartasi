@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RacunService {
@@ -80,30 +81,28 @@ public class RacunService {
 
 
     public Long getRacunForKupacAndTrgovina(Integer kupacId, Integer trgovinaId) {
-    // Provjeri postoji li račun za tog kupca i trgovinu
-    Racun racun = racunRepository.findByKupac_KupacIdAndTrgovina_TrgovinaIdAndStanje(kupacId, trgovinaId, 'K');
+        Optional<Racun> racunOptional = racunRepository.findByKupac_KupacIdAndTrgovina_TrgovinaIdAndStanje(kupacId, trgovinaId, 'K');
     
-    if (racun != null) {
-        // Ako račun postoji, vrati racunId
-        return racun.getRacunId();
-    } else {
-        Kupac kupac = kupacRepository.findById(kupacId).orElseThrow(() -> new NotFoundException("Kupac nije pronađen"));
-
-        // Provjeri postoji li trgovina
-        Trgovina trgovina = trgovinaRepository.findById(trgovinaId).orElseThrow(() -> new NotFoundException("Trgovina nije pronađena"));
-
-        // Ako kupac i trgovina postoje, stvori novi račun
-        RacunDTO racunDTO = new RacunDTO();
-        racunDTO.setStanje('K');
-        racunDTO.setKupac(kupac.getKupacId());
-        racunDTO.setTrgovina(trgovina.getTrgovinaId());
-
-        // Pozovi metodu create koja će stvoriti račun
-        Long racunId = create(racunDTO);  
-        
-        return racunId;
+        if (racunOptional.isPresent()) {
+            return racunOptional.get().getRacunId();
+        } else {
+            Kupac kupac = kupacRepository.findById(kupacId)
+                    .orElseThrow(() -> new NotFoundException("Kupac nije pronađen"));
+    
+            Trgovina trgovina = trgovinaRepository.findById(trgovinaId)
+                    .orElseThrow(() -> new NotFoundException("Trgovina nije pronađena"));
+    
+            RacunDTO racunDTO = new RacunDTO();
+            racunDTO.setStanje('K');
+            racunDTO.setKupac(kupac.getKupacId());
+            racunDTO.setTrgovina(trgovina.getTrgovinaId());
+    
+            Long racunId = create(racunDTO);
+    
+            return racunId;
+        }
     }
-}
+    
 
     private RacunDTO mapToDTO(
             final Racun racun,

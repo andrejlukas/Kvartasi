@@ -97,7 +97,7 @@ public class ProizvodService {
 
     public List<ProizvodDTO> getAllProizvodsBySearch(String input) {
         String[] keyWords = input.toLowerCase().split("\\s+");
-        return proizvodRepository.findAll().stream().filter(
+        return proizvodRepository.findAllApproved().stream().filter(
     p -> TrgovinaService.containsAllOfTheseWords(keyWords, p.getProizvodNaziv().toLowerCase()) ||
             TrgovinaService.containsAllOfTheseWords(keyWords, p.getProizvodKategorija().toLowerCase()) ||
             TrgovinaService.containsAllOfTheseWords(keyWords, p.getProizvodOpis().toLowerCase())

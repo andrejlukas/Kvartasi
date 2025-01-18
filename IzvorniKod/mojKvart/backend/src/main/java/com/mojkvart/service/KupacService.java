@@ -7,6 +7,7 @@ import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,28 @@ public class KupacService {
         return kupacRepository.findByKupacEmail(email)
                 .map(kupac -> mapToDTO(kupac, new KupacDTO()));
     }
+
+    public List<KupacDTO> getSuspendedCustomers() {
+        return kupacRepository.findAll()
+                .stream().filter(k -> k.getKupacStatus().equals("S"))
+                .map(kupac -> mapToDTO(kupac, new KupacDTO()))
+                .collect(Collectors.toList());
+    }
+
+    public List<KupacDTO> getVerifiedCustomers() {
+        return kupacRepository.findAll()
+                .stream().filter(k -> k.getKupacStatus().equals("V"))
+                .map(kupac -> mapToDTO(kupac, new KupacDTO()))
+                .collect(Collectors.toList());
+    }
+
+    public List<KupacDTO> getUnverifiedCustomers() {
+        return kupacRepository.findAll()
+        .stream().filter(k -> k.getKupacStatus().equals("N"))
+        .map(kupac -> mapToDTO(kupac, new KupacDTO()))
+        .collect(Collectors.toList());
+    }
+
 
     public KupacDTO get(final Integer kupacId) {
         return kupacRepository.findById(kupacId)

@@ -150,6 +150,9 @@ body {
 
 #recenzija-nema-odgovora{
   background-color: #ededed;
+  border-bottom-right-radius:30px ;
+  border-bottom-left-radius:30px ;
+
 
 }
 

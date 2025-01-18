@@ -54,9 +54,9 @@ export function MojiPodaci(){
     
         if (emailAddress) {
             fetch(`/api/kupacs/${emailAddress}`, options)
-                .then(async response => {
+                .then(response => {
                     if (!response.ok) {
-                        const text = await response.text();
+                        const text = response.text();
                         throw new Error(text);
                     }
                     return response.json();
@@ -96,7 +96,7 @@ export function MojiPodaci(){
                 kupacEmail: emailAddress,
                 kupacId : id,
                 kupacSifra:sifra,
-                verificiranKupac: true
+                kupacStatus:"V"
             })
         }
         

@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Navbar } from '../../components/Navbar';
+import { Navbar } from "../../components/Navbar";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 import "../../styles/Shop.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Link } from "react-router-dom";
 
 export function Shop() {
   const { email } = useParams();
   const [shop, setShop] = useState(null);
-  const [products, setProducts] = useState([]); 
+  const [products, setProducts] = useState([]);
+  const [attributes, setAttributes] = useState([]);
   const [error, setError] = useState(null);
+  const [kupacId, setKupacId] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const options = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    }
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
     if (email) {
       fetch(`/api/trgovinas/${email}`, options)
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Neuspjesno dohvacanje trgovine.");
+            throw new Error("Neuspješno dohvatanje trgovine.");
           }
           return response.json();
         })
@@ -37,20 +42,20 @@ export function Shop() {
   }, [email]);
 
   useEffect(() => {
-    if(shop) {
-      const token = localStorage.getItem('token');
+    if (shop) {
+      const token = localStorage.getItem("token");
       const options = {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      };
 
       fetch(`/api/proizvods/approved/${shop.trgovinaId}`, options)
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Neuspjesno dohvacanje proizvoda.");
+            throw new Error("Neuspješno dohvatanje proizvoda.");
           }
           return response.json();
         })
@@ -60,8 +65,34 @@ export function Shop() {
         .catch((error) => {
           setError(error.message);
         });
+
+      fetch(`/api/atributs`, options)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Neuspješno dohvatanje atributa.");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const trgovinaAtributi = data.filter((atribut) =>
+            shop.imaAtributeAtributs.includes(atribut.atributId)
+          );
+          setAttributes(trgovinaAtributi);
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
     }
   }, [shop]);
+
+  // Parse the location coordinates
+  const getCoordinates = () => {
+    if (!shop || !shop.trgovinaLokacija) return null;
+    const [lat, lng] = shop.trgovinaLokacija.split(",").map(Number);
+    return { lat, lng };
+  };
+
+  const coordinates = getCoordinates();
 
   return (
     <div>
@@ -75,25 +106,65 @@ export function Shop() {
           ) : (
             <div className="shop-product-row">
               <div id="shops" className="shop-info">
-                <img 
-                  src={shop.trgovinaSlika} 
-                  alt={shop.trgovinaNaziv} 
+                <img
+                  src={shop.trgovinaSlika}
+                  alt={shop.trgovinaNaziv}
                   className="img-fluid mb-3 shop-image"
                 />
                 <div id="pomoc">
-                <h2 id="nazivTrgovine">{shop.trgovinaNaziv || "N/A"}</h2>
-                <p id="opis"><strong></strong> {shop.trgovinaOpis || "Nije dostupan"}</p>
+                  <h2 id="nazivTrgovine">{shop.trgovinaNaziv || "N/A"}</h2>
+                  <p id="opis">
+                    <strong></strong> {shop.trgovinaOpis || "Nije dostupan"}
+                  </p>
                 </div>
                 <div className="divider"></div>
 
-                <p><strong>Adresa:</strong> {shop.trgovinaLokacija || "Nije specifirano"}</p>
-                <p><strong>Radno vrijeme: </strong> 
-                  {shop.trgovinaRadnoVrijemeOd && shop.trgovinaRadnoVrijemeDo 
+               
+                <p>
+                  <strong>Radno vrijeme: </strong>
+                  {shop.trgovinaRadnoVrijemeOd && shop.trgovinaRadnoVrijemeDo
                     ? `${shop.trgovinaRadnoVrijemeOd} - ${shop.trgovinaRadnoVrijemeDo}`
                     : "Nije specifirano"}
                 </p>
-                <p><strong>Kategorija: </strong> {shop.trgovinaKategorija || "Nije specifirano"}</p>
-                <p><strong>Email: </strong> {shop.trgovinaEmail || "Nije dostupan"}</p>
+                <p>
+                  <strong>Kategorija: </strong> {shop.trgovinaKategorija || "Nije specifirano"}
+                </p>
+                <p>
+                  <strong>Email: </strong> {shop.trgovinaEmail || "Nije dostupan"}
+                </p>
+               <p id="linkic"> <strong> <Link to={`/home/popistrgovina/${email}/recenzije`}>Recenzije</Link> </strong> 
+               </p> 
+
+                {coordinates && (
+                  <div className="shop-map" id="mapica">
+                    <MapContainer
+                      center={[coordinates.lat, coordinates.lng]}
+                      zoom={15}
+                      style={{ height: "400px", width: "100%" }}
+                    >
+                      <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      />
+                      <Marker position={[coordinates.lat, coordinates.lng]} />
+                    </MapContainer>
+                  </div>
+                )}
+
+                <div id="atributs">
+                  {attributes.length > 0 && (
+                    <>
+                      <div id="dividerr"></div>
+                      <ul className="no-bullets">
+                        {attributes.map((atribut) => (
+                          <li key={atribut.atributId}>
+                            <strong>{atribut.atributNaziv}</strong> {atribut.atributOpis}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </div>
               </div>
 
               <div id="products" className="product-section">
@@ -102,10 +173,10 @@ export function Shop() {
                     products.map((product) => (
                       <div key={product.proizvodId} className="col-md-6 mb-3">
                         <div className="card product-card">
-                          <img 
-                            src={product.proizvodSlika} 
-                            className="card-img-top" 
-                            alt={product.proizvod_naziv} 
+                          <img
+                            src={product.proizvodSlika}
+                            className="card-img-top"
+                            alt={product.proizvod_naziv}
                           />
                           <div className="card-body">
                             <h5 className="card-title">{product.proizvodNaziv}</h5>
