@@ -11,12 +11,14 @@ export function MojiRacuni() {
     const [trgovine,setTrgovine] = useState([])
 
     //recenzija
-    const [tekstRec,setTekstRec] = useState("")
-    const [ocjenaRec,setOcjenaRec] = useState(1)
+    const [tekstRec,setTekstRec] = useState([])
+    const [ocjenaRec,setOcjenaRec] = useState([])
     const [trgovinaRec,setTrgovinaRec] = useState("")
 
     const [racuniInfo,setRacuniInfo] = useState({})
     const [error,setError] = useState(null)
+
+    const [errorMessage,setErrorMessage] = useState("")
 
     //potrebno za ispis proizvoda u računu
     const [openedRacuni, setOpenedRacuni] = useState([]); // Čuva ID-ove otvorenih računa
@@ -28,6 +30,8 @@ export function MojiRacuni() {
             // Ako je već otvoren, ukloni ga iz niza
             setOpenedRacuni(openedRacuni.filter((id) => id !== key));
             setOpenedRecenzije(openedRacuni.filter((id) => id !== key));
+            setTekstRec(prevNames => ({ ...prevNames, [key]: "" }))
+            setOcjenaRec(prevNames => ({ ...prevNames, [key]: 1 }))
         } else {
             // Ako nije otvoren, dodaj ga u niz
             setOpenedRacuni([...openedRacuni, key]);
@@ -38,28 +42,41 @@ export function MojiRacuni() {
         if (openedRecenzije.includes(key)) {
             // Ako je već otvoren, ukloni ga iz niza
             setOpenedRecenzije(openedRacuni.filter((id) => id !== key));
+            setTekstRec(prevNames => ({ ...prevNames, [key]: "" }))
+            setOcjenaRec(prevNames => ({ ...prevNames, [key]: 1 }))
+            
         } else {
             // Ako nije otvoren, dodaj ga u niz
             setOpenedRecenzije([...openedRacuni, key]);
         }
     };
 
-    function dodajRec (e,poslaID)
+    function dodajRec (e,poslaID,racunIdPoslan)
 
     {
         console.log("unutra sa,")
         e.preventDefault();
+        if (!tekstRec || !ocjenaRec){
+            
 
-        const trenutnoVrijeme = new Date();
-        const formatiranoVrijeme = trenutnoVrijeme.toISOString().slice(0, 19);
-        console.log(formatiranoVrijeme)
-        if(!formatiranoVrijeme || !ocjenaRec || !tekstRec || !id)
-            setError("nije dobro za dat rec")
+            
+            console.log("nijedobro")
+            setErrorMessage("Sva polja moraju biti popunjena.");
+            return;
+        }
+        setErrorMessage("")
+
+        
+        
             
 
         const token = localStorage.getItem('token');
-        
-            if (!token || !poslaID) {
+        console.log(ocjenaRec)
+        console.log(ocjenaRec[racunIdPoslan])
+                console.log(tekstRec[racunIdPoslan])
+            if (!token || !poslaID || !ocjenaRec[racunIdPoslan] || !tekstRec[racunIdPoslan] ) {
+                
+                
                 throw new Error("Podaci za recenziju nisu dostupni");
               }
           
@@ -72,18 +89,20 @@ export function MojiRacuni() {
                 body: JSON.stringify({
                     odobrioModerator: false,
                     recenzijaOdgovor: null, 
-                    vrijemeKreiranja: "2025-01-09T10:00:00",
-                    recenzijaZvjezdice: ocjenaRec ,
-                    recenzijaOpis: tekstRec,
+                    vrijemeKreiranja: null,
+                    recenzijaZvjezdice: ocjenaRec[racunIdPoslan] ,
+                    recenzijaOpis: tekstRec[racunIdPoslan],
                     kupacId: id,
                     trgovinaId:poslaID,
 
                   }),
               };
             fetch(`/api/recenzijas`, options4)
-            .then(response => response.ok ? response.json() : Promise.reject('Failed to save changes'))
+            .then(response => !response.ok && Promise.reject('Failed to save changes'))
             .then(updated => {
                 console.log(updated)
+                setTekstRec(prevNames => ({ ...prevNames, [racunIdPoslan]: "" }))
+                setOcjenaRec(prevNames => ({ ...prevNames, [racunIdPoslan]: 1 }))
             })
             .catch(error => {
                 console.error('Error updating data:', error);
@@ -261,15 +280,15 @@ export function MojiRacuni() {
                                                         (
                                                             <div className="ostavljanje-recenzije-container">
                                                                 <p>Ostavi recenziju</p>
-                                                                <form id ="unos-recenziije-form" onSubmit={(e) => dodajRec(e, racuniInfo[key][0])} >
+                                                                <form id ="unos-recenziije-form" onSubmit={(e) => dodajRec(e, racuniInfo[key][0],key)} >
                                                                 <div>
                                                                     <label >Unesite tekst:</label>
                                                                     <input id="tekstrecenzija-mojiracuni"
                                                                         type="text"
-                                                                        placeholder={tekstRec}
-                                                                        value={tekstRec}
-                                                                        onChange={(e) => setTekstRec(e.target.value)}
-                                                                        required
+                                                                        placeholder={tekstRec[key]}
+                                                                        value={tekstRec[key] || ""}
+                                                                        onChange={(e) => setTekstRec(prevNames => ({ ...prevNames, [key]: e.target.value }))}
+                                                                        
                                                                     />
                                                                 </div>
                                 
@@ -277,14 +296,14 @@ export function MojiRacuni() {
                                                                     <label htmlFor="numberInput">Ocjeni:</label>
                                                                     <input
                                                                         type="number"
-                                                                        min="1"
-                                                                        max="5"
-                                                                        value={ocjenaRec}
-                                                                        onChange={(e) => setOcjenaRec(Number(e.target.value))}
-                                                                        required
+                                                                        value={ocjenaRec[key]}
+                                                                        placeholder={ocjenaRec[key] || Number(1)}
+
+                                                                        onChange={(e) => setOcjenaRec(prevNames => ({ ...prevNames, [key]: Number(e.target.value) }))}
+                                                                        
                                                                     />
                                                                 </div>
-                                
+                                                                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                                                                 <div className="form-buttons">
                                                                     <button  type="submit" >Predaj</button>
                                                                 </div>

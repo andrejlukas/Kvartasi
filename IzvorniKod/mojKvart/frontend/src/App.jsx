@@ -39,56 +39,55 @@ function App() {
   const [role, setRole] = useState(null);
 
   const checkTokenExpirationAndRole = async () => {
-    const url = window.location.href;
-    if (url.includes("?token=")) {
-      localStorage.setItem('token', url.split("?token=")[1]);
-      setIsAuthorized(true);
+    const token = localStorage.getItem("token");
+    if (token === null) {
+      setIsAuthorized(false);
+      return;
+    } else {
+      const url = window.location.href;
+      if (url.includes("?token=")) {
+        localStorage.setItem('token', url.split("?token=")[1]);
+        setIsAuthorized(true);
+
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ "oneLiner": url.split("?token=")[1] }),
+        };
+        try {
+          const claimsResponse = await fetch('/api/tokens/claims', options);
+          if (!claimsResponse.ok) throw new Error('Failed to fetch claims');
+          const claims = await claimsResponse.json();
+          setRole(claims.role);
+        } catch(e) {
+          setIsAuthorized(false);
+        }
+        return;
+      } 
 
       const options = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ "oneLiner": url.split("?token=")[1] }),
+        body: JSON.stringify({ "oneLiner": token }),
       };
+
       try {
+        const expirationResponse = await fetch('/api/tokens/expiration', options);
+        if (!expirationResponse.ok) {
+          throw new Error('Token expired');
+        }
         const claimsResponse = await fetch('/api/tokens/claims', options);
         if (!claimsResponse.ok) throw new Error('Failed to fetch claims');
         const claims = await claimsResponse.json();
         setRole(claims.role);
-      } catch(e) {
+        setIsAuthorized(true);
+      } catch (error) {
         setIsAuthorized(false);
       }
-      return;
-    } 
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setIsAuthorized(false);
-      return;
-    }
-
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ "oneLiner": token }),
-    };
-
-    try {
-      const expirationResponse = await fetch('/api/tokens/expiration', options);
-      if (!expirationResponse.ok) {
-        window.location.reload();
-        throw new Error('Token expired');
-      }
-      const claimsResponse = await fetch('/api/tokens/claims', options);
-      if (!claimsResponse.ok) throw new Error('Failed to fetch claims');
-      const claims = await claimsResponse.json();
-      setRole(claims.role);
-      setIsAuthorized(true);
-    } catch (error) {
-      setIsAuthorized(false);
     }
   };
 
