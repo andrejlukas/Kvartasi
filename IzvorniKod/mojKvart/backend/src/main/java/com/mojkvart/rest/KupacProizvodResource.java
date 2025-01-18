@@ -73,6 +73,13 @@ public class KupacProizvodResource {
         return ResponseEntity.ok(id);
     }
 
+    //Za testiranje neimplementiranih funkcije
+    @PostMapping("/kosarica/{kupacId}/kupi")
+    public ResponseEntity<String> kupiProizvodeIzKosarice(@PathVariable Integer kupacId) {
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
+                .body("Funkcionalnost kupovine proizvoda iz kosarice trenutno nije implementirana.");
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletekupacProizvod(
             @PathVariable(name = "id") final Long id) {

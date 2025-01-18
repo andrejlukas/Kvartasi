@@ -158,7 +158,7 @@ public class KupacResource {
         if(!matcher.matches())
             return ResponseEntity.badRequest().body("Upisan nevažeći oblik e-mail adrese!");
         if(sifra.length() < 8)
-            return ResponseEntity.badRequest().body("Vaša lozinka mora biti minimalno duljine 8 znakova!");
+            return ResponseEntity.badRequest().body("Lozinka mora biti minimalno duljine 8 znakova!");
 
         if (administratorService.findByAdministratorEmail(email).isPresent()) {
             role = "ADMINISTRATOR";
