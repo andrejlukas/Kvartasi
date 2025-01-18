@@ -136,7 +136,7 @@ export function PonudeiPromocije() {
          <div className="container-popusti">
             { loading ? (
                <p>Loading...</p>
-            ) : (
+            ) : (popusti.length + ponude.length>0 ? (
                <div className="popust-popust-row">
                   <div className="banner">
                      Pronađite najbolje ponude i popuste uz samo par klikova!
@@ -195,8 +195,10 @@ export function PonudeiPromocije() {
                      )}
                      </div>
                      </div>
-               </div>
-            )}
+                  </div>
+               ) : (
+               <p>Nema dostupnih popusta ili proizvoda</p>      
+            ))}
          </div>
       </div>
    );
