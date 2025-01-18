@@ -17,13 +17,10 @@ export default defineConfig(({ mode }) => {
     port: 3000,
     strictPort: true,
     host: true,
-    origin: "http://0.0.0.0:3000",
       proxy: {
         '/api': {
           target: "https://kvartasialfabackend.onrender.com",
-          //changeOrigin: true,
           secure: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
     },
