@@ -10,6 +10,7 @@ export function MojePonudeiPromocije(){
     const [email, setEmail] = useState("")
     const [idKupac, setIdKupac]=useState(null);
     const [error,setError] = useState("")
+    const [loading,setLoading] = useState(true)
 
     const [message,setMessage] =useState("")
 
@@ -51,7 +52,6 @@ export function MojePonudeiPromocije(){
         };
     
         try {
-            console.log(`Slanje PUT zahtjeva na /api/kupacPonudaPopusts/stanje/${kupacPonudaPopustId}`);
             const putResponse = await fetch(`/api/kupacPonudaPopusts/stanje/${kupacPonudaPopustId}`, optionsPUT);
             
             if (!putResponse.ok) {
@@ -59,10 +59,8 @@ export function MojePonudeiPromocije(){
                 throw new Error(`PUT zahtjev nije uspio: ${errorText}`);
             }
     
-            console.log(`PUT zahtjev uspješan za ponudu ID: ${idponude}`);
             setMessage(`Ponuda ${idponude} iskorištena`);
     
-            console.log(`Slanje GET zahtjeva na /api/kupacPonudaPopusts/ponude/neiskoristene/${idKupac}`);
             const getResponse = await fetch(`/api/kupacPonudaPopusts/ponude/neiskoristene/${idKupac}`, optionsGET);
     
             if (!getResponse.ok) {
@@ -72,7 +70,6 @@ export function MojePonudeiPromocije(){
     
             const data = await getResponse.json();
             setPonude(data);
-            console.log("Dobiveni podaci za ponude:", data);
     
         } catch (error) {
             console.error("Greška u funkciji iskoristiPonudu:", error);
@@ -114,8 +111,6 @@ export function MojePonudeiPromocije(){
         };
     
         try {
-            console.log(kupacPonudaPopustId2)
-            console.log(`Slanje PUT zahtjeva na /api/kupacPonudaPopusts/stanje/${kupacPonudaPopustId2}`);
             const putResponse = await fetch(`/api/kupacPonudaPopusts/stanje/${kupacPonudaPopustId2}`, optionsPUT);
             
             if (!putResponse.ok) {
@@ -123,10 +118,8 @@ export function MojePonudeiPromocije(){
                 throw new Error(`PUT zahtjev nije uspio: ${errorText}`);
             }
     
-            console.log(`PUT zahtjev uspješan za popust ID: ${idponude}`);
             setMessage(`Popust ${idponude} iskorišten`);
     
-            console.log(`Slanje GET zahtjeva na /api/kupacPonudaPopusts/popusti/neiskoristeni/${idKupac}`);
             const getResponse = await fetch(`/api/kupacPonudaPopusts/popusti/neiskoristeni/${idKupac}`, optionsGET);
     
             if (!getResponse.ok) {
@@ -136,7 +129,6 @@ export function MojePonudeiPromocije(){
     
             const data = await getResponse.json();
             setPopusti(data);
-            console.log("Dobiveni podaci za popust:", data);
     
         } catch (error) {
             console.error("Greška u funkciji iskoristiPopust:", error);
@@ -205,9 +197,9 @@ export function MojePonudeiPromocije(){
             'Content-Type': 'application/json',
             },
         };
-      
-        if (email) {
-            fetch(`/api/kupacPonudaPopusts/ponude/neiskoristene/${idKupac}`, options)
+        setLoading(true)
+      Promise.all([
+        fetch(`/api/kupacPonudaPopusts/ponude/neiskoristene/${idKupac}`, options)
                   .then(response => {
                      
                      if (!response.ok) {
@@ -217,24 +209,9 @@ export function MojePonudeiPromocije(){
                   })
                   .then(data => {
                      setPonude(data);
-                     console.log(data)
                   })
-                  .catch(error => setError(error.message));
-        }
-    }, [idKupac]);
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        const options = {
-            method: 'GET',
-            headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            },
-        };
-      
-        if (email) {
-            fetch(`/api/kupacPonudaPopusts/popusti/neiskoristeni/${idKupac}`, options)
+                  .catch(error => setError(error.message)),
+                  fetch(`/api/kupacPonudaPopusts/popusti/neiskoristeni/${idKupac}`, options)
                   .then(response => {
                      
                      if (!response.ok) {
@@ -244,12 +221,22 @@ export function MojePonudeiPromocije(){
                   })
                   .then(data => {
                      setPopusti(data);
-                     console.log(data)
                   })
-                  .catch(error => setError(error.message));
+                  .catch(error => setError(error.message))
+
+      ])
+      .catch((error) => {
+        setError(error.message);
+     })
+     .finally(() => {
+        setLoading(false); 
+     });
+        if (email) {
+            
         }
     }, [idKupac]);
 
+   
     
   
 
@@ -264,59 +251,72 @@ export function MojePonudeiPromocije(){
         <div className="moje-ponude-promocije-wrappper">
             <Navbar/>
             <div className="main-container">
-                <div className="moje-ponude-i-promocije-wrapper">
-                    <div className="kosarica-odabir">
-                    <ul >
-                        <li><a href="/kosarica">Moja košarica</a></li>
-                        <li><a id="ponude-i-promocije-odabir"href= "/mojeponudeipromocije">Moje ponude i promocije</a></li>
-                    </ul>
-                    </div>
+                    {
+                        loading ? (<p>Loading...</p>) : (
+                            <div className="moje-ponude-i-promocije-wrapper">
                     
-                    <div className="ispis-mojih-ponuda-i-promocija">
-                    <div className="moji-neiskoristeni-popusti">
-                        {
-                            popusti && popusti.map((element)=>
-                            (
-                                <div key={element.ponudaPopustId}>
-                                    <p>Popust: {element.popustId}</p>
-                                    <p>  {element.popustNaziv }</p>
-                                    <p>  {element.popustOpis}</p>
-                                    <p>  {element.trgovinaIme}</p>
-                                    <button >Makni popust</button>
-                                    <button onClick={()=> iskoristiPopust(element.kupacPonudaPopustId,element.popustId)}>Iskoristio popust</button>
+                                <div className="kosarica-odabir">
+                                <ul >
+                                    <li><a id="kosarica-odabir"href="/kosarica">Moja košarica</a></li>
+                                    <li><a id="ponude-i-promocije-odabir"href= "/mojeponudeipromocije">Moje ponude i promocije</a></li>
+                                </ul>
                                 </div>
-                            )
-                            )
-                        }
-                    </div>
-                    <div className="moje-neiskoristene-ponude">
-                        <div>
-                        {
-                            ponude && ponude.map((element)=>
-                            (
-                                <div key={element.ponudaPopustId}>
-                                    <p> Ponuda:  {element.ponudaId}</p>
-                                    <p>  {element.ponudaNaziv }</p>
-                                    <p>  {element.ponudaOpis}</p>
-                                    <p> {element.trgovinaIme}</p>
-                                    <button >Makni ponudu</button>
-                                    <button onClick={()=> iskoristiPonudu(element.kupacPonudaPopustId,element.ponudaId)}>Iskoristio ponudu</button>
+                                
+                                <div className="ispis-mojih-ponuda-i-promocija">
+                                <div className="moji-neiskoristeni-popusti">
+                                    {
+                                        popusti && popusti.map((element)=>
+                                        (
+                                            <div id="moj-popust" key={element.ponudaPopustId}>
+                                                <div className="moje-ponude-popusti-info">
+                                                <p>{element.popustNaziv }</p>
+                                                <p>  {element.trgovinaIme}</p>
+                                                <p>{element.popustOpis}</p>
+                                                {/* <p>Popust: {element.popustId}</p> */}
 
+                                                </div>
+                                                <div className="moje-ponude-popusti-buttons" >
+                                                <button >Makni popust</button>
+                                                <button onClick={()=> iskoristiPopust(element.kupacPonudaPopustId,element.popustId)}>Iskoristio popust</button>
 
-
+                                                </div>
+                                               
+                                                
+                                            </div>
+                                        )
+                                        )
+                                    }
                                 </div>
-                            )
-                            )
-                        }
-                        </div>
-                    </div>
-                    </div>
-                    
-                    
-                    
-                    
+                                <div className="moje-neiskoristene-ponude">
+                                    {
+                                        ponude && ponude.map((element)=>
+                                        (
+                                            <div id="moja-ponuda" key={element.ponudaPopustId}>
+                                                <div className="moje-ponude-popusti-info">
+                                                <p>{element.ponudaNaziv }</p>
+                                                <p> {element.trgovinaIme}</p>
+                                                <p>{element.ponudaOpis}</p>
+                                                {/* <p> Ponuda:  {element.ponudaId}</p> */}
+                                                </div>
+                                                <div className="moje-ponude-popusti-buttons">
+                                                <button >Makni ponudu</button>
+                                                <button onClick={()=> iskoristiPonudu(element.kupacPonudaPopustId,element.ponudaId)}>Iskoristio ponudu</button>
 
-                </div>
+                                                </div>
+                                                
+
+
+
+                                            </div>
+                                        )
+                                        )
+                                    }
+                                </div>
+                                </div>
+                            </div>
+                        )
+                    }
+                
                 
             </div>
             {

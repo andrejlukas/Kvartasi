@@ -10,6 +10,9 @@ export function Kosarica(){
 
     const [kosarica,setKosarica] = useState({})
 
+    const [loading, setLoading]=useState(true);
+        
+
     function uvecajKolicinuProizvoda(proizvodID) {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -159,35 +162,7 @@ export function Kosarica(){
         .catch(error => console.error('There was a problem with the fetch operation: ', error));
     }, []); //prazno, radi se na pocetku samo
 
-    useEffect(() => {
-    const token = localStorage.getItem('token');
-    const options = {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    };
-
- // Dohvaćanje korisničkih podataka ako postoji emaila
- if (emailAddress) {
-     fetch(`/api/kupacs/${emailAddress}`, options)
-         .then(response => {
-             if (!response.ok) {
-                 throw new Error('Network response was not ok');
-             }
-             return response.json();
-         })
-         .then(data => {
-             setId(data.kupacId);
-             console.log(token)
-         })
-         .catch(error => {
-             console.error('There was a problem with the fetch operation: ', error);
-             setError(error.message);
-         });
- }
-}, [emailAddress]);
+ 
     useEffect(() => {
         const token = localStorage.getItem('token');
         const options = {
@@ -197,6 +172,8 @@ export function Kosarica(){
                 'Content-Type': 'application/json'
             }
         };
+      setLoading(true); 
+
 
     // Dohvaćanje korisničkih podataka ako postoji emaila
     if (emailAddress) {
@@ -213,7 +190,10 @@ export function Kosarica(){
             .catch(error => {
                 console.error('There was a problem with the fetch operation: ', error);
                 setError(error.message);
-            });
+            })
+            .finally(() => {
+                setLoading(false); 
+             });
     }
     }, [emailAddress]);
 
@@ -253,7 +233,12 @@ export function Kosarica(){
         <div className="kosarica-wrappper">
             <Navbar/>
             <div className="main-container">
-                <div className="kosarica-glavni-div">
+                {
+                    loading ? (
+                        <p>Loading...</p>
+                    ) :
+                    (
+                        <div className="kosarica-glavni-div">
                     <div className="kosarica-odabir">
                         <ul>
                             <li><a id = "kosarica-odabir"href="/kosarica">Moja košarica</a></li>
@@ -262,49 +247,67 @@ export function Kosarica(){
                     </div>
                     <div className="prikaz-kosarice">
                     {
-                        (kosarica) ? (
+                        (kosarica && Object.keys(kosarica).length > 0) ? (
                             Object.entries(kosarica).map(([key, proizvodi]) => (
                                 
                                 /* console.log(key) */
-                                <div className={key} >
+                                <div className={key} id="kosarica-element" >
                                     
-                                    <h3>Proizvodi : {proizvodi[0].trgovinaNaziv}</h3>
-                                    <div className="kosarica-proizvodi-ispis">
+                                    <p className="kosarica-element-naslov">Trgovina : {proizvodi[0].trgovinaNaziv}</p>
+                                    <hr></hr>
+                                    <div className="kosarica-proizvodi-ispis" >
                                         {
                                             proizvodi
                                             .slice() //kopiram i sortiram
                                             .sort((a, b) => a.proizvodNaziv.localeCompare(b.proizvodNaziv))
                                             .map((proizvod)=>
                                             <div className={proizvod.proizvodNaziv}  id="kosarica-proizvod">
-                                                <p>{proizvod.proizvodNaziv}</p>
+                                                <p id="element-proizvoda">{proizvod.proizvodNaziv}</p>
+                                                <div id="element-proizvoda" className="kosarica-proizvod-cijena">
+                                                <p>{proizvod.proizvodCijena.toFixed(2)} </p>
+                                                <p>€/kom</p>
+
+                                                </div>
+
+                                                <div id="element-proizvoda"className="kosarica-proizvod-kolicina">
                                                 <button onClick={() =>smanjiKolicinuProizvoda(proizvod.proizvodId)}>-</button>
-                                                <p>Kol: {proizvod.proizvodKolicina}</p>
+                                                <p>{proizvod.proizvodKolicina}</p>
                                                 <button onClick={() => uvecajKolicinuProizvoda(proizvod.proizvodId)}>+</button>
-                                                <p>Cijena: {proizvod.proizvodCijena}</p>
+                                                </div>
+                                                
+                                                <p id="element-proizvoda" className="proizvod-kolicina-iznos">{(proizvod.proizvodCijena * proizvod.proizvodKolicina).toFixed(2) } €</p>
+
                                                 
                                             </div>
                                             )
                                         }
                                     </div>
-                                    <p>ukupno novca za ovu trgovinu: {
+                                    <div className="trgovina-ukupno">
+                                        <p>Ukupno:  </p>
+                                        <p>{
                                         proizvodi.reduce(
                                             (sum, proizvod) =>
                                                 sum + proizvod.proizvodKolicina * proizvod.proizvodCijena,
                                             0
                                             
                                         ).toFixed(2)
-                                        }</p>
+                                        } €</p>
+                                    </div>
+                                        
                                 </div>
                             )
                             )
                         ) : (
-                            <div>Kosarica je prazna.</div>
+                            <p>Kosarica je prazna.</p>
                         )
                     }
 
                     </div>
                     
                 </div>
+                    )
+                }
+                
             </div>
         </div>
     )

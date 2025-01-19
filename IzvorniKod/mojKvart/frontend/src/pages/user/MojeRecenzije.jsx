@@ -15,6 +15,9 @@ export function MojeRecenzije() {
    const [recenzije, SetRecenzije] = useState([])
    const [error, setError] = useState(null);
 
+    const [loading, setLoading]=useState(true);
+    
+
    /* ZA PROVJERU
    useEffect(() => {
    console.log("ID ažuriran:", id);
@@ -83,9 +86,9 @@ useEffect(() => {
            'Content-Type': 'application/json'
        }
    };
+   setLoading(true); 
 
    // Dohvaćanje recenzija preko id-a
-   console.log(id)
    if (id) {
        fetch(`/api/recenzijas/kupacs/${id}`, options)
            .then(response => {
@@ -95,7 +98,6 @@ useEffect(() => {
                return response.json();
            })
            .then(data => {
-               console.log(data)
                SetRecenzije(data)
                data.forEach((element) =>
                 fetchTrgovinaName(element.trgovinaId)
@@ -105,7 +107,10 @@ useEffect(() => {
            .catch(error => {
                console.error('There was a problem with the fetch operation: ', error);
                setError(error.message);
-           });
+           })
+           .finally(() => {
+            setLoading(false); 
+         });
    }
    const fetchTrgovinaName = async (trgovinaId) => {
     // console.log(trgovinaId)
@@ -130,12 +135,9 @@ recenzijaOpis
 recenzijaZvjezdice
 trgovinaId
 vrijemeKreiranja */
-  useEffect(()=>{ console.log(trgovina)}, [trgovina]
-   )
 
 //brisanje recenzije
 async function brisanjeRecenzije(poslanId) {
-    console.log(`Brisanje recenzije s ID-jem: ${poslanId}`);
     const  fetchTrgovinaName = async (trgovinaId) => {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -158,7 +160,6 @@ async function brisanjeRecenzije(poslanId) {
             }
     
             const trgovinaData = await response.json();
-            console.log(`Dohvaćena trgovina: ${trgovinaData.trgovinaNaziv}`);
             setTrgovina((prevNames) => ({
                 ...prevNames,
                 [trgovinaId]: trgovinaData.trgovinaNaziv,
@@ -188,7 +189,6 @@ async function brisanjeRecenzije(poslanId) {
         if (!deleteResponse.ok) {
             throw new Error(`Brisanje recenzije nije uspjelo. Status: ${deleteResponse.status}`);
         }
-        console.log(`Recenzija s ID-jem ${poslanId} uspješno obrisana.`);
 
         // Dohvaćanje ažuriranih recenzija
         const recenzijeOptions = {
@@ -205,7 +205,6 @@ async function brisanjeRecenzije(poslanId) {
         }
 
         const recenzijeData = await recenzijeResponse.json();
-        console.log("Ažurirane recenzije:", recenzijeData);
 
         // Ažuriranje state-a
         SetRecenzije(recenzijeData);
@@ -231,8 +230,9 @@ async function brisanjeRecenzije(poslanId) {
          <Navbar/>
          <div className="main-container">
             {/* <h1>Moje recenzije:</h1> */}
-
-            <div className="moje-recenzije-container">
+            { loading ? (<p>Loading...</p>):
+            (
+                <div className="moje-recenzije-container">
             {
                recenzije.length > 0 ? (
                   recenzije.map((recenzija, index) => 
@@ -292,6 +292,10 @@ async function brisanjeRecenzije(poslanId) {
             }
 
             </div>
+            )
+
+            }
+            
 
          </div>
       </div>

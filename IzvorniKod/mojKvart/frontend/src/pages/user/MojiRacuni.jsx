@@ -18,11 +18,14 @@ export function MojiRacuni() {
     const [racuniInfo,setRacuniInfo] = useState({})
     const [error,setError] = useState(null)
 
-    const [errorMessage,setErrorMessage] = useState("")
+    const [errorMessage,setErrorMessage] = useState([])
 
     //potrebno za ispis proizvoda u računu
     const [openedRacuni, setOpenedRacuni] = useState([]); // Čuva ID-ove otvorenih računa
     const [openedRecenzije, setOpenedRecenzije] = useState([]); // Čuva ID-ove računa otvorenih recenzija
+
+  const [loading, setLoading]=useState(true);
+
 
 
     const prikazracuna = (key) => {
@@ -32,6 +35,8 @@ export function MojiRacuni() {
             setOpenedRecenzije(openedRacuni.filter((id) => id !== key));
             setTekstRec(prevNames => ({ ...prevNames, [key]: "" }))
             setOcjenaRec(prevNames => ({ ...prevNames, [key]: 1 }))
+            setErrorMessage((prevNames => ({ ...prevNames, [key]: "" })));
+
         } else {
             // Ako nije otvoren, dodaj ga u niz
             setOpenedRacuni([...openedRacuni, key]);
@@ -44,6 +49,7 @@ export function MojiRacuni() {
             setOpenedRecenzije(openedRacuni.filter((id) => id !== key));
             setTekstRec(prevNames => ({ ...prevNames, [key]: "" }))
             setOcjenaRec(prevNames => ({ ...prevNames, [key]: 1 }))
+            setErrorMessage((prevNames => ({ ...prevNames, [key]: "" })));
             
         } else {
             // Ako nije otvoren, dodaj ga u niz
@@ -54,26 +60,27 @@ export function MojiRacuni() {
     function dodajRec (e,poslaID,racunIdPoslan)
 
     {
-        console.log("unutra sa,")
         e.preventDefault();
-        if (!tekstRec || !ocjenaRec){
+        if (!ocjenaRec[racunIdPoslan] || !tekstRec[racunIdPoslan]){
             
 
             
-            console.log("nijedobro")
-            setErrorMessage("Sva polja moraju biti popunjena.");
+            setErrorMessage((prevNames => ({ ...prevNames, [racunIdPoslan]: "Sve polja moraju biti popunjena" })));
             return;
         }
-        setErrorMessage("")
+        else if(ocjenaRec[racunIdPoslan] > 5 || ocjenaRec[racunIdPoslan] < 1){
+            setErrorMessage((prevNames => ({ ...prevNames, [racunIdPoslan]: "Ocjena mora biti od 1 do 5" })));
 
-        
+        }
+        else{
+            setErrorMessage((prevNames => ({ ...prevNames, [racunIdPoslan]: "" })));
+
+        }
+
         
             
 
         const token = localStorage.getItem('token');
-        console.log(ocjenaRec)
-        console.log(ocjenaRec[racunIdPoslan])
-                console.log(tekstRec[racunIdPoslan])
             if (!token || !poslaID || !ocjenaRec[racunIdPoslan] || !tekstRec[racunIdPoslan] ) {
                 
                 
@@ -100,7 +107,6 @@ export function MojiRacuni() {
             fetch(`/api/recenzijas`, options4)
             .then(response => !response.ok && Promise.reject('Failed to save changes'))
             .then(updated => {
-                console.log(updated)
                 setTekstRec(prevNames => ({ ...prevNames, [racunIdPoslan]: "" }))
                 setOcjenaRec(prevNames => ({ ...prevNames, [racunIdPoslan]: 1 }))
             })
@@ -133,7 +139,6 @@ export function MojiRacuni() {
         },
         body: JSON.stringify({ oneLiner: token })
     }
-    console.log(token)
 
     fetch('/api/tokens/claims', options)
         .then(response => {
@@ -186,7 +191,8 @@ export function MojiRacuni() {
                 'Content-Type': 'application/json'
             }
         };
-     
+        setLoading(true); 
+        
         // Dohvaćanje raucna preko id-a
         //console.log(id)
         if (id) {
@@ -198,7 +204,6 @@ export function MojiRacuni() {
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data)
                     setRacuni(data)
                     Object.keys(data).forEach((key) => fetchRacunInfo(key));
 
@@ -206,8 +211,12 @@ export function MojiRacuni() {
                 .catch(error => {
                     console.error('There was a problem with the fetch operation: ', error);
                     setError(error.message);
-                });
+                })
+                .finally(() => {
+                    setLoading(false); 
+                 });
         }
+
 
         const fetchRacunInfo = async (racunId) => {
             try {
@@ -231,7 +240,6 @@ export function MojiRacuni() {
          };
      }, [id]);
 
-    useEffect(() => console.log(racuniInfo), [racuniInfo])
 
      // koristit
         /*  <button onClick={handleToggle}>
@@ -245,9 +253,9 @@ export function MojiRacuni() {
          <Navbar/>
         
          <div className="main-container">
-                    {
+                    { loading ? (<p>Loading...</p>)
                         
-                        
+                        :(
                         
                             <div className="moji-racuni-container">
                                 <h1>Moji racuni</h1>
@@ -286,7 +294,7 @@ export function MojiRacuni() {
                                                                     <input id="tekstrecenzija-mojiracuni"
                                                                         type="text"
                                                                         placeholder={tekstRec[key]}
-                                                                        value={tekstRec[key] || ""}
+                                                                        value={tekstRec[key] }
                                                                         onChange={(e) => setTekstRec(prevNames => ({ ...prevNames, [key]: e.target.value }))}
                                                                         
                                                                     />
@@ -303,7 +311,7 @@ export function MojiRacuni() {
                                                                         
                                                                     />
                                                                 </div>
-                                                                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                                                                { Object.keys(errorMessage).includes(key) && <p style={{ color: 'red' }}>{errorMessage[key]}</p>}
                                                                 <div className="form-buttons">
                                                                     <button  type="submit" >Predaj</button>
                                                                 </div>
@@ -352,7 +360,7 @@ export function MojiRacuni() {
 
                                 </div>
                             </div>
-                            
+                        ) 
                                 
                         
                     }

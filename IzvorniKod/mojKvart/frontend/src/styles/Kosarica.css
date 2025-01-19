@@ -11,6 +11,7 @@
     margin: 20px;
     display: flex;
     width: 70%;
+    gap: 20px;
 }
 
 .kosarica-glavni-div ul{
@@ -38,12 +39,127 @@
 .kosarica-odabir ul a:hover{
     color: rgba(50, 49, 49, 0.8);
 }
+
+#element-proizvoda{
+    width: 20%;
+}
+
+#kosarica-element{
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(62, 152, 30, 0.2);
+    border-radius: 30px;
+    padding: 20px;
+    justify-content: space-between;
+}
+
+.kosarica-element-naslov{
+    font-size: larger;
+    font-weight: bolder;
+    color: black;
+}
+.kosarica-proizvodi-ispis{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 #kosarica-proizvod{
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center
 }
-#kosarica-proizvod p{
-    width: 20%;
+
+.kosarica-proizvod-kolicina{
+    flex-direction: row;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    justify-content: space-around
+}
+.kosarica-proizvod-kolicina button{
+    background-color: rgb(85, 85, 85,0.2);
+    
+    border: none;
+    border-radius: 30px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.kosarica-proizvod-kolicina button:hover {
+    background-color: rgb(85, 85, 85,0.4);
+  }
+.kosarica-proizvod-cijena{
+    flex-direction: row;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    justify-content: space-between
+}
+.kosarica-proizvod-cijena p {
+    width: 45%;
+}
+.proizvod-kolicina-iznos{
+    text-align: end;
+}
+
+
+.trgovina-ukupno{
+  color: #555;
+  flex-direction: row;
+display: flex;
+gap: 10px;
+justify-content: space-between
+}
+
+.prikaz-kosarice{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .kosarica-glavni-div{
+        width: 90%;
+        margin-left: 10px ;
+        margin-right: 10px;
+
+    }
+   
+
+    .kosarica-glavni-div ul{
+        flex-direction: column;
+        gap: 10px;
+        align-items: center
+    }
+    #element-proizvoda {
+       /*  width: auto; */
+    }
+    #kosarica-proizvod{
+        gap: 10px;
+    }
+
+}
+
+@media (max-width: 450px) {
+    #kosarica-proizvod{
+        flex-direction: column;
+    }
+    .kosarica-proizvod-cijena p {
+        width: 100%;
+    }
+    #element-proizvoda {
+        width: 100%;
+        text-align: center;
+    }
+    .kosarica-proizvod-kolicina{
+        justify-content: center
+    }
+    .kosarica-glavni-div{
+        min-width: 210px;
+    }
+
+
 }

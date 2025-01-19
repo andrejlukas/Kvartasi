@@ -11,6 +11,7 @@
     margin: 20px;
     display: flex;
     width: 70%;
+    gap: 20px;
 }
 
 .moje-ponude-i-promocije-wrapper ul{
@@ -33,6 +34,8 @@
     color: rgba(50, 49, 49, 0.5);
     font-weight: 700; 
     font-size: 24px;
+    transition: background-color 0.3s;
+
 }
 
 .kosarica-odabir ul a:hover{
@@ -40,12 +43,132 @@
 }
 
 .moje-ponude-popusti-zatvori-div{
-    display: block;
+    display: flex;
+    flex-direction: column;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgb(177, 224, 160);
     padding: 40px;
-    color: white;
+    color: black;
+    border-radius: 30px;
+}
+.moje-ponude-popusti-zatvori-div button{
+    background-color: rgb(85, 85, 85,0.2);
+    
+    border: none;
+    border-radius: 30px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 10px;
+}
+.ispis-mojih-ponuda-i-promocija{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.moji-neiskoristeni-popusti{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.moje-neiskoristene-ponude{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+#moj-popust{
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(62, 152, 30, 0.2);
+    border-radius: 30px;
+    padding: 20px;
+    justify-content: space-between;
+}
+
+#moja-ponuda{
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(62, 152, 30, 0.2);
+    border-radius: 30px;
+    padding: 20px;
+    justify-content: space-between;
+}
+
+.moje-ponude-popusti-info p:first-child{
+    font-size: larger;
+    font-weight: bolder;
+    color: black;
+    margin-left: 0px;
+}
+
+.moje-ponude-popusti-info p{
+    margin-left: 0px;
+  color: #555;
+}
+
+.moje-ponude-popusti-info{
+    max-width: 60%;
+}
+.moje-ponude-popusti-buttons{
+    flex-direction: column;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-evenly
+    
+}
+
+.moje-ponude-popusti-buttons button{
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    height: 45px;
+    border-radius: 30px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.moje-ponude-popusti-buttons button:hover {
+    background-color: #218838;
+  }
+
+
+
+@media (max-width: 768px) {
+    .moje-ponude-i-promocije-wrapper{
+    width: 90%;
+    margin-left: 10px ;
+    margin-right: 10px;
+    min-width: 250px;
+    }
+    #moj-popust{
+        flex-direction: column;
+        align-items: stretch;
+        gap:15px;
+    }
+    .moje-ponude-popusti-buttons{
+        gap:10px
+    }
+
+    #moja-ponuda{
+        flex-direction: column;
+        align-items: stretch;
+        gap:15px;
+    }
+
+    .moje-ponude-i-promocije-wrapper ul{
+        flex-direction: column;
+        gap: 10px;
+        align-items: center
+    }
+
+
 }

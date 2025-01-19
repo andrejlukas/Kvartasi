@@ -41,6 +41,8 @@ body {
     border-style: none;
     border-radius: 20px;
     font-size: 24px;
+    transition: background-color 0.3s;
+
 }
 
 .idracun-button:hover{
