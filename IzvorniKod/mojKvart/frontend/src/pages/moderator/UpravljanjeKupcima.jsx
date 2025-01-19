@@ -3,10 +3,11 @@ import { Navbar } from '../../components/ModeratorNavbar'
 // import "../../styles/Home.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export function ModeratorDogadaji(){
+export function ModeratorUpravljanjeKupcima(){
 
     return <div>
         <Navbar />
+        aaaaaaaa
         
     </div>
 }

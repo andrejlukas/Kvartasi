@@ -9,9 +9,15 @@ export function ModeratorPonude() {
     // popustType je true ako je potvrden, a false ako nije 
     const [popustType, setPopustType] = useState(true);
     const [error, setError] = useState("");
+
     const [approvedPopust, setApprovedPopust] = useState([]);
     const [notApprovedPopust, setNotApprovedPopust] = useState([]);
     const [popusti, setPopust] = useState([]);
+
+    const [approvedPonuda, setApprovedPonuda] = useState([]);
+    const [notApprovedPonuda, setNotApprovedPonuda] = useState([]);
+    const [ponude, setPonude] = useState([]);
+
     const [qrCodes, setQrCodes] = useState({});
     const [loading, setLoading] = useState(true);
     // const [ponudaPopustId, setPonudaPopustId] = useState();
@@ -63,13 +69,51 @@ export function ModeratorPonude() {
             .catch((error) => {
                 setError(error.message);
             });
+        
+        
+        fetch(`/api/ponudas/flag-true`, options)
+            .then(async (response) => {
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(text);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                
+                setApprovedPonuda(data);
+                if (popustType === true) {
+                    setPonude(data);
+                }
+            })
+            .catch((error) => {
+                setError(error.message);
+            });
+        
+            fetch(`/api/ponudas/flag-false`, options)
+            .then(async (response) => {
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(text);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setNotApprovedPonuda(data);
+                if (popustType === false) {
+                    setPonude(data);
+                }
+            })
+            .catch((error) => {
+                setError(error.message);
+            });
+
 
         setLoading(false);
     }, [popustType]);
 
 
     const OdobriPopust = async (popustData) => {
-        console.log(popustData.ponudaPopust)
         try {
             const token = localStorage.getItem('token');
             const getOptions = {
@@ -79,8 +123,7 @@ export function ModeratorPonude() {
                     'Content-Type': 'application/json',
                 },
             };
-
-            // First fetch request to get popust data
+            // get ponudaPopust data
             const response = await fetch(`/api/ponudaPopusts/${popustData.ponudaPopust}`, getOptions);
             if (!response.ok) {
                 const text = await response.text();
@@ -88,9 +131,7 @@ export function ModeratorPonude() {
             }
 
             const data = await response.json();
-            console.log(data);
             data.ponudaPopustFlag = true;
-            console.log(data);
 
             const putOptions = {
                 method: 'PUT',
@@ -100,7 +141,7 @@ export function ModeratorPonude() {
                 },
                 body: JSON.stringify(data),
             };
-
+            //update ponudaPopust data
             const putResponse = await fetch(`/api/ponudaPopusts/${popustData.ponudaPopust}`, putOptions);
             if (!putResponse.ok) {
                 const text = await putResponse.text();
@@ -140,12 +181,10 @@ export function ModeratorPonude() {
             return response;
         })
         .then(() => {
-            // Remove the deleted popust from the notApprovedPopust array
             setNotApprovedPopust((prevPopust) =>
                 prevPopust.filter((popust) => popust.popustId !== popustData.popustId)
             );
 
-            // Update the popusti state based on the current popustType
             setPopust((prevPopust) =>
                 prevPopust.filter((popust) => popust.popustId !== popustData.popustId)
             );
@@ -153,16 +192,102 @@ export function ModeratorPonude() {
         .catch((error) => {
             setError(error.message);
         });
-};
+    };
+
+
+    const OdobriPonuda = async (ponudaData) => {
+        try {
+            const token = localStorage.getItem('token');
+            const getOptions = {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            };
+            // get ponudaPopust data
+            const response = await fetch(`/api/ponudaPopusts/${ponudaData.ponudaPopust}`, getOptions);
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text);
+            }
+
+            const data = await response.json();
+            data.ponudaPopustFlag = true;
+
+            const putOptions = {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            };
+            //update ponudaPopust data
+            const putResponse = await fetch(`/api/ponudaPopusts/${ponudaData.ponudaPopust}`, putOptions);
+            if (!putResponse.ok) {
+                const text = await putResponse.text();
+                throw new Error(text);
+            }
+
+            setNotApprovedPonuda((prevPonuda) =>
+                prevPonuda.filter((ponuda) => ponuda.ponudaId !== ponudaData.ponudaId)
+            );
+
+            setApprovedPonuda((prevPonuda) => [...prevPonuda, ponudaData]);
+            setPonude((prevPonuda) =>
+                prevPonuda.filter((ponuda) => ponuda.ponudaId !== ponudaData.ponudaId)
+            );
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+
+    const OdbijPonuda = (ponudaData) => {
+        
+    const token = localStorage.getItem('token');
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    };
+
+    fetch(`/api/ponudas/${ponudaData.ponudaId}`, options)
+        .then(async (response) => {
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text);
+            }
+            return response;
+        })
+        .then(() => {
+            setNotApprovedPonuda((prevPonuda) =>
+                prevPonuda.filter((ponuda) => ponuda.ponudaId !== ponudaData.ponudaId)
+            );
+
+            setPonude((prevPonuda) =>
+                prevPonuda.filter((ponuda) => ponuda.ponudaId !== ponudaData.ponudaId)
+            );
+        })
+        .catch((error) => {
+            setError(error.message);
+        });
+    };
 
     const handlePopustTypeChange = (e) => {
         const value = e.target.value === "true";
         setPopustType(value);
         if (value === true) {
             setPopust(approvedPopust);
+            console.log("eeej"+approvedPonuda)
+            setPonude(approvedPonuda);
             generateQRCodes(approvedPopust); 
         } else {
             setPopust(notApprovedPopust);
+            setPonude(notApprovedPonuda);
             generateQRCodes(notApprovedPopust); 
         }
     };
@@ -253,7 +378,7 @@ export function ModeratorPonude() {
                                             ))
                                         )}
                                     </div>
-                                    {/* <div id="ponude" className="popusti-section">
+                                    <div id="ponude" className="popusti-section">
                                         {ponude.length > 0 && (
                                             ponude.map((ponuda) => (
                                                 <div key={ponuda.ponudaId} className="my-popust-wrapper">
@@ -267,14 +392,19 @@ export function ModeratorPonude() {
                                                                 <p className="popust-details">{ponuda.ponudaOpis}</p>
                                                             </div>
                                                             <div className="popust-actions">
-                                                                <button className="save-button">Spremi ponudu</button>
+                                                                    {popustType === false && (
+                                                                    <>
+                                                                        <button className="add-to-cart-btn-alt" onClick={() => OdobriPonuda(ponuda)}>Odobri ponudu</button>
+                                                                        <button className="add-to-cart-btn-alt" onClick={() => OdbijPonuda(ponuda)}>Odbij ponudu</button>
+                                                                    </>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             ))
                                         )}
-                                    </div> */}
+                                    </div>
                                 </div>
                             </div>
                         ) : (

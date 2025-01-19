@@ -17,7 +17,7 @@ export function Navbar() {
                             <img className="navbar-brand" src={logo} alt="Logo" style={{ width: '150px' }} />
 
                             <div id="obruc" className="d-flex align-items-center ms-auto">
-                                <a href="/racuntrgovine" className="me-3" id="MojRacun">Moj račun</a>
+                                <a href="/racunmoderator" className="me-3" id="MojRacun">Moj račun</a>
                                 <a href="#" onClick={handleLogout} className="me-3" id="OdjaviSe">Odjava</a>
                             </div>
                         </div>
@@ -36,7 +36,7 @@ export function Navbar() {
                                     <a href="/moderator/home/ponude" className="nav-link">Ponude i promocije</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a href="/moderator/home/dogadaji" className="nav-link">Upravljanje kupcima</a>
+                                    <a href="/moderator/home/kupci" className="nav-link">Upravljanje kupcima</a>
                                 </li>
                             </ul>
                         </div>

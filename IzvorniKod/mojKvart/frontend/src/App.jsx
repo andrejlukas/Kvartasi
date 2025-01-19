@@ -33,7 +33,9 @@ import { ShopMojiAtributi } from './pages/shop/MojiAtributi';
 import { ModeratorHome } from './pages/moderator/Home';
 import { ModeratorPonude } from './pages/moderator/PonudeiPromocije';
 import { ModeratorRecenzije } from './pages/moderator/Recenzije';
-import { ModeratorDogadaji } from './pages/moderator/Dogadaji';
+import { ModeratorUpravljanjeKupcima } from './pages/moderator/UpravljanjeKupcima';
+import { ModeratorKorisnickiRacun } from './pages/moderator/KorisnickiRacun';
+import { ModeratorMojiPodaci } from './pages/moderator/MojiPodaci';
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(null);
   const [role, setRole] = useState(null);
@@ -260,9 +262,19 @@ function App() {
             <ModeratorPonude />
           </SecuredModeratorRoute>
         } />
-          <Route path="/moderator/home/dogadaji" element={
+          <Route path="/moderator/home/kupci" element={
           <SecuredModeratorRoute>
-            <ModeratorDogadaji />
+            <ModeratorUpravljanjeKupcima />
+          </SecuredModeratorRoute>
+        } />
+          <Route path="/racunmoderator" element={
+          <SecuredModeratorRoute>
+            <ModeratorKorisnickiRacun />
+          </SecuredModeratorRoute>
+        } />
+          <Route path="/podacimoderator" element={
+          <SecuredModeratorRoute>
+            <ModeratorMojiPodaci />
           </SecuredModeratorRoute>
         } />
 
