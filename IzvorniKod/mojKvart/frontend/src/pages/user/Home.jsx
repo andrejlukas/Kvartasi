@@ -68,8 +68,7 @@ export function Home() {
                 key={product.proizvodId} 
                 className="col-lg-4 col-md-6 col-12 mb-3-alt"
               >
-                {/* Omotaj cijelu karticu sa Link komponentom */}
-                <Link to={`/home/proizvod/${product.proizvodId}`} className="card-link">
+                
                   <div className="card-alt product-card-alt">
                     <img 
                       src={product.proizvodSlika} 
@@ -82,11 +81,12 @@ export function Home() {
                       <p className="card-text-alt">{product.proizvodOpis}</p>
                       <div id="gumbcijena-alt">
                         <p className="price-alt">€{product.proizvodCijena}</p>
-                        <button className="add-to-cart-btn-alt">Dodaj u košaricu</button>
+                        <Link to={`/home/proizvod/${product.proizvodId}`} className="card-link"> 
+                        <button className="pogl">Pogledaj detalje</button>
+                        </Link>
                       </div>
                     </div>
                   </div>
-                </Link>
               </div>
             ))
           ) : (

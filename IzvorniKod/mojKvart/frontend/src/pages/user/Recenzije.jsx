@@ -11,9 +11,7 @@ export function Recenzije() {
     const [trgovinaId, setTrgovinaId] = useState(null);
     const [emailKupac, setEmailKupac] = useState("");
     const [kupacId, setKupacId] = useState(null);
-    const [novaRecenzija, setNovaRecenzija] = useState({ opis: "", zvjezdice: 0 });
-    const [successMessage, setSuccessMessage] = useState("");
-
+    
     useEffect(() => {
         const token = localStorage.getItem("token");
         const options = {
@@ -155,70 +153,7 @@ export function Recenzije() {
         return `${day}.${month}.${year}`; // Formatiraj kao DD.MM.YYYY
     };
 
-    const renderInteractiveStars = (currentRating, setRating) => {
-        const totalStars = 5;
-    
-        return (
-            <div>
-                {Array.from({ length: totalStars }, (_, index) => (
-                    <span
-                        key={index}
-                        className={`interactive-star ${index < currentRating ? "full-review-star" : "empty-review-star"}`}
-                        onClick={() => setRating(index + 1)} // Postavlja ocjenu na kliknutu zvjezdicu
-                        style={{ cursor: "pointer", fontSize: "24px", marginRight: "5px" }}
-                    >
-                        {index < currentRating ? "★" : "☆"}
-                    </span>
-                ))}
-            </div>
-        );
-    };
-
-    const handleAddRecenzija = (e) => {
-        e.preventDefault();
-        const token = localStorage.getItem("token");
-
-        const options = {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                recenzijaOpis: novaRecenzija.opis,
-                recenzijaZvjezdice: novaRecenzija.zvjezdice,
-                kupacId,
-                trgovinaId,
-                vrijemeKreiranja: Date.now(),
-                recenzijaOdgovor: null,
-                odobrioModerator: false
-            }),
-        };
-
-        fetch("/api/recenzijas", options)
-        .then((response) => {
-            console.log("Response Status:", response.status);
-            return response.text(); // Get the response as text first
-        })
-        .then((text) => {
-            console.log("Response Text:", text); // Log the full response
-            try {
-                const data = JSON.parse(text); // Try parsing as JSON
-                setRecenzije((prev) => [...prev, data]);
-                setSuccessMessage("Recenzija uspješno dodana!");
-                setNovaRecenzija({ opis: "", zvjezdice: 0 });
-            } catch (error) {
-                console.error("Error parsing JSON:", error);
-                setError("Neispravan odgovor s poslužitelja.");
-            }
-        })
-        .catch((error) => {
-            console.error("Request failed:", error);
-            setError(error.message);
-        });
-    
-    };
-
+   
 
     return (
         <div id="vanjskiii">
@@ -226,31 +161,6 @@ export function Recenzije() {
                 <Navbar />
             </div>
             <div id="vanjskic">
-                <div id="unosic">
-                <h1 id="naslovic1">Dodajte novu recenziju za trgovinu {shop ? shop.trgovinaNaziv : ""}</h1>
-                {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
-                <form onSubmit={handleAddRecenzija}>
-                    <div className="review-rating">
-                        <label id="ocjenaa">Vaša ocjena:</label>
-                        {renderInteractiveStars(novaRecenzija.zvjezdice, (rating) =>
-                            setNovaRecenzija({ ...novaRecenzija, zvjezdice: rating })
-                        )}
-                    </div>
-                    <div className="review-description">
-                        <label id="opiss">Opis recenzije:</label>
-                        <textarea
-                            id="kutijica"
-                            value={novaRecenzija.opis}
-                            onChange={(e) =>
-                                setNovaRecenzija({ ...novaRecenzija, opis: e.target.value })
-                            }
-                            required
-                        />
-                    </div>
-                    <button type="submit" className="submit-button">Dodaj recenziju</button>
-                </form>
-
-                </div>
                 <div id="listica">
                     <h1 id="naslovic">Recenzije za trgovinu {shop ? shop.trgovinaNaziv : ""}</h1>
                     {error && <p style={{ color: "red" }}>{error}</p>}

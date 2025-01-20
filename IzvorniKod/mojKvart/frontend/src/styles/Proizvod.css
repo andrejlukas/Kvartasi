@@ -32,8 +32,8 @@
   }
   
   /* Submit Button */
-  #submit-rating {
-    background-color: #28a745;
+  #submit-ratingg {
+    background-color: rgba(62, 152, 30, 0.674); 
     color: #fff;
     border: none;
     height:45px;
@@ -47,6 +47,10 @@
     align-items: center;
   }
 
+  #submit-ratingg:hover {
+    background-color: rgba(62, 152, 30);
+  }
+  
   
 
   #ocjj{
@@ -89,6 +93,8 @@
     background-color: white;
     border-radius: 20px;
     padding: 30px;
+    padding-top: 50px;
+    padding-bottom: 50px;
     display: flex;
     align-items: center; 
     justify-content: space-around ;
@@ -99,9 +105,10 @@
     font-family: Raleway;
   }
 
-  #nas{
+  #naslovvv{
     font-weight: bold;
     color: #323131dc;
+    margin-left: 0px;
   }
 
   #trg{
@@ -171,8 +178,22 @@
     cursor: pointer;
   }
   
+  .notification2 {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(62, 152, 30, 0.674);  /* Zelena boja za uspjeh */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: fadeInOut 5s ease-in-out;
+  }
+
   #dodaj-kosaricu {
-    background-color: #28a745;
+    background-color: rgba(62, 152, 30, 0.674); 
     color: #fff;
     border: none;
     height:45px;
@@ -187,7 +208,7 @@
   }
   
   #dodaj-kosaricu:hover {
-    background-color: #218838;
+    background-color: rgba(62, 152, 30);
   }
   
   #minus, #plus {

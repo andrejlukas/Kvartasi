@@ -254,7 +254,6 @@ export function PopisTrgovina() {
                                 <p className="card-text location-text">
                                   {"Udaljeno od vas: " + distanceToShop(address, shop.trgovinaLokacija) + " km"}
                                 </p>
-                                <span>avg stars</span>
                                 <p className="card-text hours-text">
                                   Radno vrijeme:{" "}
                                   <strong>

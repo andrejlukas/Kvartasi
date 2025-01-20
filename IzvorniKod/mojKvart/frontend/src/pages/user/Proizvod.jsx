@@ -14,6 +14,7 @@ export function Proizvod() {
   const [kupacId, setKupacId] = useState(null);
   const [userOcjena, setUserOcjena] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState(null);
 
   const [trgovinaId, setTrgovinaId] = useState(null);
   const [racunId, setRacunId] = useState(null);
@@ -243,73 +244,54 @@ export function Proizvod() {
     );
   };
   
-  const submitRating = async (userRating) => {
+  function submitRating(userOcjena) {
+    if (!userOcjena || !proizvodId || !kupacId) {
+      setError("Nedostaju informacije");
+      return;
+    }
+  
     const token = localStorage.getItem("token");
   
-    if (!token) {
-      setError("Nedostaje token za autentifikaciju. Prijavite se ponovo.");
+    if (!token || !kupacId) {
+      setError("Podaci za recenziju nisu dostupni");
       return;
     }
   
-    if (!kupacId) {
-      setError("Kupac ID nije pronađen. Molimo pokušajte ponovo.");
-      return;
-    }
-  
-    if (!userRating) {
-      setError("Molimo odaberite ocjenu prije slanja.");
-      return;
-    }
-  
-    setIsSubmitting(true);
-  
-    // Generiramo jedinstveni ID ocjene
-    const idOcjene = Date.now();
-  
-    // Pripremamo payload
-    const payload = {
-      id: idOcjene,
-      proizvodId,
-      kupacId,
-      ocjena: userRating,
+    const options4 = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ocjena: userOcjena,
+        kupac: kupacId,
+        proizvod: proizvodId,
+      }),
     };
   
-    try {
-      const validateTokenResponse = await fetch("/api/tokens/validate", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
+    setIsSubmitting(true); 
+    fetch(`/api/ocjenaProizvodKupacs`, options4)
+      .then((response) => {
+        if (response.ok) {
+          setNotification("Vaša ocjena je uspješno poslana!");
+          setUserOcjena(null); 
+          return response.json();
+        } else {
+          throw new Error("Failed to save changes");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating data:", error);
+        setNotification("Došlo je do pogreške pri slanju ocjene."); 
+      })
+      .finally(() => {
+        setIsSubmitting(false); 
+        setTimeout(() => setNotification(null), 5000);
       });
+  }
   
-      if (!validateTokenResponse.ok) {
-        const errorText = await validateTokenResponse.text();
-        throw new Error(`Token nije valjan: ${errorText}`);
-      }
   
-      const response = await fetch(`/api/ocjenaProizvodKupacs`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Greška pri slanju ocjene: ${response.status} - ${errorText}`);
-      }
-  
-      setIsSubmitting(false);
-      alert(`Vaša ocjena je uspješno zabilježena! ID ocjene: ${idOcjene}`);
-      setUserOcjena(null); // Resetiramo ocjenu
-    } catch (error) {
-      setIsSubmitting(false);
-      setError(error.message);
-    }};
   
   const renderStars = (srednjaOcjena) => {
     if (srednjaOcjena === null) {
@@ -369,7 +351,7 @@ export function Proizvod() {
                 />
               </div>
               <div id="pojedinosti">
-                <h2 id="nas">{proizvod.proizvodNaziv}</h2>
+                <h2 id="naslovvv">{proizvod.proizvodNaziv}</h2>
                 <p id="trg">{trgovinaNames[proizvod.trgovina]} </p>
                 <p id="kat">
                   <span id="kats">Kategorija:</span> {proizvod.proizvodKategorija}
@@ -413,12 +395,17 @@ export function Proizvod() {
                 <div id="zvjez">{renderInteractiveStars(userOcjena, setUserOcjena)} {/* Show the stars */}
                 </div>
                 <button 
-                  id="submit-rating"
+                  id="submit-ratingg"
                   onClick={() => submitRating(userOcjena)} // Submit the rating when the button is clicked
                   disabled={isSubmitting || !userOcjena} // Disable the button if submitting or no rating selected
                 >
                   {isSubmitting ? "Slanje..." : "Pošaljite ocjenu"} {/* Display loading or submit text */}
                 </button>
+                {notification && (
+                <div className="notification1">
+                  {notification}
+                </div>
+              )}
               </div>
               </div>
             </div>

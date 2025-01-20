@@ -17,7 +17,7 @@ body {
   align-items: flex-start; 
 }
 
-#nazivTrgovine{
+#nazivTrgovinee{
 
   padding-top: 10px;
   font-weight: bold;
@@ -140,7 +140,7 @@ a:hover {
 
 
 
-.add-to-cart-btn {
+.pogledaj {
   background-color: rgba(62, 152, 30, 0.674); 
   color: #fff;
   border: none;
@@ -150,7 +150,7 @@ a:hover {
   font-size: 14px;
 }
 
-.add-to-cart-btn:hover {
+.pogledaj:hover {
   background-color: rgba(62, 152, 30);
 }
 

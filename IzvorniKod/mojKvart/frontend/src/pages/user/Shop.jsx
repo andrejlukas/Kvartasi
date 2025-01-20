@@ -112,7 +112,7 @@ export function Shop() {
                   className="img-fluid mb-3 shop-image"
                 />
                 <div id="pomoc">
-                  <h2 id="nazivTrgovine">{shop.trgovinaNaziv || "N/A"}</h2>
+                  <h2 id="nazivTrgovinee">{shop.trgovinaNaziv || "N/A"}</h2>
                   <p id="opis">
                     <strong></strong> {shop.trgovinaOpis || "Nije dostupan"}
                   </p>
@@ -183,7 +183,9 @@ export function Shop() {
                             <p className="card-text">{product.proizvodOpis}</p>
                             <div id="gumbcijena">
                               <p className="price">€{product.proizvodCijena}</p>
-                              <button className="add-to-cart-btn">Dodaj u košaricu</button>
+                              <Link to={`/home/proizvod/${product.proizvodId}`} className="card-link"> 
+                              <button className="pogledaj">Pogledaj detalje</button>
+                              </Link>
                             </div>
                           </div>
                         </div>
