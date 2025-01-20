@@ -36,6 +36,14 @@ import { ModeratorRecenzije } from './pages/moderator/Recenzije';
 import { ModeratorUpravljanjeKupcima } from './pages/moderator/UpravljanjeKupcima';
 import { ModeratorKorisnickiRacun } from './pages/moderator/KorisnickiRacun';
 import { ModeratorMojiPodaci } from './pages/moderator/MojiPodaci';
+
+import { AdminHome } from './pages/admin/Home';
+import { AdminPonude } from './pages/admin/PonudeiPromocije';
+import { AdminRecenzije } from './pages/admin/Recenzije';
+import { AdminUpravljanjeUlogama } from './pages/admin/UpravljanjeUlogama';
+import { AdminKorisnickiRacun } from './pages/admin/KorisnickiRacun';
+import { AdminMojiPodaci } from './pages/admin/MojiPodaci';
+
 function App() {
   const [isAuthorized, setIsAuthorized] = useState(null);
   const [role, setRole] = useState(null);
@@ -117,7 +125,7 @@ function App() {
 
   const SecuredAdminRoute = ({ children }) => {
     if(isAuthorized === null && role === null) return <div>Loading...</div>;
-    if(!isAuthorized || role !== "ADMIN") return <NotFound />;
+    if(!isAuthorized || role !== "ADMINISTRATOR") return <NotFound />;
     return children;
   };
 
@@ -277,6 +285,43 @@ function App() {
             <ModeratorMojiPodaci />
           </SecuredModeratorRoute>
         } />
+
+        <Route path="/admin/home" element={
+          <SecuredAdminRoute>
+            <AdminHome />
+          </SecuredAdminRoute>
+        } />
+        <Route path="/admin/home/proizvodi" element={
+          <SecuredAdminRoute>
+            <AdminHome />
+          </SecuredAdminRoute>
+        } />
+        <Route path="/admin/home/recenzije" element={
+          <SecuredAdminRoute>
+            <AdminRecenzije />
+          </SecuredAdminRoute>
+        } />
+        <Route path="/admin/home/ponude" element={
+          <SecuredAdminRoute>
+            <AdminPonude />
+          </SecuredAdminRoute>
+        } />
+        <Route path="/admin/home/uloge" element={
+          <SecuredAdminRoute>
+            <AdminUpravljanjeUlogama />
+          </SecuredAdminRoute>
+        } />
+        <Route path="/racunadmin" element={
+          <SecuredAdminRoute>
+            <AdminKorisnickiRacun />
+          </SecuredAdminRoute>
+        } />
+        <Route path="/podaciadmin" element={
+          <SecuredAdminRoute>
+            <AdminMojiPodaci />
+          </SecuredAdminRoute>
+        } />
+        
 
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
