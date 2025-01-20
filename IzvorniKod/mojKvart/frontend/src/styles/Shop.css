@@ -83,7 +83,7 @@ a:hover {
 
 .price{
   font-size: 18px;
-  color: #2c8c2c;
+  color: #28a745;
   font-weight: bold;
 }
 #products {
@@ -141,7 +141,7 @@ a:hover {
 
 
 .pogledaj {
-  background-color: rgba(62, 152, 30, 0.674); 
+  background-color: #28a745; 
   color: #fff;
   border: none;
   padding: 8px 12px;
@@ -151,7 +151,7 @@ a:hover {
 }
 
 .pogledaj:hover {
-  background-color: rgba(62, 152, 30);
+  background-color: #218838;
 }
 
 @media (max-width: 1000px) {
