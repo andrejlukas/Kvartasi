@@ -41,6 +41,7 @@ export function PonudeiPromocije() {
             ponudaPopust: kupacponudapopustid
 
          })}
+      
       fetch(`/api/kupacPonudaPopusts`, optionsPOST)
          .then(response =>{
            if (!response.ok) {
@@ -51,11 +52,51 @@ export function PonudeiPromocije() {
          })
          .then(updated => {
          setMessage(`Popust (${naziv}) spremljen`)
+         const options = {
+            method: 'GET',
+            headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            },
+         };
+   
+   
+         Promise.all([
+         fetch(`/api/popusts/flag-true/${idKupac}`, options)
+            .then((response) => {
+            if (!response.ok) {
+               throw new Error("Neuspješno dohvaćanje popusta.");
+            }
+            return response.json();
+         })
+            .then((data) => {
+               console.log(data)
+               setPopusti(data);
+               generateQRCodes(data);
+         })
+            .catch((error) => {
+            setError(error.message);
+         }),
+         fetch(`/api/ponudas/flag-true/${idKupac}`, options)
+            .then((response) => {
+            if (!response.ok) {
+               throw new Error("Neuspješno dohvaćanje ponuda.");
+            }
+            return response.json();
+         })
+            .then((data) => {
+               setPonude(data);
+         })
+      ])
+            .catch((error) => {
+            setError(error.message);
+         })
            
          })
          .catch(error => {
              console.error('Error updating data:', error);
       })
+      
    }
 
    const spremiPonuda = (naziv, kupacponudapopustid, nazivtrgovine) => {
@@ -69,6 +110,7 @@ export function PonudeiPromocije() {
          return
 
       }
+
       const optionsPOST = {
          method: 'POST',
          headers: {
@@ -91,11 +133,51 @@ export function PonudeiPromocije() {
          })
          .then(updated => {
          setMessage(`Ponuda (${naziv}) spremljena`)
+         const options = {
+            method: 'GET',
+            headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            },
+         };
+   
+   
+         Promise.all([
+         fetch(`/api/popusts/flag-true/${idKupac}`, options)
+            .then((response) => {
+            if (!response.ok) {
+               throw new Error("Neuspješno dohvaćanje popusta.");
+            }
+            return response.json();
+         })
+            .then((data) => {
+               console.log(data)
+               setPopusti(data);
+               generateQRCodes(data);
+         })
+            .catch((error) => {
+            setError(error.message);
+         }),
+         fetch(`/api/ponudas/flag-true/${idKupac}`, options)
+            .then((response) => {
+            if (!response.ok) {
+               throw new Error("Neuspješno dohvaćanje ponuda.");
+            }
+            return response.json();
+         })
+            .then((data) => {
+               setPonude(data);
+         })
+      ])
+            .catch((error) => {
+            setError(error.message);
+         })
            
          })
          .catch(error => {
              console.error('Error updating data:', error);
       })
+      
 
    }
 
