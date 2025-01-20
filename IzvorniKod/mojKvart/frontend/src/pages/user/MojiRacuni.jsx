@@ -286,7 +286,7 @@ export function MojiRacuni() {
                         :(
                         
                             <div className="moji-racuni-container">
-                                <h1>Moji racuni</h1>
+                                <h1>Moji računi</h1>
                                 <div className="moji-racuni-lista">
                                     {
                                         Object.keys(racuni).length > 0 ? (Object.keys(racuni).map((key) => (

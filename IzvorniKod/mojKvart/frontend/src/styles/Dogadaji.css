@@ -92,6 +92,10 @@
   transition: background-color 0.3s;
 }
 
+.confirm-button:hover{
+  background-color: #218838;
+}
+
 .items-dogadaji {
   display: flex;
   flex-direction: row;

@@ -14,7 +14,7 @@ body {
 
 .price-alt {
   font-size: 18px;
-  color: #2c8c2c;
+  color: #28a745;
   font-weight: bold;
 }
 
@@ -74,7 +74,7 @@ body {
 }
 
 .pogl {
-  background-color: rgba(62, 152, 30, 0.674); 
+  background-color: #28a745; 
   color: #fff;
   border: none;
   padding: 8px 12px;
@@ -84,7 +84,7 @@ body {
 }
 
 .pogl:hover {
-  background-color: rgba(62, 152, 30);
+  background-color: #218838;
 }
 
 #productController {
@@ -110,24 +110,9 @@ body {
 
 #productController input[type="radio"] {
   margin-right: 5px;
-  accent-color: #2c8c2c;
+  accent-color: #28a745;
 }
 
-#addProduct {
-  background-color: #2c8c2c;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-family: Raleway, sans-serif;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#addProduct:hover {
-  background-color: rgba(62, 152, 30);
-}
 
 #vani2 {
   z-index: 1;

@@ -143,23 +143,5 @@ justify-content: space-between
 
 }
 
-@media (max-width: 450px) {
-    #kosarica-proizvod{
-        flex-direction: column;
-    }
-    .kosarica-proizvod-cijena p {
-        width: 100%;
-    }
-    #element-proizvoda {
-        width: 100%;
-        text-align: center;
-    }
-    .kosarica-proizvod-kolicina{
-        justify-content: center
-    }
-    .kosarica-glavni-div{
-        min-width: 210px;
-    }
 
 
-}

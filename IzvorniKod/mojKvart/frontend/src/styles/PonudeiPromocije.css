@@ -63,16 +63,17 @@
   flex-direction: column;
   box-sizing: border-box;
   height: 13rem;
-  transition: border ease; 
+  transition: border ease;
 }
 
 
 
 .popust-header {
-   padding-left: 10px;
+  padding-left: 10px;
   font-size: 20px;
   font-weight: 600;
   border-radius: 8px;
+  padding-top: 13px;
 }
 
 .popust-body {
@@ -105,11 +106,12 @@
   flex-direction: row;
   align-items: center;
   gap: 110px;
+  padding-bottom: 20px;
 }
 
 .qr-code {
-  
   height: 100%;
+  height: 110px;
   padding-bottom: 0px;
   object-fit: contain;
 }

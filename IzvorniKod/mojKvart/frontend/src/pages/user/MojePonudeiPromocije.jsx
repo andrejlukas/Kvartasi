@@ -383,7 +383,7 @@ export function MojePonudeiPromocije(){
 
                                                 </div>
                                                 <div className="moje-ponude-popusti-buttons" >
-                                                <button onClick={()=> izbrisaoPopust(element.kupacPonudaPopustId,element.popustNaziv)}>Makni popust</button>
+                                                <button onClick={()=> izbrisaoPopust(element.kupacPonudaPopustId,element.popustNaziv)}>Izbriši popust</button>
                                                 <button onClick={()=> iskoristiPopust(element.kupacPonudaPopustId,element.popustId)}>Iskoristio popust</button>
 
                                                 </div>
@@ -406,7 +406,7 @@ export function MojePonudeiPromocije(){
                                                 {/* <p> Ponuda:  {element.ponudaId}</p> */}
                                                 </div>
                                                 <div className="moje-ponude-popusti-buttons">
-                                                <button onClick={()=> izbrisaoPonudu(element.kupacPonudaPopustId,element.ponudaNaziv)}>Makni ponudu</button>
+                                                <button onClick={()=> izbrisaoPonudu(element.kupacPonudaPopustId,element.ponudaNaziv)}>Izbriši ponudu</button>
                                                 <button onClick={()=> iskoristiPonudu(element.kupacPonudaPopustId,element.ponudaId)}>Iskoristio ponudu</button>
 
                                                 </div>
