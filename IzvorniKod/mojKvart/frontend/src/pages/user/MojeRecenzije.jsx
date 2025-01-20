@@ -267,13 +267,25 @@ async function brisanjeRecenzije(poslanId) {
                             <div className="stupac-recenzija" id="recenzija-dodatne-info" >
                                 <div className="recenzija-ocjena">
                                     <p>Ocjena:</p>
-                                    <p id="brojzvjezdica">{recenzija.recenzijaZvjezdice}</p>
+                                    <div className="star-rating">
+                                        {[...Array(5)].map((star, index) => {
+                                            const starValue = index + 1;
+                                            return (
+                                                <span
+                                                    key={index}
+                                                    className={`star ${starValue <= recenzija.recenzijaZvjezdice ? 'filled' : ''}`}
+                                                >
+                                                    &#9733;
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                                 <div>
                                     <p>Vrijeme kreiranja:</p>
                                     <p>{recenzija.vrijemeKreiranja}</p></div>
                                 <div id="odobrenotekst-recenzija">
-                                    {recenzija.odobrioModerator && (<p id="odebrenotekst">Odobrio moderator!</p>)}
+                                    {recenzija.odobrioModerator ? (<p id="odebrenotekst">Odobrio moderator!</p>) : (<p id="nije-odebrenotekst">Nije odoborio moderator!</p>)}
                                 </div>
                                 <button className="brisanjeRec" onClick={() => brisanjeRecenzije(recenzija.recenzijaId)}>Izbriši recenziju!</button>
                             </div>

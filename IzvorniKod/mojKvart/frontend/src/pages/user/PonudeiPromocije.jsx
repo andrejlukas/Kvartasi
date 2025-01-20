@@ -13,8 +13,98 @@ export function PonudeiPromocije() {
    const [error, setError] = useState(null);
    const [loading, setLoading]=useState(true);
 
+   const [message,setMessage] = useState("")
+
+   function zatvori() {
+      setMessage("")
+   }
+   const spremiPopust = (naziv, kupacponudapopustid, nazivtrgovine) => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Nedostaje token za autorizaciju.");
+        return;
+      }
+      if(!idKupac || !kupacponudapopustid){
+         throw new Error("nemam sve informacije za spremanje popusta");
+         return
+
+      }
+      const optionsPOST = {
+         method: 'POST',
+         headers: {
+             'Authorization': `Bearer ${token}`,
+             'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({ 
+            kupacPonudaPopustFlag : false,
+            kupac : idKupac,
+            ponudaPopust: kupacponudapopustid
+
+         })}
+      fetch(`/api/kupacPonudaPopusts`, optionsPOST)
+         .then(response =>{
+           if (!response.ok) {
+             return response.text().then((text) => {
+               throw new Error(text);
+             });
+           }
+         })
+         .then(updated => {
+         setMessage(`Popust (${naziv}) spremljen`)
+           
+         })
+         .catch(error => {
+             console.error('Error updating data:', error);
+      })
+   }
+
+   const spremiPonuda = (naziv, kupacponudapopustid, nazivtrgovine) => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Nedostaje token za autorizaciju.");
+        return;
+      }
+      if(!idKupac || !kupacponudapopustid){
+         throw new Error("nemam sve informacije za spremanje ponude");
+         return
+
+      }
+      const optionsPOST = {
+         method: 'POST',
+         headers: {
+             'Authorization': `Bearer ${token}`,
+             'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({ 
+            kupacPonudaPopustFlag : false,
+            kupac : idKupac,
+            ponudaPopust: kupacponudapopustid
+
+         })}
+      fetch(`/api/kupacPonudaPopusts`, optionsPOST)
+         .then(response =>{
+           if (!response.ok) {
+             return response.text().then((text) => {
+               throw new Error(text);
+             });
+           }
+         })
+         .then(updated => {
+         setMessage(`Ponuda (${naziv}) spremljena`)
+           
+         })
+         .catch(error => {
+             console.error('Error updating data:', error);
+      })
+
+   }
+
+
+
+
    useEffect(() => {
       const token = localStorage.getItem('token');
+      console.log(token)
       const options = {
           method: 'POST',
           headers: {
@@ -164,7 +254,7 @@ export function PonudeiPromocije() {
                                              className="qr-code"
                                           />
                                        )}
-                                       <button className="save-button">Spremi popust</button>
+                                       <button className="save-button" onClick={() => spremiPopust(pop.popustNaziv,pop.ponudaPopust,pop.trgovinaIme)}>Spremi popust</button>
                                     </div>
                                  </div>
                               </div>
@@ -186,7 +276,7 @@ export function PonudeiPromocije() {
                                        <p className="popust-details">{ponuda.ponudaOpis}</p>
                                     </div>
                                     <div className="popust-actions">
-                                       <button className="save-button">Spremi ponudu</button>
+                                       <button className="save-button" onClick={() => spremiPonuda(ponuda.ponudaNaziv,ponuda.ponudaPopust,ponuda.trgovinaIme)} >Spremi ponudu</button>
                                     </div>
                                  </div>
                               </div>
@@ -200,6 +290,9 @@ export function PonudeiPromocije() {
                <p>Nema dostupnih popusta ili proizvoda</p>      
             ))}
          </div>
+         {
+                        message  && <div className="moje-ponude-popusti-zatvori-div"><p>{message}</p> <button className="zatvaranje-obavijesti-o-iskoristenom" onClick={() => zatvori()}>Zatvori</button></div>
+                    }
       </div>
    );
 }

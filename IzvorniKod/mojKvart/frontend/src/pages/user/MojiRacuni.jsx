@@ -24,9 +24,37 @@ export function MojiRacuni() {
     const [openedRacuni, setOpenedRacuni] = useState([]); // Čuva ID-ove otvorenih računa
     const [openedRecenzije, setOpenedRecenzije] = useState([]); // Čuva ID-ove računa otvorenih recenzija
 
-  const [loading, setLoading]=useState(true);
+    const [loading, setLoading]=useState(true);
 
 
+    const renderStars = (key) => {
+        const stars = [];
+        const currentRating = ocjenaRec[key] || 1;
+        const [hover, setHover] = useState(0);
+
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <span
+                    key={i}
+                    className={`star ${i <= (hover || currentRating) ? 'filled' : ''}`}
+                    onClick={() => setOcjenaRec(prev => ({ ...prev, [key]: i }))}
+                    onMouseEnter={() => setHover(i)}
+                    onMouseLeave={() => setHover(0)}
+                    role="button"
+                    aria-label={`Ocjena ${i}`}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            setOcjenaRec(prev => ({ ...prev, [key]: i }));
+                        }
+                    }}
+                >
+                    &#9733;
+                </span>
+            );
+        }
+        return stars;
+    };
 
     const prikazracuna = (key) => {
         if (openedRacuni.includes(key)) {
@@ -287,9 +315,8 @@ export function MojiRacuni() {
                                                         openedRecenzije.includes(key) && 
                                                         (
                                                             <div className="ostavljanje-recenzije-container">
-                                                                <p>Ostavi recenziju</p>
                                                                 <form id ="unos-recenziije-form" onSubmit={(e) => dodajRec(e, racuniInfo[key][0],key)} >
-                                                                <div>
+                                                                <div className="div-unos-tekst-recenzija">
                                                                     <label >Unesite tekst:</label>
                                                                     <input id="tekstrecenzija-mojiracuni"
                                                                         type="text"
@@ -301,15 +328,40 @@ export function MojiRacuni() {
                                                                 </div>
                                 
                                                                 <div>
-                                                                    <label htmlFor="numberInput">Ocjeni:</label>
-                                                                    <input
+                                                                    <label >Ocjeni:</label>
+                                                                    <div className="star-rating">
+                                                                    {[...Array(5)].map((star, index) => {
+                                                                        const starValue = index + 1;
+                                                                        return (
+                                                                            <span
+                                                                                key={starValue}
+                                                                                className={`star ${starValue <= (ocjenaRec[key] || 1) ? 'filled' : ''}`}
+                                                                                onClick={() => setOcjenaRec(prev => ({ ...prev, [key]: starValue }))}
+                                                                                onMouseEnter={() => setOcjenaRec(prev => ({ ...prev, [`hover-${key}`]: starValue }))}
+                                                                                onMouseLeave={() => setOcjenaRec(prev => ({ ...prev, [`hover-${key}`]: 0 }))}
+                                                                                role="button"
+                                                                                aria-label={`Ocjena ${starValue}`}
+                                                                                tabIndex={0}
+                                                                                onKeyDown={(e) => {
+                                                                                    if (e.key === 'Enter') {
+                                                                                        setOcjenaRec(prev => ({ ...prev, [key]: starValue }));
+                                                                                    }
+                                                                                }}
+                                                                            >
+                                                                                &#9733;
+                                                                            </span>
+                                                                        );
+                                                                    })}
+
+                                                                    </div>
+                                                                    {/* <input
                                                                         type="number"
                                                                         value={ocjenaRec[key]}
                                                                         placeholder={ocjenaRec[key] || Number(1)}
 
                                                                         onChange={(e) => setOcjenaRec(prevNames => ({ ...prevNames, [key]: Number(e.target.value) }))}
                                                                         
-                                                                    />
+                                                                    /> */}
                                                                 </div>
                                                                 { Object.keys(errorMessage).includes(key) && <p style={{ color: 'red' }}>{errorMessage[key]}</p>}
                                                                 <div className="form-buttons">

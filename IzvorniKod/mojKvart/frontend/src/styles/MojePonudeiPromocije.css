@@ -53,6 +53,8 @@
     padding: 40px;
     color: black;
     border-radius: 30px;
+    width: 450px;
+    height: 200px;
 }
 .moje-ponude-popusti-zatvori-div button{
     background-color: rgb(85, 85, 85,0.2);
