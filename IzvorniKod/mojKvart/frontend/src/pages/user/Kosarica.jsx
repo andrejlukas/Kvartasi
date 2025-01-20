@@ -253,38 +253,37 @@ export function Kosarica(){
                                 /* console.log(key) */
                                 <div className={key} id="kosarica-element" >
                                     
-                                    <p className="kosarica-element-naslov">Trgovina : {proizvodi[0].trgovinaNaziv}</p>
+                                    <p className="kosarica-element-naslov">{proizvodi[0].trgovinaNaziv}</p>
                                     <hr></hr>
                                     <div className="kosarica-proizvodi-ispis" >
                                         {
                                             proizvodi
-                                            .slice() //kopiram i sortiram
+                                            .slice() 
                                             .sort((a, b) => a.proizvodNaziv.localeCompare(b.proizvodNaziv))
                                             .map((proizvod)=>
-                                            <div className={proizvod.proizvodNaziv}  id="kosarica-proizvod">
-                                                <p id="element-proizvoda">{proizvod.proizvodNaziv}</p>
-                                                <div id="element-proizvoda" className="kosarica-proizvod-cijena">
-                                                <p>{proizvod.proizvodCijena.toFixed(2)} </p>
-                                                <p>€/kom</p>
-
+                                                <div className={proizvod.proizvodNaziv} id="kosarica-proizvod">
+                                                <p id="nazproiz">{proizvod.proizvodNaziv}</p> 
+                                                <div className="kosarica-proizvod-detalji">
+                                                    <div id="element-proizvoda" className="kosarica-proizvod-cijena">
+                                                        <p id="cijj">{proizvod.proizvodCijena.toFixed(2)}€/kom</p>
+                                                    </div>
+                                                    <div id="element-proizvoda" className="kosarica-proizvod-kolicina">
+                                                        <button onClick={() => smanjiKolicinuProizvoda(proizvod.proizvodId)}>-</button>
+                                                        <p>{proizvod.proizvodKolicina}</p>
+                                                        <button onClick={() => uvecajKolicinuProizvoda(proizvod.proizvodId)}>+</button>
+                                                    </div>
+                                                    <p id="element-proizvoda" className="proizvod-kolicina-iznos">
+                                                        {(proizvod.proizvodCijena * proizvod.proizvodKolicina).toFixed(2)}€
+                                                    </p>
                                                 </div>
-
-                                                <div id="element-proizvoda"className="kosarica-proizvod-kolicina">
-                                                <button onClick={() =>smanjiKolicinuProizvoda(proizvod.proizvodId)}>-</button>
-                                                <p>{proizvod.proizvodKolicina}</p>
-                                                <button onClick={() => uvecajKolicinuProizvoda(proizvod.proizvodId)}>+</button>
-                                                </div>
-                                                
-                                                <p id="element-proizvoda" className="proizvod-kolicina-iznos">{(proizvod.proizvodCijena * proizvod.proizvodKolicina).toFixed(2) } €</p>
-
-                                                
                                             </div>
+
                                             )
                                         }
                                     </div>
                                     <div className="trgovina-ukupno">
                                         <p>Ukupno:  </p>
-                                        <p>{
+                                        <p id="ukupcijena">{
                                         proizvodi.reduce(
                                             (sum, proizvod) =>
                                                 sum + proizvod.proizvodKolicina * proizvod.proizvodCijena,

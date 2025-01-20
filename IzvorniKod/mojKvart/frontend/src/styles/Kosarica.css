@@ -1,25 +1,30 @@
-.kosarica-glavni-div{
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
+
+.kosarica-glavni-div {
     height: 100%;
+    font-family: Raleway, sans-serif;
     text-align: left;
-    padding: 20px;
+    padding: 30px;
     background-color: #ffffff;
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     position: relative;
     flex-direction: column;
     box-sizing: border-box;
+    align-self: center;
     margin: 20px;
     display: flex;
-    width: 70%;
+    width: 80%;
     gap: 20px;
 }
 
-.kosarica-glavni-div ul{
+.kosarica-glavni-div ul {
     display: flex;
     flex-direction: row;
     padding: 0px;
     justify-content: space-around;
-    list-style-type: none; 
+    list-style-type: none;
 }
 
 .kosarica-odabir {
@@ -27,60 +32,98 @@
     border-bottom-style: solid;
     border-bottom-color: rgba(50, 49, 49, 0.5);
     border-bottom-width: 2px;
+    text-align: center;
 }
 
-.kosarica-odabir ul  a{
-    text-decoration: none; 
+.kosarica-odabir ul a {
+    text-decoration: none;
     color: rgba(50, 49, 49, 0.5);
-    font-weight: 700; 
+    font-weight: 700;
     font-size: 24px;
+    margin-inline: 10px;
+    
 }
 
-.kosarica-odabir ul a:hover{
+.kosarica-odabir ul a:hover {
     color: rgba(50, 49, 49, 0.8);
 }
 
-#element-proizvoda{
+#element-proizvoda {
     width: 20%;
 }
 
-#kosarica-element{
+#nazproiz{
+    font-weight: bolder;
+    color: #323131;
+    margin-bottom: 10px;
+}
+
+#kosarica-element {
     display: flex;
     flex-direction: column;
     background-color: rgba(62, 152, 30, 0.2);
     border-radius: 30px;
     padding: 20px;
+    padding-inline: 30px;
     justify-content: space-between;
 }
 
-.kosarica-element-naslov{
-    font-size: larger;
-    font-weight: bolder;
-    color: black;
+.kosarica-element-naslov {
+    font-size: 24px;
+    font-weight: bold;
+    color: #323131;
+    margin-bottom: 0px;
 }
-.kosarica-proizvodi-ispis{
+
+.kosarica-proizvodi-ispis {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-#kosarica-proizvod{
+
+#kosarica-proizvod {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center
+    flex-direction: column; 
+    gap: 10px; 
 }
 
-.kosarica-proizvod-kolicina{
+
+.kosarica-proizvod-detalji {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+
+.kosarica-proizvod-cijena,
+.kosarica-proizvod-kolicina,
+.proizvod-kolicina-iznos {
+    flex: 1; 
+    text-align: center; 
+}
+
+.kosarica-proizvod-cijena p {
+    width: 45%;
+}
+
+.proizvod-kolicina-iznos {
+    text-align: end;
+}
+
+
+.kosarica-proizvod-kolicina {
     flex-direction: row;
     display: flex;
     align-items: baseline;
-    gap: 5px;
-    justify-content: space-around
+    justify-content: center;
+    gap: 10px;
 }
-.kosarica-proizvod-kolicina button{
-    background-color: rgb(85, 85, 85,0.2);
-    
+
+.kosarica-proizvod-kolicina button {
+    background-color: rgba(85, 85, 85, 0.2);
     border: none;
     border-radius: 30px;
     padding: 5px 10px;
@@ -88,60 +131,77 @@
     cursor: pointer;
     transition: background-color 0.3s;
 }
+
 .kosarica-proizvod-kolicina button:hover {
-    background-color: rgb(85, 85, 85,0.4);
-  }
-.kosarica-proizvod-cijena{
+    background-color: #218838;
+}
+
+.trgovina-ukupno {
+    margin-top: 30px;
+    color: #555;
     flex-direction: row;
     display: flex;
-    align-items: baseline;
-    gap: 5px;
-    justify-content: space-between
-}
-.kosarica-proizvod-cijena p {
-    width: 45%;
-}
-.proizvod-kolicina-iznos{
-    text-align: end;
+    gap: 10px;
+    justify-content: space-between;
+    font-size: 18px;
 }
 
-
-.trgovina-ukupno{
-  color: #555;
-  flex-direction: row;
-display: flex;
-gap: 10px;
-justify-content: space-between
+#ukupcijena{
+    font-weight: bold;
+    color:#218838;
+    font-size: 18px;
 }
 
-.prikaz-kosarice{
+.prikaz-kosarice {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-@media (max-width: 768px) {
-    .kosarica-glavni-div{
-        width: 90%;
-        margin-left: 10px ;
-        margin-right: 10px;
-
-    }
-   
-
-    .kosarica-glavni-div ul{
+@media (max-width:768px) {
+    .kosarica-glavni-div ul {
+        display: flex;
         flex-direction: column;
+        padding: 0px;
         gap: 10px;
-        align-items: center
-    }
-    #element-proizvoda {
-       /*  width: auto; */
-    }
-    #kosarica-proizvod{
-        gap: 10px;
+        justify-content: space-around;
+        list-style-type: none;
     }
 
+    .kosarica-proizvod-detalji{
+        display: flex;
+        flex-direction: column;
+        align-items: start; 
+        padding-left: 10px;
+        margin-bottom: 10px;
+    }
+
+    .kosarica-proizvod-kolicina {
+        flex-direction: row;
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 10px;
+        padding-left: 25px;
+    }
+    
+    .kosarica-proizvod-kolicina button {
+        background-color: rgba(85, 85, 85, 0.2);
+        border: none;
+        border-radius: 30px;
+        padding: 5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    #nazproiz{
+        font-weight: bolder;
+        color: #323131;
+        margin-bottom: 5px;
+    }
+
+    
+
+   
 }
-
-
-
