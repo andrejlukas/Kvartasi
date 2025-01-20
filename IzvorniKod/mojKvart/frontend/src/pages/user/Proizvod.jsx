@@ -19,6 +19,12 @@ export function Proizvod() {
   const [racunId, setRacunId] = useState(null);
   const [kupacProizvodId, setKupacProizvodId] = useState(null);
 
+  const [message,setMessage] = useState("")
+
+  function zatvori() {
+    setMessage("")
+}
+
   const povecajKolicinu = () => {
     setKolicina(kolicina + 1);
   };
@@ -43,9 +49,9 @@ export function Proizvod() {
     // Provjerite jesu li potrebne varijable postavljene
     if (!kupacId || !trgovinaId || !proizvodId) {
       setError("Podaci za kupca, trgovinu ili proizvod nisu dostupni.");
-      console.log(kupacId)
-      console.log(trgovinaId)
-      console.log(proizvodId)
+      //console.log(kupacId)
+      //console.log(trgovinaId)
+      //console.log(proizvodId)
 
       return;
     }
@@ -62,9 +68,16 @@ export function Proizvod() {
   
     
       fetch(`/api/kupacProizvods/dodaj/${kupacId}/${trgovinaId}/${proizvodId}/${kolicina}`, options)
-    .then(response => response.ok && console.log("uspjela"))
+    .then(response =>{
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(text);
+        });
+      }
+    })
     .then(updated => {
-      console.log(updated)
+    setMessage("Proizvod dodan u kosaricu")
+      
     })
     .catch(error => {
         console.error('Error updating data:', error);
@@ -412,6 +425,9 @@ export function Proizvod() {
           )}
         </div>
       </div>
+      {
+                        message  && <div className="dodan-u-kosaricu-zatvori-div"><p>{message}</p> <button className="zatvaranje-obavijesti" onClick={() => zatvori()}>Zatvori</button></div>
+                    }
     </div>
   );
 }

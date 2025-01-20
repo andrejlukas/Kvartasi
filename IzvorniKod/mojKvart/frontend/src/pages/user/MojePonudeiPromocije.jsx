@@ -18,6 +18,113 @@ export function MojePonudeiPromocije(){
         setMessage("")
     }
 
+    async function izbrisaoPopust(kupacPonudaPopustId,naziv) {
+        if (!kupacPonudaPopustId) {
+            setError("Nemam podatke za izbrisat ponudu");
+            console.error("Nemam podatke za iskorištiti ponudu");
+            return;
+        }
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError("Token nije pronađen");
+            console.error("Token nije pronađen u localStorage");
+            return;
+        }
+        
+        const optionsDELETE = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+        const optionsGET = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+        try {
+            const putResponse = await fetch(`/api/kupacPonudaPopusts/${kupacPonudaPopustId}`, optionsDELETE);
+            
+            if (!putResponse.ok) {
+                const errorText = await putResponse.text();
+                throw new Error(`PUT zahtjev nije uspio: ${errorText}`);
+            }
+    
+            setMessage(`Popust (${naziv}) nije više spremljen`);
+    
+            const getResponse = await fetch(`/api/kupacPonudaPopusts/popusti/neiskoristeni/${idKupac}`, optionsGET);
+    
+            if (!getResponse.ok) {
+                const errorText = await getResponse.text();
+                throw new Error(`GET zahtjev nije uspio: ${errorText}`);
+            }
+    
+            const data = await getResponse.json();
+            setPopusti(data);
+    
+        } catch (error) {
+            console.error("Greška u funkciji makni:", error);
+            setError(error.message || "Došlo je do nepoznate greške");
+        }
+        
+    }
+
+    async function izbrisaoPonudu(kupacPonudaPopustId, naziv) {
+        if (!kupacPonudaPopustId) {
+            setError("Nemam podatke za izbrisat ponudu");
+            console.error("Nemam podatke za iskorištiti ponudu");
+            return;
+        }
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError("Token nije pronađen");
+            console.error("Token nije pronađen u localStorage");
+            return;
+        }
+        
+        const optionsDELETE = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+        const optionsGET = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        };
+        try {
+            const putResponse = await fetch(`/api/kupacPonudaPopusts/${kupacPonudaPopustId}`, optionsDELETE);
+            
+            if (!putResponse.ok) {
+                const errorText = await putResponse.text();
+                throw new Error(`PUT zahtjev nije uspio: ${errorText}`);
+            }
+    
+            setMessage(`Ponuda (${naziv}) nije više spremljena`);
+    
+            const getResponse = await fetch(`/api/kupacPonudaPopusts/ponude/neiskoristene/${idKupac}`, optionsGET);
+    
+            if (!getResponse.ok) {
+                const errorText = await getResponse.text();
+                throw new Error(`GET zahtjev nije uspio: ${errorText}`);
+            }
+    
+            const data = await getResponse.json();
+            setPonude(data);
+    
+        } catch (error) {
+            console.error("Greška u funkciji makni:", error);
+            setError(error.message || "Došlo je do nepoznate greške");
+        }
+    }
+
     async function iskoristiPonudu(kupacPonudaPopustId, idponude) {
         if (!kupacPonudaPopustId) {
             setError("Nemam podatke za iskorištiti ponudu");
@@ -276,7 +383,7 @@ export function MojePonudeiPromocije(){
 
                                                 </div>
                                                 <div className="moje-ponude-popusti-buttons" >
-                                                <button >Makni popust</button>
+                                                <button onClick={()=> izbrisaoPopust(element.kupacPonudaPopustId,element.popustNaziv)}>Makni popust</button>
                                                 <button onClick={()=> iskoristiPopust(element.kupacPonudaPopustId,element.popustId)}>Iskoristio popust</button>
 
                                                 </div>
@@ -299,7 +406,7 @@ export function MojePonudeiPromocije(){
                                                 {/* <p> Ponuda:  {element.ponudaId}</p> */}
                                                 </div>
                                                 <div className="moje-ponude-popusti-buttons">
-                                                <button >Makni ponudu</button>
+                                                <button onClick={()=> izbrisaoPonudu(element.kupacPonudaPopustId,element.ponudaNaziv)}>Makni ponudu</button>
                                                 <button onClick={()=> iskoristiPonudu(element.kupacPonudaPopustId,element.ponudaId)}>Iskoristio ponudu</button>
 
                                                 </div>
