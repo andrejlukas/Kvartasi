@@ -109,10 +109,84 @@ export function ModeratorRecenzije() {
     updateReview(review);
   };
 
-  const OdbijRecenziju = (review) => {
+  async function ObrisiRecenziju(reviewData){
+    const token = localStorage.getItem("token");
+    if (!token) {
+        setError("Nedostaje token za autorizaciju.");
+        return;
+    }
+
+    const options = {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    };
+
+    try {
+        // Brisanje recenzije
+        const deleteResponse = await fetch(`/api/recenzijas/${reviewData.recenzijaId}`, options);
+        if (!deleteResponse.ok) {
+            throw new Error(`Brisanje recenzije nije uspjelo. Status: ${deleteResponse.status}`);
+        }
+
+        // Dohvaćanje ažuriranih recenzija
+        const recenzijeOptions = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        fetch(`/api/recenzijas/approved`, recenzijeOptions)
+        .then(async (response) => {
+          if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setApprovedReviews(data);
+          if (reviewsType === "approved") {
+            setReviews(data);
+          }
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+  
+      fetch(`/api/recenzijas/not-approved`, recenzijeOptions)
+        .then(async (response) => {
+          if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setNotApprovedReviews(data);
+          if (reviewsType === "notApproved") {
+            setReviews(data);
+          }
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+
+
+    } catch (error) {
+        console.error("Pogreška prilikom obrade recenzija:", error);
+        setError(error.message);
+    }
+
+  }
+
+ /*  const OdbijRecenziju = (review) => {
     review.odobrioModerator = false;
     updateReview(review);
-  };
+  }; */
 
   return (
     <div>
@@ -164,11 +238,17 @@ export function ModeratorRecenzije() {
                           >
                             Odobri recenziju
                           </button>
-                          <button
+                         {/*  <button
                             className="add-to-cart-btn-no"
                             onClick={() => OdbijRecenziju(review)}
                           >
                             Odbij recenziju
+                          </button> */}
+                          <button
+                            className="add-to-cart-btn-no"
+                            onClick={() => ObrisiRecenziju(review)}
+                          >
+                            Obriši recenziju
                           </button>
                         </>
                       )}
