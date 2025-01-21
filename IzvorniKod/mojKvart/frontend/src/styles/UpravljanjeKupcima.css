@@ -5,7 +5,7 @@ body {
     height: 100%;
   }
   
-  #reviews-alt1 {
+  #customers-alt1 {
     flex: 2;
     background-color: #ededed;
     border-radius: 8px;
@@ -20,14 +20,14 @@ body {
     color: #323131;
   }
   
-  #reviewsbox1 {
+  #customersbox1 {
     margin-bottom: 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
   }
   
-  .review-card-alt1 {
+  .customer-card-alt1 {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 20px;
@@ -49,7 +49,7 @@ body {
     padding-left: 10px;
   }
   
-  .review-section-alt1 {
+  .customer-section-alt1 {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
@@ -72,24 +72,6 @@ body {
   
   
 
-  .add-to-cart-btn-yes{
-    background-color: #28a745; 
-    margin-top: 10px;
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-bottom: 10px;
-    width: 60%;
-    align-self: center;
-  }
-
-  .add-to-cart-btn-yes:hover{
-    background-color: #218838;
-  }
-
   .add-to-cart-btn-no{
     background-color: #e12020; 
     color: #fff;
@@ -109,7 +91,7 @@ body {
   
  
   
-  #reviewController1 {
+  #customerController1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -120,7 +102,7 @@ body {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   }
   
-  #reviewController1 label {
+  #customerController1 label {
     font-family: Raleway, sans-serif;
     font-size: 16px;
     color: #323131;
@@ -130,7 +112,7 @@ body {
     gap: 8px;
   }
   
-  #reviewController1 input[type="radio"] {
+  #customerController1 input[type="radio"] {
     margin-right: 5px;
     accent-color: #28a745;
   }
@@ -142,39 +124,27 @@ body {
   
 
   @media (max-width: 780px) {
-    .review-card-alt1 {
+    .customer-card-alt1 {
       flex-direction: column;
     }
 
-    .add-to-cart-btn-yes{
+    
+    .add-to-cart-btn-no{
         width: 80%;
-       }
-     
-     
-       .add-to-cart-btn-no{
-         width: 80%;
-       }
+    }
   }
   
   @media (max-width: 750px) {
-    #reviewController1 {
+    #customerController1 {
       flex-direction: column;
       align-items: flex-start;
       gap: 15px;
     }
   
-    #reviewController1 label {
+    #customerController1 label {
       margin-right: 0;
     }
-  
-    #addReview {
-      align-self: flex-start;
-    }
 
-    .add-to-cart-btn-yes{
-       width: 80%;
-      }
-    
     
       .add-to-cart-btn-no{
         width: 80%;
