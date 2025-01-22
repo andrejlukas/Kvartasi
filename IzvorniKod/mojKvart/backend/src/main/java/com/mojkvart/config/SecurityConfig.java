@@ -46,8 +46,6 @@ public class SecurityConfig{
                         .requestMatchers("/api/kupacs/login").permitAll()
 
                         .requestMatchers("/api/trgovinas/signup").permitAll()
-
-                        .requestMatchers("/api/mail").permitAll()
                         .anyRequest().authenticated(); })
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

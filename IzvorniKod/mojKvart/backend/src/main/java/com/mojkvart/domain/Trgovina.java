@@ -69,6 +69,9 @@ public class Trgovina implements UserDetails {
     @Column(nullable = false, length = 200)
     private String trgovinaSifra;
 
+    @Column(nullable = false)
+    private String trgovinaStatus;
+
     @OneToMany(mappedBy = "trgovina")
     @JsonManagedReference 
     private Set<Proizvod> trgovinaProizvods;

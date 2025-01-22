@@ -62,6 +62,7 @@ public class ModeratorService {
         moderatorDTO.setModeratorPrezime(moderator.getModeratorPrezime());
         moderatorDTO.setModeratorEmail(moderator.getModeratorEmail());
         moderatorDTO.setModeratorSifra(moderator.getModeratorSifra());
+        moderatorDTO.setModeratorStatus(moderator.getModeratorStatus());
         return moderatorDTO;
     }
 
@@ -70,6 +71,7 @@ public class ModeratorService {
         moderator.setModeratorPrezime(moderatorDTO.getModeratorPrezime());
         moderator.setModeratorEmail(moderatorDTO.getModeratorEmail());
         moderator.setModeratorSifra(moderatorDTO.getModeratorSifra());
+        moderator.setModeratorStatus(moderatorDTO.getModeratorStatus());
         return moderator;
     }
 

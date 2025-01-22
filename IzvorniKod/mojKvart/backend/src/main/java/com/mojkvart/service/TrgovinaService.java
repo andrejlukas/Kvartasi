@@ -111,6 +111,7 @@ public class TrgovinaService {
         trgovinaDTO.setTrgovinaRadnoVrijemeOd(trgovina.getTrgovinaRadnoVrijemeOd());
         trgovinaDTO.setTrgovinaRadnoVrijemeDo(trgovina.getTrgovinaRadnoVrijemeDo());
         trgovinaDTO.setTrgovinaSifra(trgovina.getTrgovinaSifra());
+        trgovinaDTO.setTrgovinaStatus(trgovina.getTrgovinaStatus());
         trgovinaDTO.setImaAtributeAtributs(trgovina.getImaAtributeAtributs().stream()
                 .map(Atribut::getAtributId)
                 .collect(Collectors.toSet()));
@@ -127,6 +128,7 @@ public class TrgovinaService {
         trgovina.setTrgovinaRadnoVrijemeOd(trgovinaDTO.getTrgovinaRadnoVrijemeOd());
         trgovina.setTrgovinaRadnoVrijemeDo(trgovinaDTO.getTrgovinaRadnoVrijemeDo());
         trgovina.setTrgovinaSifra(trgovinaDTO.getTrgovinaSifra());
+        trgovina.setTrgovinaStatus(trgovinaDTO.getTrgovinaStatus());
         final List<Atribut> imaAtributeAtributs = atributRepository.findAllById(
                 trgovinaDTO.getImaAtributeAtributs() == null ? Collections.emptyList() : trgovinaDTO.getImaAtributeAtributs());
         if (imaAtributeAtributs.size() != (trgovinaDTO.getImaAtributeAtributs() == null ? 0 : trgovinaDTO.getImaAtributeAtributs().size())) {

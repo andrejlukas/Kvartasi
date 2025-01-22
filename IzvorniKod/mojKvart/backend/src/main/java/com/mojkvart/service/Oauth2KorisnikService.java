@@ -49,16 +49,10 @@ public class Oauth2KorisnikService extends DefaultOAuth2UserService {
 
         if(kupacService.findByKupacEmail(email).isPresent())
             status = kupacService.findByKupacEmail(email).get().getKupacStatus();
-
-        // fali status trgovine i moderatora
-        /*
-        else if(trgovinaService.findByTrgovinaEmail(email).isPresent()) {
+        if(trgovinaService.findByTrgovinaEmail(email).isPresent())
             status = trgovinaService.findByTrgovinaEmail(email).get().getTrgovinaStatus();
-        } else if(moderatorService.findByModeratorEmail(email).isPresent()) {
+        if(moderatorService.findByModeratorEmail(email).isPresent())
             status = moderatorService.findByModeratorEmail(email).get().getModeratorStatus();
-        } else
-            status = administratorService.findByAdministratorEmail(email).get().getAdministratorStatus();
-        */
     }
 
     public HashMap<String, Object> getClaims(OAuth2User oAuth2User) {

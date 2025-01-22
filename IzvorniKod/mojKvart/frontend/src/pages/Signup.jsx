@@ -26,6 +26,7 @@ export function Signup() {
       trgovinaRadnoVrijemeDo: "20:00",
       trgovinaEmail: "",
       trgovinaSifra: "",
+      trgovinaStatus: "N"
    });
    const [showPassword, setShowPassword] = useState(false);
    const [verificationCode, setVerificationCode] = useState("");
@@ -132,8 +133,10 @@ export function Signup() {
             return response.json();
          })
          .then((data) => {
-            navigate('/trgovina/home?token=' + data.token);
-            window.location.reload();
+            //navigate('/trgovina/home?token=' + data.token);
+            //window.location.reload();
+            //ovo promjeniti u
+            navigate("/notverified");
          })
          .catch(error => setErrorMessage(error.message))
    }

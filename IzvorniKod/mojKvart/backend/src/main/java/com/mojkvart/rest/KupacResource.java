@@ -113,10 +113,12 @@ public class KupacResource {
         if(kupacDTO.getKupacSifra().length() < 8)
             return ResponseEntity.badRequest().body("Vaša lozinka mora biti minimalno duljine 8 znakova!");
         if(administratorService.findByAdministratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
-                moderatorService.findByModeratorEmail(kupacDTO.getKupacEmail()).isPresent() ||
-                trgovinaService.findByTrgovinaEmail(kupacDTO.getKupacEmail()).isPresent() ||
-                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isPresent() &&
-                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).get().getKupacStatus().equals("V")){
+                (moderatorService.findByModeratorEmail(kupacDTO.getKupacEmail()).isPresent() &&
+                moderatorService.findByModeratorEmail(kupacDTO.getKupacEmail()).get().getModeratorStatus().equals("V")) ||
+                (trgovinaService.findByTrgovinaEmail(kupacDTO.getKupacEmail()).isPresent() &&
+                trgovinaService.findByTrgovinaEmail(kupacDTO.getKupacEmail()).get().getTrgovinaStatus().equals("V")) ||
+                (kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).isPresent() &&
+                kupacService.findByKupacEmail(kupacDTO.getKupacEmail()).get().getKupacStatus().equals("V"))) {
             return ResponseEntity.badRequest().body("Imate već postojeći korisnički račun?");
         }
 
@@ -168,7 +170,7 @@ public class KupacResource {
     public ResponseEntity<Object> loginKupac(@RequestBody @Valid LoginDTO loginDTO) {
         String email = loginDTO.getEmail();
         String sifra = loginDTO.getSifra();
-        String sifraIzBaze, role = "";
+        String sifraIzBaze, role, status = "";
 
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(email);
@@ -183,19 +185,26 @@ public class KupacResource {
         } else if (moderatorService.findByModeratorEmail(email).isPresent()) {
             role = "MODERATOR";
             sifraIzBaze = moderatorService.findByModeratorEmail(email).get().getModeratorSifra();
+            status = moderatorService.findByModeratorEmail(email).get().getModeratorStatus();
         } else if (trgovinaService.findByTrgovinaEmail(email).isPresent()) {
             role = "TRGOVINA";
             sifraIzBaze = trgovinaService.findByTrgovinaEmail(email).get().getTrgovinaSifra();
-        } else if (kupacService.findByKupacEmail(email).isPresent() &&
-                   kupacService.findByKupacEmail(email).get().getKupacStatus().equals("V")) {
+            status = trgovinaService.findByTrgovinaEmail(email).get().getTrgovinaStatus();
+        } else if (kupacService.findByKupacEmail(email).isPresent()) {
             role = "KUPAC";
             sifraIzBaze = kupacService.findByKupacEmail(email).get().getKupacSifra();
+            status = kupacService.findByKupacEmail(email).get().getKupacStatus();
         } else
             return ResponseEntity.badRequest().body("Unesena kriva lozinka ili e-mail adresa!");
 
+        if(status.equals("N"))
+            return ResponseEntity.badRequest().body("Vaš račun nije još verificiran!");
+
+        if(status.equals("S"))
+            return ResponseEntity.badRequest().body("Vaš račun je suspendiran!");
+
         if(sifraIzBaze == null)
             return ResponseEntity.badRequest().body("Registrirani ste s Google računom!");
-
 
         if (passwordEncoder.matches(sifra, sifraIzBaze)){
             Map<String, Object> claims = new HashMap<>();
