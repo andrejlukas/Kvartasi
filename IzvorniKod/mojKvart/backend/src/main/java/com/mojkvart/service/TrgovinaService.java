@@ -63,6 +63,30 @@ public class TrgovinaService {
                 .toList();
     }
 
+    public List<TrgovinaDTO> findAllVerified() {
+        final List<Trgovina> trgovinas = trgovinaRepository.findAll(Sort.by("trgovinaId"));
+        return trgovinas.stream()
+                .filter(t ->t.getTrgovinaStatus().equals("V"))
+                .map(trgovina -> mapToDTO(trgovina, new TrgovinaDTO()))
+                .toList();
+    }
+
+    public List<TrgovinaDTO> findAllNotVerified() {
+        final List<Trgovina> trgovinas = trgovinaRepository.findAll(Sort.by("trgovinaId"));
+        return trgovinas.stream()
+                .filter(t ->t.getTrgovinaStatus().equals("N"))
+                .map(trgovina -> mapToDTO(trgovina, new TrgovinaDTO()))
+                .toList();
+    }
+
+    public List<TrgovinaDTO> findAllSuspended() {
+        final List<Trgovina> trgovinas = trgovinaRepository.findAll(Sort.by("trgovinaId"));
+        return trgovinas.stream()
+                .filter(t ->t.getTrgovinaStatus().equals("S"))
+                .map(trgovina -> mapToDTO(trgovina, new TrgovinaDTO()))
+                .toList();
+    }
+
     public Optional<TrgovinaDTO> findByTrgovinaEmail(String email) {
         return trgovinaRepository.findByTrgovinaEmail(email)
                 .map(trgovina -> mapToDTO(trgovina, new TrgovinaDTO()));

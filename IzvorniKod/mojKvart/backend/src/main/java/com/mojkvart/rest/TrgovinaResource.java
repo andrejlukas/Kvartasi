@@ -64,11 +64,28 @@ public class TrgovinaResource {
         return ResponseEntity.ok(trgovinaService.findAll());
     }
 
+    @GetMapping("/verified")
+    public ResponseEntity<List<TrgovinaDTO>> getAllVerifiedTrgovinas() {
+        return ResponseEntity.ok(trgovinaService.findAllVerified());
+    }
+
+    @GetMapping("/notverified")
+    public ResponseEntity<List<TrgovinaDTO>> getAllNotVerifiedTrgovinas() {
+        return ResponseEntity.ok(trgovinaService.findAllNotVerified());
+    }
+
+    @GetMapping("/suspended")
+    public ResponseEntity<List<TrgovinaDTO>> getAllSuspendedTrgovinas() {
+        return ResponseEntity.ok(trgovinaService.findAllSuspended());
+    }
+
     //UC4, koristite api/trgovinas/{trgovinaEmail} za pregled osnovnih podataka
     @GetMapping("/{trgovinaEmail}")
     public ResponseEntity<Object> getTrgovina(@PathVariable(name = "trgovinaEmail") final String trgovinaEmail) {
         if(trgovinaService.findByTrgovinaEmail(trgovinaEmail).isEmpty())
-            return ResponseEntity.badRequest().body("ne funkcionira getTrgovina");
+            return ResponseEntity.badRequest().body("Ne postoji takva trgovina.");
+        if(!trgovinaService.findByTrgovinaEmail(trgovinaEmail).get().getTrgovinaStatus().equals("V"))
+            return ResponseEntity.badRequest().body("Trgovina nije verificirana.");
         return ResponseEntity.ok(trgovinaService.findByTrgovinaEmail(trgovinaEmail).get());
     }
 

@@ -25,7 +25,7 @@ export function PopisTrgovina() {
       },
     };
 
-    fetch(`/api/trgovinas`, options)
+    fetch(`/api/trgovinas/verified`, options)
       .then(async (response) => {
         if (!response.ok) {
           const text = await response.text();
