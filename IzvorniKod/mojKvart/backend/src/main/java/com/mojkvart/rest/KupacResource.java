@@ -104,7 +104,7 @@ public class KupacResource {
             return ResponseEntity.badRequest().body("Ime mora biti minimalno duljine 2 znaka!");
         if(kupacDTO.getKupacPrezime().length() < 2)
             return ResponseEntity.badRequest().body("Prezime mora biti minimalno duljine 2 znaka!");
-        if(kupacDTO.getKupacSifra().isEmpty())
+        if(kupacDTO.getKupacAdresa().isEmpty())
             return ResponseEntity.badRequest().body("Popunite polje 'Kućna adresa'!");
         Pattern pattern = Pattern.compile(EMAIL_REGEX);
         Matcher matcher = pattern.matcher(kupacDTO.getKupacEmail());

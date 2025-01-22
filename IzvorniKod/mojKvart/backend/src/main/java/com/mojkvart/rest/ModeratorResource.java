@@ -1,9 +1,11 @@
 package com.mojkvart.rest;
 
 import com.mojkvart.model.ModeratorDTO;
-import com.mojkvart.service.ModeratorService;
+import com.mojkvart.service.*;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,14 +26,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/moderators", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ModeratorResource {
 
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9šđčćžŠĐČĆŽ._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+    @Autowired
+    private AdministratorService administratorService;
+
+    @Autowired
+    private ModeratorService moderatorService;
+
+    @Autowired
+    private TrgovinaService trgovinaService;
+
+    @Autowired
+    private KupacService kupacService;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private final ModeratorService moderatorService;
-
-    public ModeratorResource(final ModeratorService moderatorService) {
-        this.moderatorService = moderatorService;
-    }
+    @Autowired
+    private JwtService jwtService;
 
     @GetMapping
     public ResponseEntity<List<ModeratorDTO>> getAllModerators() {
@@ -61,8 +74,27 @@ public class ModeratorResource {
 
     //UC5, koristite api/moderators i pošaljite JSON objekt za kreiranje novog moderatora
     @PostMapping
-    public ResponseEntity<Integer> createModerator(
-            @RequestBody @Valid final ModeratorDTO moderatorDTO) {
+    public ResponseEntity<Object> createModerator(@RequestBody @Valid final ModeratorDTO moderatorDTO) {
+        if(moderatorDTO.getModeratorIme().length() < 2)
+            return ResponseEntity.badRequest().body("Ime mora biti minimalno duljine 2 znaka!");
+        if(moderatorDTO.getModeratorPrezime().length() < 2)
+            return ResponseEntity.badRequest().body("Prezime mora biti minimalno duljine 2 znaka!");
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(moderatorDTO.getModeratorEmail());
+        if(!matcher.matches())
+            return ResponseEntity.badRequest().body("Upisan nevažeći oblik e-mail adrese!");
+        if(moderatorDTO.getModeratorSifra().length() < 8)
+            return ResponseEntity.badRequest().body("Vaša lozinka mora biti minimalno duljine 8 znakova!");
+        if(administratorService.findByAdministratorEmail(moderatorDTO.getModeratorEmail()).isPresent() ||
+                (moderatorService.findByModeratorEmail(moderatorDTO.getModeratorEmail()).isPresent() &&
+                        moderatorService.findByModeratorEmail(moderatorDTO.getModeratorEmail()).get().getModeratorStatus().equals("V")) ||
+                (trgovinaService.findByTrgovinaEmail(moderatorDTO.getModeratorEmail()).isPresent() &&
+                        trgovinaService.findByTrgovinaEmail(moderatorDTO.getModeratorEmail()).get().getTrgovinaStatus().equals("V")) ||
+                (kupacService.findByKupacEmail(moderatorDTO.getModeratorEmail()).isPresent() &&
+                        kupacService.findByKupacEmail(moderatorDTO.getModeratorEmail()).get().getKupacStatus().equals("V"))) {
+            return ResponseEntity.badRequest().body("Imate već postojeći korisnički račun?");
+        }
+
         moderatorDTO.setModeratorSifra(passwordEncoder.encode(moderatorDTO.getModeratorSifra()));
         final Integer createdModeratorId = moderatorService.create(moderatorDTO);
         return new ResponseEntity<>(createdModeratorId, HttpStatus.CREATED);

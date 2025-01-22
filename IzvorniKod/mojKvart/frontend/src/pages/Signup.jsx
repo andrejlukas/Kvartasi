@@ -28,6 +28,13 @@ export function Signup() {
       trgovinaSifra: "",
       trgovinaStatus: "N"
    });
+   const [moderatorData, setModeratorData] = useState({
+      moderatorIme: "",
+      moderatorPrezime: "",
+      moderatorEmail: "",
+      moderatorSifra: "",
+      moderatorStatus: "N"
+   });
    const [showPassword, setShowPassword] = useState(false);
    const [verificationCode, setVerificationCode] = useState("");
    const [errorMessage, setErrorMessage] = useState("");
@@ -141,6 +148,35 @@ export function Signup() {
          .catch(error => setErrorMessage(error.message))
    }
 
+   function registerModerator(e) {
+      e.preventDefault();
+
+      const options = {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         },
+         body: JSON.stringify(shopData)
+      };
+
+      return fetch("/api/moderators", options)
+         .then((response) => {
+            if (!response.ok) {
+               return response.text().then((text) => {
+                  throw new Error(text);
+               });
+            }
+            return response.json();
+         })
+         .then((data) => {
+            //navigate('/moderator/home?token=' + data.token);
+            //window.location.reload();
+            //ovo promjeniti u
+            navigate("/notverified");
+         })
+         .catch(error => setErrorMessage(error.message))
+   }
+
    const backToSignUp = () => {
       localStorage.removeItem("verificationData");
       window.location.reload();
@@ -162,6 +198,11 @@ export function Signup() {
    const handleShopChange = (e) => {
       const { name, value } = e.target;
       setShopData((prevData) => ({ ...prevData, [name]: value }));
+   };
+
+   const handleModeratorChange = (e) => {
+      const { name, value } = e.target;
+      setModeratorData((prevData) => ({ ...prevData, [name]: value }));
    };
 
    const LocationMarker = () => {
@@ -343,9 +384,58 @@ export function Signup() {
       </>
    );
 
+   const renderModeratorForm = () => (
+      <>
+         <div className="form-group">
+            <input
+               type="text"
+               placeholder="Ime"
+               className="signup-inputs"
+               name="moderatorIme"
+               value={moderatorData.moderatorIme}
+               onChange={handleModeratorChange}
+            />
+            <input
+               type="text"
+               placeholder="Prezime"
+               className="signup-inputs"
+               name="moderatorPrezime"
+               value={moderatorData.moderatorPrezime}
+               onChange={handleModeratorChange}
+            />
+         </div>
+         <input
+            type="email"
+            placeholder="E-mail adresa"
+            className="signup-inputs"
+            name="moderatorEmail"
+            value={moderatorData.moderatorEmail}
+            onChange={handleModeratorChange}
+         />
+         <div className="password-input-container">
+            <input
+               type={showPassword ? "text" : "password"}
+               placeholder="Lozinka"
+               name="moderatorSifra"
+               className="inputs"
+               value={moderatorData.moderatorSifra}
+               onChange={handleModeratorChange}
+            />
+            <button
+               type="button"
+               onClick={togglePasswordVisibility}
+               className="toggle-password-button-signup"
+            >
+               {showPassword ? "Sakrij" : "Otkrij"}
+            </button>
+         </div>
+      </>
+   );
+
+
    if(localStorage.getItem("verificationData") != null) {
       return (
-         <div>
+         <div id="verificationDiv">
             <h3>Verifikacijski kod je poslan na email adresu {JSON.parse(localStorage.getItem("verificationData")).email}</h3>
             <h2>Imate pet minuta i/ili 3 pokušaja da unesete kod nakon čega verifikacija više neće biti moguća.</h2>
             <form onSubmit={checkVerificationCode}>
@@ -384,15 +474,26 @@ export function Signup() {
                         />
                         Registracija trgovine
                      </label>
+                     <label>
+                        <input
+                           type="radio"
+                           name="registrationType"
+                           value="moderator"
+                           checked={registrationType === "moderator"}
+                           onChange={handleRegistrationTypeChange}
+                        />
+                        Registracija moderatora
+                     </label>
                   </div>
-                  <form onSubmit={(e) => registrationType === "customer" ? getVerificationCode(e) : registerShop(e)}>
+                  <form onSubmit={(e) => registrationType === "customer" ? getVerificationCode(e) : 
+                                         (registrationType === "shop" ? registerShop(e) : registerModerator(e))}>
                      {registrationType === "customer"
                         ? renderCustomerForm()
-                        : renderShopForm()}
+                        : (registrationType === "shop" ? renderShopForm() : renderModeratorForm())}
                      <button type="submit" className="signup-buttons">
                         {registrationType === "customer"
                            ? "Registriraj se"
-                           : "Registriraj trgovinu"}
+                           : (registrationType === "shop" ? "Registriraj trgovinu" : "Registriraj se kao moderator")}
                      </button>
                      {registrationType === "customer" && <a href={`${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`} role="button" id="google-btn">
                         <img src={googleLogo} alt="Google Logo"/>
