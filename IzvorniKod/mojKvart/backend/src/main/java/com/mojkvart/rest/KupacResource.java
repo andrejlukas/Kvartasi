@@ -9,7 +9,6 @@ import com.mojkvart.service.*;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 import java.time.LocalDateTime;
@@ -133,7 +132,7 @@ public class KupacResource {
     }
 
     @PostMapping("/sendVerificationMail")
-    public ResponseEntity<String> sendVerificationMail(@RequestBody final OneLineDTO oneLineDTO) throws MessagingException {
+    public ResponseEntity<String> sendVerificationMail(@RequestBody final OneLineDTO oneLineDTO) {
         KupacDTO kupacDTO = kupacService.findByKupacEmail(oneLineDTO.getOneLiner()).get();
         mailService.sendVerificationMail(oneLineDTO.getOneLiner(), kupacDTO.getVerifikacijskiKod());
         kupacDTO.setVerifikacijskiKod(passwordEncoder.encode(kupacDTO.getVerifikacijskiKod()));
