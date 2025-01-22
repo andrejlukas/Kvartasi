@@ -80,7 +80,8 @@ public class PonudaService {
                 .filter(ponuda -> ponuda.getPonudaPopust() != null &&
                         ponuda.getPonudaPopust().getPonudaPopustFlag() != null &&
                         ponuda.getPonudaRok().isAfter(LocalDateTime.now()) &&
-                        ponuda.getPonudaPopust().getPonudaPopustFlag() == true)
+                        ponuda.getPonudaPopust().getPonudaPopustFlag() &&
+                        ponuda.getPonudaPopust().getTrgovina().getTrgovinaStatus().equals("V"))
                 .map(ponuda -> mapToDTO(ponuda, new PonudaDTO()))
                 .toList();
     }

@@ -50,19 +50,21 @@ public class DogadajService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    // svi nadolazeci dogadaji
+    // svi nadolazeci dogadaji od odobrenih trgovina
     public List<DogadajDTO> findAllUpcoming() {
         final List<Dogadaj> dogadajs = dogadajRepository.findAll(Sort.by("dogadajId"));
         return dogadajs.stream()
+                .filter(dogadaj -> dogadaj.getTrgovina().getTrgovinaStatus().equals("V"))
                 .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
                 .filter(d -> getVrijeme(d.getDogadajPocetak()).isAfter(LocalDateTime.now()) &&
                         getVrijeme(d.getDogadajKraj()).isAfter(LocalDateTime.now())).toList();
     }
 
-    // svi prijsanji dogadaji
+    // svi prijsanji dogadaji od odobrenih trgovina
     public List<DogadajDTO> findAllFinished() {
         final List<Dogadaj> dogadajs = dogadajRepository.findAll(Sort.by("dogadajId"));
         return dogadajs.stream()
+                .filter(dogadaj -> dogadaj.getTrgovina().getTrgovinaStatus().equals("V"))
                 .map(dogadaj -> mapToDTO(dogadaj, new DogadajDTO()))
                 .filter(d -> getVrijeme(d.getDogadajPocetak()).isBefore(LocalDateTime.now()) &&
                         getVrijeme(d.getDogadajKraj()).isBefore(LocalDateTime.now())).toList();

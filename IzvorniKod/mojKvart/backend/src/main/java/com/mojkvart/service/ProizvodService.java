@@ -57,11 +57,15 @@ public class ProizvodService {
     }
 
     public List<ProizvodDTO> findAllApproved() {
-        return proizvodRepository.findAllApproved().stream().map(p -> mapToDTO(p, new ProizvodDTO())).toList();
+        return proizvodRepository.findAllApproved().stream()
+                .filter(p -> p.getTrgovina().getTrgovinaStatus().equals("V"))
+                .map(p -> mapToDTO(p, new ProizvodDTO())).toList();
     }
 
     public List<ProizvodDTO> findAllNotApproved() {
-        return proizvodRepository.findAllNotApproved().stream().map(p -> mapToDTO(p, new ProizvodDTO())).toList();
+        return proizvodRepository.findAllNotApproved().stream()
+                .filter(p -> p.getTrgovina().getTrgovinaStatus().equals("V"))
+                .map(p -> mapToDTO(p, new ProizvodDTO())).toList();
     }
 
     public ProizvodDTO get(final Integer proizvodId) {

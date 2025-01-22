@@ -94,8 +94,9 @@ public class PopustService {
         return popusti.stream()
                 .filter(popust -> popust.getPonudaPopust() != null &&
                         popust.getPonudaPopust().getPonudaPopustFlag() != null &&
-                        popust.getPonudaPopust().getPonudaPopustFlag() == true &&
-                        popust.getPopustRok().isAfter(LocalDateTime.now()))
+                        popust.getPonudaPopust().getPonudaPopustFlag() &&
+                        popust.getPopustRok().isAfter(LocalDateTime.now()) &&
+                        popust.getPonudaPopust().getTrgovina().getTrgovinaStatus().equals("V"))
                 .map(popust -> mapToDTO(popust, new PopustDTO()))
                 .toList();
     }
