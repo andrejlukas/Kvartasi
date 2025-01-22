@@ -40,7 +40,7 @@ export function Signup() {
    const [errorMessage, setErrorMessage] = useState("");
    const [markerPosition, setMarkerPosition] = useState(null);
 
-   function getVerificationCode(e){   
+   async function getVerificationCode(e){   
       e.preventDefault();
 
       const options = {
@@ -74,7 +74,7 @@ export function Signup() {
          .catch( error => navigate('/signup') );
    }
 
-   function checkVerificationCode(e) {
+   async function checkVerificationCode(e) {
       e.preventDefault();
    
       let data = JSON.parse(localStorage.getItem("verificationData"));
@@ -90,12 +90,11 @@ export function Signup() {
       };
    
       return fetch('/api/kupacs/verification', options)
-         .then((response) => {
+         .then(async (response) => {
             if (!response.ok) {
-               return response.text().then((text) => {
-                  localStorage.setItem("verificationData", JSON.stringify(data));
-                  throw new Error(text);
-               });
+               const text = await response.text();
+               localStorage.setItem("verificationData", JSON.stringify(data));
+               throw new Error(text);
             }
             return response.json();
          })
@@ -119,7 +118,7 @@ export function Signup() {
          });
    }
 
-   function registerShop(e) {
+   async function registerShop(e) {
       e.preventDefault();
 
       const options = {
@@ -131,11 +130,10 @@ export function Signup() {
       };
 
       return fetch("/api/trgovinas/signup", options)
-         .then((response) => {
+         .then(async (response) => {
             if (!response.ok) {
-               return response.text().then((text) => {
-                  throw new Error(text);
-               });
+               const text = await response.text();
+               throw new Error(text);
             }
             return response.json();
          })
@@ -156,11 +154,11 @@ export function Signup() {
          headers: {
             'Content-Type': 'application/json'
          },
-         body: JSON.stringify(shopData)
+         body: JSON.stringify(moderatorData)
       };
 
-      return fetch("/api/moderators", options)
-         .then((response) => {
+      return fetch("/api/moderators/signup", options)
+         .then(async (response) => {
             if (!response.ok) {
                return response.text().then((text) => {
                   throw new Error(text);

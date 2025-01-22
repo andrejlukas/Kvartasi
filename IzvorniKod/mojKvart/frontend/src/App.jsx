@@ -35,7 +35,6 @@ import { ModeratorPonude } from './pages/moderator/PonudeiPromocije';
 import { ModeratorRecenzije } from './pages/moderator/Recenzije';
 import { ModeratorUpravljanjeKupcima } from './pages/moderator/UpravljanjeKupcima';
 import { ModeratorUpravljanjeTrgovinama } from './pages/moderator/UpravljanjeTrgovinama';
-
 import { ModeratorKorisnickiRacun } from './pages/moderator/KorisnickiRacun';
 import { ModeratorMojiPodaci } from './pages/moderator/MojiPodaci';
 
@@ -253,6 +252,7 @@ function App() {
           </SecuredShopRoute>
         } />
 
+
         <Route path="/moderator/home" element={
           <SecuredModeratorRoute>
             <ModeratorHome />
@@ -293,6 +293,7 @@ function App() {
             <ModeratorMojiPodaci />
           </SecuredModeratorRoute>
         } />
+
 
         <Route path="/admin/home" element={
           <SecuredAdminRoute>

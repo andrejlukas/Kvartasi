@@ -102,9 +102,10 @@ public class ProizvodService {
     public List<ProizvodDTO> getAllProizvodsBySearch(String input) {
         String[] keyWords = input.toLowerCase().split("\\s+");
         return proizvodRepository.findAllApproved().stream().filter(
-    p -> TrgovinaService.containsAllOfTheseWords(keyWords, p.getProizvodNaziv().toLowerCase()) ||
+    p -> (TrgovinaService.containsAllOfTheseWords(keyWords, p.getProizvodNaziv().toLowerCase()) ||
             TrgovinaService.containsAllOfTheseWords(keyWords, p.getProizvodKategorija().toLowerCase()) ||
-            TrgovinaService.containsAllOfTheseWords(keyWords, p.getProizvodOpis().toLowerCase())
+            TrgovinaService.containsAllOfTheseWords(keyWords, p.getProizvodOpis().toLowerCase()) &&
+            p.getTrgovina().getTrgovinaStatus().equals("V"))
         ).map(p -> mapToDTO(p, new ProizvodDTO())).toList();
     }
 

@@ -118,9 +118,10 @@ public class TrgovinaService {
     public List<TrgovinaDTO> getAllTrgovinasBySearch(String input) {
         String[] keyWords = input.toLowerCase().split("\\s+");
         return trgovinaRepository.findAll().stream().filter(
-    t -> containsAllOfTheseWords(keyWords, t.getTrgovinaNaziv().toLowerCase()) ||
+    t -> (containsAllOfTheseWords(keyWords, t.getTrgovinaNaziv().toLowerCase()) ||
             containsAllOfTheseWords(keyWords, t.getTrgovinaKategorija().toLowerCase()) ||
-            containsAllOfTheseWords(keyWords, t.getTrgovinaOpis().toLowerCase())
+            containsAllOfTheseWords(keyWords, t.getTrgovinaOpis().toLowerCase()) &&
+            t.getTrgovinaStatus().equals("V"))
         ).map(t -> mapToDTO(t, new TrgovinaDTO())).toList();
     }
 

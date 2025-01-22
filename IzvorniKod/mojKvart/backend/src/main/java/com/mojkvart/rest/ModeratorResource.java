@@ -73,7 +73,7 @@ public class ModeratorResource {
     }
 
     //UC5, koristite api/moderators i pošaljite JSON objekt za kreiranje novog moderatora
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<Object> createModerator(@RequestBody @Valid final ModeratorDTO moderatorDTO) {
         if(moderatorDTO.getModeratorIme().length() < 2)
             return ResponseEntity.badRequest().body("Ime mora biti minimalno duljine 2 znaka!");
