@@ -34,6 +34,8 @@ import { ModeratorHome } from './pages/moderator/Home';
 import { ModeratorPonude } from './pages/moderator/PonudeiPromocije';
 import { ModeratorRecenzije } from './pages/moderator/Recenzije';
 import { ModeratorUpravljanjeKupcima } from './pages/moderator/UpravljanjeKupcima';
+import { ModeratorUpravljanjeTrgovinama } from './pages/moderator/UpravljanjeTrgovinama';
+
 import { ModeratorKorisnickiRacun } from './pages/moderator/KorisnickiRacun';
 import { ModeratorMojiPodaci } from './pages/moderator/MojiPodaci';
 
@@ -273,6 +275,11 @@ function App() {
           <Route path="/moderator/home/kupci" element={
           <SecuredModeratorRoute>
             <ModeratorUpravljanjeKupcima />
+          </SecuredModeratorRoute>
+        } />
+        <Route path="/moderator/home/trgovine" element={
+          <SecuredModeratorRoute>
+            <ModeratorUpravljanjeTrgovinama />
           </SecuredModeratorRoute>
         } />
           <Route path="/racunmoderator" element={

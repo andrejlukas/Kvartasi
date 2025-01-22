@@ -38,6 +38,9 @@ export function Navbar() {
                                 <li className="nav-item">
                                     <a href="/moderator/home/kupci" className="nav-link">Upravljanje kupcima</a>
                                 </li>
+                                <li className="nav-item">
+                                    <a href="/moderator/home/trgovine" className="nav-link">Upravljanje trgovinama</a>
+                                </li>
                             </ul>
                         </div>
                     </nav>
