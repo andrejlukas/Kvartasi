@@ -38,6 +38,21 @@ public class ModeratorResource {
         return ResponseEntity.ok(moderatorService.findAll());
     }
 
+    @GetMapping("/verified")
+    public ResponseEntity<List<ModeratorDTO>> getAllVerifiedModerators() {
+        return ResponseEntity.ok(moderatorService.findAllVerified());
+    }
+
+    @GetMapping("/notverified")
+    public ResponseEntity<List<ModeratorDTO>> getAllNotVerifiedModerators() {
+        return ResponseEntity.ok(moderatorService.findAllNotVerified());
+    }
+
+    @GetMapping("/suspended")
+    public ResponseEntity<List<ModeratorDTO>> getAllSuspendedModerators() {
+        return ResponseEntity.ok(moderatorService.findAllSuspended());
+    }
+
     @GetMapping("/{moderatorEmail}")
     public ResponseEntity<ModeratorDTO> getModerator(
             @PathVariable(name = "moderatorEmail") final String moderatorEmail) {

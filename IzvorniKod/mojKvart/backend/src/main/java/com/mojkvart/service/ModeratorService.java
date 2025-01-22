@@ -28,6 +28,30 @@ public class ModeratorService {
                 .toList();
     }
 
+    public List<ModeratorDTO> findAllVerified() {
+        final List<Moderator> moderators = moderatorRepository.findAll(Sort.by("moderatorId"));
+        return moderators.stream()
+                .filter(moderator -> moderator.getModeratorStatus().equals("V"))
+                .map(moderator -> mapToDTO(moderator, new ModeratorDTO()))
+                .toList();
+    }
+
+    public List<ModeratorDTO> findAllNotVerified() {
+        final List<Moderator> moderators = moderatorRepository.findAll(Sort.by("moderatorId"));
+        return moderators.stream()
+                .filter(moderator -> moderator.getModeratorStatus().equals("N"))
+                .map(moderator -> mapToDTO(moderator, new ModeratorDTO()))
+                .toList();
+    }
+
+    public List<ModeratorDTO> findAllSuspended() {
+        final List<Moderator> moderators = moderatorRepository.findAll(Sort.by("moderatorId"));
+        return moderators.stream()
+                .filter(moderator -> moderator.getModeratorStatus().equals("S"))
+                .map(moderator -> mapToDTO(moderator, new ModeratorDTO()))
+                .toList();
+    }
+
     public Optional<ModeratorDTO> findByModeratorEmail(String email) {
         return moderatorRepository.findByModeratorEmail(email)
                 .map(moderator -> mapToDTO(moderator, new ModeratorDTO()));
