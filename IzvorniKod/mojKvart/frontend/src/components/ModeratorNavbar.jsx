@@ -35,12 +35,12 @@ export function Navbar() {
                                 <li className="nav-item">
                                     <a href="/moderator/home/ponude" className="nav-link">Ponude i promocije</a>
                                 </li>
-                                <li className="nav-item">
+                               {/*  <li className="nav-item">
                                     <a href="/moderator/home/kupci" className="nav-link">Upravljanje kupcima</a>
                                 </li>
                                 <li className="nav-item">
                                     <a href="/moderator/home/trgovine" className="nav-link">Upravljanje trgovinama</a>
-                                </li>
+                                </li> */}
                             </ul>
                         </div>
                     </nav>

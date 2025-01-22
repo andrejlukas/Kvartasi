@@ -43,6 +43,7 @@ import { AdminHome } from './pages/admin/Home';
 import { AdminPonude } from './pages/admin/PonudeiPromocije';
 import { AdminRecenzije } from './pages/admin/Recenzije';
 import { AdminUpravljanjeUlogama } from './pages/admin/UpravljanjeUlogama';
+import { SusKorisnike } from './pages/admin/SusKorisnike';
 import { AdminKorisnickiRacun } from './pages/admin/KorisnickiRacun';
 import { AdminMojiPodaci } from './pages/admin/MojiPodaci';
 
@@ -316,6 +317,11 @@ function App() {
         <Route path="/admin/home/uloge" element={
           <SecuredAdminRoute>
             <AdminUpravljanjeUlogama />
+          </SecuredAdminRoute>
+        } />
+        <Route path="/admin/home/suskorisnike" element={
+          <SecuredAdminRoute>
+            <SusKorisnike />
           </SecuredAdminRoute>
         } />
         <Route path="/racunadmin" element={
