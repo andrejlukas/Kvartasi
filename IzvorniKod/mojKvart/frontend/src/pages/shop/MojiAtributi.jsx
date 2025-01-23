@@ -124,7 +124,6 @@ export function ShopMojiAtributi() {
             const updatedAttributes = checked
                 ? [...prev.imaAtributeAtributs, attributeId]
                 : prev.imaAtributeAtributs.filter((id) => id !== attributeId);
-                console.log(updatedAttributes);
             return {
                 ...prev,
                 imaAtributeAtributs: updatedAttributes
@@ -164,6 +163,7 @@ export function ShopMojiAtributi() {
                    placeholder="Želite li dodati novu značajku?" 
                    value={newAttribute} 
                    onChange={ e => setNewAttribute(e.target.value)}
+                   maxLength={30}
             />
             <button onClick={handleAttributeAddition}>Dodaj novu značajku</button>
         </div>

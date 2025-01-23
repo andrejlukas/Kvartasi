@@ -213,3 +213,23 @@ form .btn:focus {
       font-weight: 300; 
   }
 }
+
+
+
+@media(max-width: 555px) {
+  #unutarnji{
+    margin-top:20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 5px;
+    border-radius: 0; 
+    display: flex !important;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center !important;
+  }
+
+  #obruc{
+    justify-content: center;
+  }
+}

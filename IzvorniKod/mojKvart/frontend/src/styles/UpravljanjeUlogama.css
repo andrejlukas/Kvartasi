@@ -1,5 +1,5 @@
 
-.suspendiranje-odabir-popis-div{
+.upravljanje-ulogama-popis-div{
     margin: 20px;
 }
 
@@ -24,8 +24,8 @@
     background-color: rgb(34, 126, 55);
 }
 
-.add-to-cart-btn-no{
-    background-color: #e12020; 
+.verificiraj-korisnika-button{
+    background-color: #c3c62d; 
     color: #fff;
     border: none;
     padding: 8px 12px;
@@ -36,9 +36,8 @@
     width: 60%;
     align-self: center;
   }
-
-  .add-to-cart-btn-no:hover{
-    background-color: #ae2323;
+  .verificiraj-korisnika-button:hover{
+    background-color: #c3c62d;
   }
 
 #customerController1 {
@@ -85,7 +84,7 @@
     }
 
     
-    .add-to-cart-btn-no{
+    .verificiraj-korisnika-button{
         width: 80%;
     }
   }
@@ -102,7 +101,7 @@
     }
 
     
-      .add-to-cart-btn-no{
+      .verificiraj-korisnika-button{
         width: 80%;
       }
   }

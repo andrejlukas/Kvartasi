@@ -80,6 +80,11 @@
   padding: 20px;
   text-align: left;
 }
+
+#pom{
+  margin-top: 20px;
+}
+
 .confirm-button {
   background-color: #28a745;
   color: #fff;
@@ -94,6 +99,10 @@
 
 .confirm-button:hover{
   background-color: #218838;
+}
+
+.card-title{
+  margin-bottom: 20px;
 }
 
 .items-dogadaji {

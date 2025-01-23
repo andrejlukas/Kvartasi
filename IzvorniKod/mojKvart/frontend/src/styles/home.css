@@ -73,7 +73,7 @@ body {
   font-family: Raleway, sans-serif;
 }
 
-.pogl {
+.add-to-cart-btn-alt, .pogl {
   background-color: #28a745; 
   color: #fff;
   border: none;
@@ -83,7 +83,7 @@ body {
   font-size: 14px;
 }
 
-.pogl:hover {
+.add-to-cart-btn-alt:hover, .pogl:hover {
   background-color: #218838;
 }
 

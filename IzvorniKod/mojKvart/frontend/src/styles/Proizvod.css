@@ -224,28 +224,7 @@
   #broj-komada{
     font-size: 20px;
   }
-
-  @media (max-width: 1000px) {
-    #slika {
-        flex-direction: column;
-        gap: 40px;
-        padding-top: 30px;
-        padding-bottom: 30px;
-    }
-
-    #pojedinosti{
-        margin-top: 10px;
-    }
-
-    #dodaj-kosaricu {
-        
-        font-size: 16px;
-    
-      }
-
-  }
   
-
   .dodan-u-kosaricu-zatvori-div{
     display: flex;
     flex-direction: column;
@@ -270,3 +249,30 @@
     transition: background-color 0.3s;
     padding: 10px;
   }
+
+  @media (max-width: 1000px) {
+    #slika {
+        flex-direction: column;
+        gap: 40px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    #pojedinosti{
+        margin-top: 10px;
+    }
+
+    #dodaj-kosaricu {
+        
+        font-size: 16px;
+    
+      }
+
+  }
+
+  .card-img-top-alt{
+    width: 300px;
+  }
+  
+
+  
