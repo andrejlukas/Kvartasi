@@ -304,7 +304,7 @@ export function Dogadaji() {
                                              (<button className="confirm-button" id="replyOver">Dolazim!</button>)
                                           }
                                        </div>
-                                       <div className="card-text"> {dog.dogadajOpis}</div>
+                                       <div className="card-text" id="pom"> {dog.dogadajOpis}</div>
                                        
                                        <div className="card-text"> {"Početak: " + dog.dogadajPocetak}</div>
                                           
