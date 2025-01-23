@@ -1,0 +1,129 @@
+body {
+    background-color: #ededed;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  .shop-orders-container {
+    padding: 20px;
+    margin: 30px;
+    margin-top: 20px;
+  }
+  
+  .shop-orders-error-text {
+    color: #e12020;
+    font-family: Raleway, sans-serif;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  
+  .shop-orders-radio-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .shop-orders-radio-buttons label {
+    font-family: Raleway, sans-serif;
+    font-size: 16px;
+    color: #323131;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .shop-orders-radio-buttons input[type="radio"] {
+    margin-right: 5px;
+    accent-color: #28a745;
+  }
+
+  #sve{
+    padding-top: 0px;
+  }
+  
+  .shop-order-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shop-order-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .shop-order-card-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #323131;
+  }
+  
+  .shop-order-btn {
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    align-self: flex-start;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  .shop-order-btn-success {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+  }
+  
+  .shop-order-btn-success:hover {
+    background-color: #1e7e34;
+  }
+  
+  #divov {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; 
+    gap: 20px;
+    width: 100%;
+  }
+  
+  @media (max-width: 780px) {
+    .shop-orders-radio-buttons {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .shop-order-btn {
+      width: 100%;
+    }
+  
+    #divov {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
+  
+  @media (max-width: 750px) {
+    .shop-order-card {
+      padding: 15px;
+    }
+  
+    .shop-orders-radio-buttons {
+      padding: 15px;
+    }
+  
+    .shop-order-btn {
+      width: 100%;
+    }
+  }
+  

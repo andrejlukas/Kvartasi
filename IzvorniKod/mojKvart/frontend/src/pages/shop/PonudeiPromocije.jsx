@@ -432,6 +432,7 @@ export function ShopPonudeiPromocije() {
    return (
       <div>
          <Navbar/>
+         <div id="Vanjski1">
          <div id="eventController">
             <label>
                <input
@@ -607,6 +608,7 @@ export function ShopPonudeiPromocije() {
                <button onClick={closePopustForm}>Odustani</button>
             </div>}
          </div>
+      </div>
       </div>
    );
 }

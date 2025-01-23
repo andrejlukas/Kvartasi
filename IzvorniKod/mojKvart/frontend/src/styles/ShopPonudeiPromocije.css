@@ -1,5 +1,5 @@
 .addPiPbutton {
-    background-color: #2c8c2c;
+    background-color: #28a745;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -9,8 +9,14 @@
     transition: background-color 0.3s ease;
 }
 
+#Vanjski1{
+    margin: 20px;
+    padding-inline: 10px;
+    padding-top: 5px;
+}
+
 .addPiPbutton:hover {
-    background-color: rgba(62, 152, 30);
+    background-color:#1e7e34;
 }
 
 #addButtonsController {
@@ -19,6 +25,15 @@
     gap: 10px;
 }
 
+.YesNoButtons button{
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+}
+
+.YesNoButtons button:hover{
+    background-color: #1e7e34;
+}
 
 #PiPdataList {
     margin: 20px;
@@ -44,10 +59,7 @@
     width: 45%;
 }
 
-.bracketItem:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
+
 
 @media (max-width: 750px) {
     .bracketItem { width: 100%;}
