@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from '../../components/AdminNavbar';
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../../styles/Suspendiranje.css";
+
 
 export function SusKorisnike() {
     const [trgovinas, setTrgovinas] = useState([]);
@@ -251,13 +253,13 @@ export function SusKorisnike() {
     }, [korisniciTip, korisniciStanje, Skupacs, kupacs, Strgovinas, trgovinas, Smoderators, moderators]);
 
     return (
-        <div>
+        <div className="SusKosrisnika-wrapper">
             <Navbar />
-            <h1>Pregled korisnika</h1>
-
-            <div id="customerController1">
+            <div className="suspendiranje-odabir-popis-div">
+            <div id="customerController1" className="odabirKorisnika">
                 <label>
                     <input
+                        className="odabirTipa"
                         type="radio"
                         name="korisniciTip"
                         value="kupac"
@@ -268,6 +270,7 @@ export function SusKorisnike() {
                 </label>
                 <label>
                     <input
+                        className="odabirTipa"
                         type="radio"
                         name="korisniciTip"
                         value="trgovina"
@@ -278,6 +281,7 @@ export function SusKorisnike() {
                 </label>
                 <label>
                     <input
+                        className="odabirTipa"
                         type="radio"
                         name="korisniciTip"
                         value="moderator"
@@ -287,8 +291,17 @@ export function SusKorisnike() {
                     Moderatori
                 </label>
             </div>
-
             <div id="customerController1">
+                 <label>
+                    <input
+                        type="radio"
+                        name="korisniciStanje"
+                        value="nonSuspended"
+                        checked={korisniciStanje === "nonSuspended"}
+                        onChange={handlekorisniciStanjeChange}
+                    />
+                    Nesuspendirani
+                </label>
                 <label>
                     <input
                         type="radio"
@@ -299,24 +312,14 @@ export function SusKorisnike() {
                     />
                     Suspendirani
                 </label>
-                <label>
-                    <input
-                        type="radio"
-                        name="korisniciStanje"
-                        value="nonSuspended"
-                        checked={korisniciStanje === "nonSuspended"}
-                        onChange={handlekorisniciStanjeChange}
-                    />
-                    Nesuspendirani
-                </label>
             </div>
 
-            <div className="row">
+            <div className="row" >
                 {error && <p style={{ color: "red" }}>Greška: {error}</p>}
                 {prikaz.length > 0 ? (
                     prikaz.map((korisnik) => (
                         <div key={korisnik.kupacId || korisnik.trgovinaId || korisnik.moderatorId} className="col-lg-4 col-md-6 col-12 mb-3">
-                            <div className="card">
+                            <div className="card" id="sus-card">
                                 <div className="card-body">
                                     <h5 className="card-title">ID: {korisnik.kupacId || korisnik.trgovinaId || korisnik.moderatorId}</h5>
                                     <p><strong>Email:</strong> {korisnik.kupacEmail || korisnik.trgovinaEmail || korisnik.moderatorEmail}</p>
@@ -339,7 +342,7 @@ export function SusKorisnike() {
                                         </button>
                                     )}
                                     {korisniciStanje === "suspended" && (
-                                        <button
+                                        <button id="odsuspendiraj-button"
                                         className
                                         onClick={() => odsuspendirajKorisnika(korisnik,korisniciTip)}
                                         >
@@ -354,6 +357,8 @@ export function SusKorisnike() {
                     <p>Nema korisnika u ovoj kategoriji.</p>
                 )}
             </div>
+            </div>
+           
         </div>
     );
 }
