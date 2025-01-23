@@ -16,7 +16,7 @@ export function SusKorisnike() {
 
     const [error, setError] = useState(null);
 
-    const [korisniciStanje, setKorisniciStanje] = useState("suspended"); // može biti "nonSuspended"
+    const [korisniciStanje, setKorisniciStanje] = useState("nonSuspended"); // može biti "nonSuspended"
     const [korisniciTip, setKorisniciTip] = useState("kupac"); // može biti "moderator", "trgovina"
 
 
@@ -181,9 +181,6 @@ export function SusKorisnike() {
               });
 
         }
-        
-    
-        
       }
 
     
