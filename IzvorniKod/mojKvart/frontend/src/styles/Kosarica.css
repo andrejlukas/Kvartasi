@@ -158,6 +158,18 @@
     gap: 15px;
 }
 
+.button-posalji-naruzdbu-iz-kosarice{
+    background-color: #218838;
+    border-style: none;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 8px;
+    width: 30%;
+    padding: 10px;
+    margin-top: 30px;
+    align-self: flex-end;
+}
+
 @media (max-width:768px) {
     .kosarica-glavni-div ul {
         display: flex;
@@ -166,6 +178,13 @@
         gap: 10px;
         justify-content: space-around;
         list-style-type: none;
+    }
+    .kosarica-glavni-div{
+        min-width: 200px;
+
+    }
+    .trgovina-ukupno{
+        flex-direction: column;
     }
 
     .kosarica-proizvod-detalji{
@@ -200,7 +219,9 @@
         color: #323131;
         margin-bottom: 5px;
     }
-
+    .button-posalji-naruzdbu-iz-kosarice{
+        width: 100%;
+    }
     
 
    

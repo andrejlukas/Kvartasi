@@ -11,7 +11,12 @@ export function Kosarica(){
     const [kosarica,setKosarica] = useState({})
 
     const [loading, setLoading]=useState(true);
-        
+
+    const [message,setMessage] = useState("")
+    
+    function zatvori() {
+        setMessage("")
+    }
 
     function uvecajKolicinuProizvoda(proizvodID) {
         const token = localStorage.getItem("token");
@@ -72,6 +77,70 @@ export function Kosarica(){
             .catch((error) => {
                 console.error("Greška prilikom povećanja količine:", error);
             });
+    }
+    function posaljiNarudzbu(idRacuna,naziv){
+        const token = localStorage.getItem("token");
+        console.log(token)
+        if (!token) {
+            setError("Nedostaje token za autorizaciju.");
+            return;
+        }
+    
+        // Provjera potrebnih varijabli
+        if (!idRacuna) {
+            setError("Ne mogu poslat narudzbu.");
+            return;
+        }
+    
+        const options = {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                novoStanje: "T"
+            })
+        };
+        fetch(`/api/racuns/stanje/${idRacuna}`, options)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Greška prilikom slanja narudzbe.");
+                }
+            })
+            .then(() => {
+                setMessage(`Možete pokupiti svoju narudžbu u trgovini ${naziv} .`)
+
+                // Ponovno dohvaćanje košarice nakon uspješnog ažuriranja
+                const fetchOptions = {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                    
+                };
+    
+                fetch(`/api/kupacProizvods/kosarica/${id}`, fetchOptions)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Greška prilikom dohvaćanja košarice.");
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        setKosarica(data); // Ažuriranje košarice u state
+                        console.log("Ažurirana košarica:", data);
+                    })
+                    .catch((error) => {
+                        console.error("Greška prilikom dohvaćanja košarice:", error);
+                        setError(error.message);
+                    });
+            })
+            .catch((error) => {
+                console.error("Greška prilikom smanjivanja količine:", error);
+            });
+
     }
     
     function smanjiKolicinuProizvoda (proizvodID) {
@@ -250,8 +319,7 @@ export function Kosarica(){
                         (kosarica && Object.keys(kosarica).length > 0) ? (
                             Object.entries(kosarica).map(([key, proizvodi]) => (
                                 
-                                /* console.log(key) */
-                                <div className={key} id="kosarica-element" >
+                                <div key={key} className={key} id="kosarica-element" >
                                     
                                     <p className="kosarica-element-naslov">{proizvodi[0].trgovinaNaziv}</p>
                                     <hr></hr>
@@ -261,7 +329,7 @@ export function Kosarica(){
                                             .slice() 
                                             .sort((a, b) => a.proizvodNaziv.localeCompare(b.proizvodNaziv))
                                             .map((proizvod)=>
-                                                <div className={proizvod.proizvodNaziv} id="kosarica-proizvod">
+                                                <div key={proizvod.proizvodNaziv} className={proizvod.proizvodNaziv} id="kosarica-proizvod">
                                                 <p id="nazproiz">{proizvod.proizvodNaziv}</p> 
                                                 <div className="kosarica-proizvod-detalji">
                                                     <div id="element-proizvoda" className="kosarica-proizvod-cijena">
@@ -292,7 +360,8 @@ export function Kosarica(){
                                         ).toFixed(2)
                                         } €</p>
                                     </div>
-                                        
+                                    <button onClick={()=>posaljiNarudzbu(key,proizvodi[0].trgovinaNaziv)} className="button-posalji-naruzdbu-iz-kosarice">Pošalji narudžbu trgovini</button>
+                                    
                                 </div>
                             )
                             )
@@ -308,6 +377,9 @@ export function Kosarica(){
                 }
                 
             </div>
+            {
+                        message  && <div className="dodan-u-kosaricu-zatvori-div"><p>{message}</p> <button className="zatvaranje-obavijesti" onClick={() => zatvori()}>Zatvori</button></div>
+                    }
         </div>
     )
     
