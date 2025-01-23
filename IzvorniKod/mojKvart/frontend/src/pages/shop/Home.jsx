@@ -10,12 +10,7 @@ export function ShopHome() {
     const [toUpdate, setToUpdate] = useState(true);
     const [error, setError] = useState("");
     const [popupError, setPopupError] = useState("Proizvod će biti poslan na odobravanje!");
-
-    const [approvedProducts, setApprovedProducts] = useState([]);
-    const [notApprovedProducts, setNotApprovedProducts] = useState([]);
-    const [rejectedProducts, setRejectedProducts] = useState([]);
     const [products, setProducts] = useState([]);
-
     const [productData, setProductData] = useState({
         "proizvodId": "placeholder",
         "proizvodNaziv": "",
@@ -91,7 +86,7 @@ export function ShopHome() {
             }
         }
 
-        fetch(`/api/proizvods/approved/${shopId}`, options)
+        fetch(`/api/proizvods/${productsType}/${shopId}`, options)
             .then(async (response) => {
                 if (!response.ok) {
                     const text = await response.text();
@@ -100,48 +95,15 @@ export function ShopHome() {
                 return response.json();
             })
             .then((data) => {
-                setApprovedProducts(data);
+                setProducts(data);
             })
             .catch((error) => {
                 setError(error.message);
             });
-
-        fetch(`/api/proizvods/notApproved/${shopId}`, options)
-            .then(async (response) => {
-                if (!response.ok) {
-                    const text = await response.text();
-                    throw new Error(text);
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setNotApprovedProducts(data);
-            })
-            .catch((error) => {
-                setError(error.message);
-            });
-
-        fetch(`/api/proizvods/rejected/${shopId}`, options)
-            .then(async (response) => {
-                if (!response.ok) {
-                    const text = await response.text();
-                    throw new Error(text);
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setRejectedProducts(data);
-            })
-            .catch((error) => {
-                setError(error.message);
-            });
-    }, [shopId]);
+    }, [shopId, productsType]);
 
     const handleProductsTypeChange = (e) => {
         setProductsType(e.target.value);
-        if(e.target.value === "approved") setProducts(approvedProducts);
-        else if(e.target.value === "notApproved") setProducts(notApprovedProducts);
-        else setProducts(rejectedProducts);
     };
 
     const handleProductChange = (e) => {

@@ -43,6 +43,11 @@ public class DogadajResource {
         return ResponseEntity.ok(dogadajService.findAllUpcoming());
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<DogadajDTO>> getAllDogadajsFiltered() {
+        return ResponseEntity.ok(dogadajService.findAllUpcomingSorted());
+    }
+
     // API za dohvacanje svih nadolazecih dogadaja odredene trgovine
     @GetMapping("/upcoming/{trgovinaId}")
     public ResponseEntity<List<DogadajDTO>> getUpcomingTrgovinasDogadajs(@PathVariable(name = "trgovinaId") final Integer id) {

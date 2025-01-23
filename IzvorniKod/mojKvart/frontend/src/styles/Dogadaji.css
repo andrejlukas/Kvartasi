@@ -115,7 +115,6 @@
   }
 
   .filteri-dogadaji {
-    margin-top: 20px;
     width: 90%;
     margin-bottom: 20px;
   }
@@ -123,7 +122,6 @@
   .dogadaj-dogadaj-row {
     flex-direction: column;
     align-items: center; 
-    justify-content: center; 
     width: 100%;
     gap: 10px;
   }

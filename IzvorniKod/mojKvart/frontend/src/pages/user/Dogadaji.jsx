@@ -30,6 +30,8 @@ export function Dogadaji() {
    }, [])
 
    useEffect(() => {
+      if(localStorage.getItem("dogadajFilter") === null)
+         localStorage.setItem("dogadajFilter", "N");
       const token = localStorage.getItem('token');
       const options1 = {
          method: 'POST',
@@ -58,18 +60,32 @@ export function Dogadaji() {
          'Content-Type': 'application/json',
          },
       };
-      fetch(`/api/dogadajs`, options2)
-         .then((response) => {
-            if (!response.ok) {
-               throw new Error("Neuspješno dohvaćanje događaja.");
-            }
-            return response.json();
-         }).then((data) => {
-            setDogadaji(data);
-            data.forEach(dog => fetchTrgovinaName(dog.trgovina));
-         }).catch((error) => {
-            setError(error.message);
-         });
+      if(localStorage.getItem("dogadajFilter") === null || localStorage.getItem("dogadajFilter") === "N")
+         fetch(`/api/dogadajs`, options2)
+            .then((response) => {
+               if (!response.ok) {
+                  throw new Error("Neuspješno dohvaćanje događaja.");
+               }
+               return response.json();
+            }).then((data) => {
+               setDogadaji(data);
+               data.forEach(dog => fetchTrgovinaName(dog.trgovina));
+            }).catch((error) => {
+               setError(error.message);
+            });
+      else
+         fetch(`/api/dogadajs/filter`, options2)
+            .then((response) => {
+               if (!response.ok) {
+                  throw new Error("Neuspješno dohvaćanje događaja.");
+               }
+               return response.json();
+            }).then((data) => {
+               setDogadaji(data);
+               data.forEach(dog => fetchTrgovinaName(dog.trgovina));
+            }).catch((error) => {
+               setError(error.message);
+            });
       
       const fetchTrgovinaName = async (trgovinaId) => {
          try {
@@ -244,6 +260,15 @@ export function Dogadaji() {
          .catch(error => setError(error.message));
    };   
 
+   const openTheFilter = () => {
+      localStorage.setItem("dogadajFilter", "Y");
+      window.location.reload();
+   };
+
+   const resetFilters = () => {
+      localStorage.setItem("dogadajFilter", "N");
+      window.location.reload();
+   };
 
    return (
       <div>
@@ -256,10 +281,10 @@ export function Dogadaji() {
             ) : (
                <div className="dogadaj-dogadaj-row">
                   
-                  <div className="filteri-dogadaji">
-                     <p>filteri1</p>
-                     <p>filter2 </p>
-                     <p id="content"></p>
+                  <div className="filters">
+                     <strong><p>FILTRIRAJ</p></strong>
+                     <button onClick={() => openTheFilter()}>Po najbrže nadolazećim</button>
+                     <button onClick={() => resetFilters()}>Po početnim postavkama</button>
                   </div>
                         
                   <div className="dogadaji-section">
