@@ -78,6 +78,8 @@ public class KupacProizvodService {
                                                 Collectors.mapping(
                                                                 kp -> new KupacProizvodInfoDTO(
                                                                                 kp.getProizvod().getProizvodId(),
+                                                                                kp.getKupac().getKupacIme(),
+                                                                                kp.getKupac().getKupacPrezime(),
                                                                                 kp.getProizvod().getProizvodNaziv(),
                                                                                 kp.getProizvod().getProizvodCijena(),
                                                                                 kp.getProizvod().getProizvodSlika(),
@@ -103,6 +105,8 @@ public class KupacProizvodService {
                                                 Collectors.mapping(
                                                                 kp -> new KupacProizvodInfoDTO(
                                                                         kp.getProizvod().getProizvodId(),
+                                                                        kp.getKupac().getKupacIme(),
+                                                                                kp.getKupac().getKupacPrezime(),
                                                                                 kp.getProizvod().getProizvodNaziv(),
                                                                                 kp.getProizvod().getProizvodCijena(),
                                                                                 kp.getProizvod().getProizvodSlika(),
@@ -117,7 +121,7 @@ public class KupacProizvodService {
                                 ));
         }
 
-        public Map<String, List<KupacProizvodInfoDTO>> getTrgovinaNarudzbe(Integer trgovinaId) {
+        public Map<Long, List<KupacProizvodInfoDTO>> getTrgovinaNarudzbe(Integer trgovinaId) {
                 // Dohvati sve KupacProizvod zapise za trgovinu
                 List<KupacProizvod> kupacProizvodi = kupacProizvodRepository
                                 .findByRacun_Trgovina_TrgovinaId(trgovinaId);
@@ -125,17 +129,19 @@ public class KupacProizvodService {
                 // Grupiraj proizvode po kupcima koristeći mapu
                 return kupacProizvodi.stream().filter(kp -> kp.getRacun().getStanje() == 'T')
                                 .collect(Collectors.groupingBy(
-                                                kp -> kp.getRacun().getKupac().getKupacEmail(), // Grupiraj po emailu
-                                                                                                // kupca
+                                                kp -> kp.getRacun().getRacunId(), // grupiraj po IDju racuna
                                                 Collectors.mapping(
                                                                 kp -> new KupacProizvodInfoDTO(
                                                                         kp.getProizvod().getProizvodId(),
                                                                                 kp.getProizvod().getProizvodNaziv(),
+                                                                                kp.getKupac().getKupacIme(),
+                                                                                kp.getKupac().getKupacPrezime(),
                                                                                 kp.getProizvod().getProizvodCijena(),
                                                                                 kp.getProizvod().getProizvodSlika(),
                                                                                 kp.getKolicinaProizvoda(),
                                                                                 kp.getRacun().getTrgovina()
-                                                                                                .getTrgovinaNaziv()), // Mapiraj
+                                                                                                .getTrgovinaNaziv()), 
+                                                                                                // Mapiraj
                                                                                                                       // id
                                                                                                                       // i
                                                                                                                       // količinu

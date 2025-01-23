@@ -13,6 +13,12 @@ public class KupacProizvodInfoDTO {
 
     @NotNull
     private Integer proizvodId;
+
+    @NotNull 
+    private String kupacIme;
+
+    @NotNull
+    private String kupacPrezime;
     
     @NotNull
     private String proizvodNaziv;

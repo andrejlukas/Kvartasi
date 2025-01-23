@@ -45,10 +45,10 @@ public class KupacProizvodResource {
         return ResponseEntity.ok(groupedProizvodi);
     }
 
-    // dohvati prosle narudzbe za kupca s odredenim ID-jem
-    @GetMapping("/narudzbeTrgovina/{kupacId}")
-    public ResponseEntity<Map<String, List<KupacProizvodInfoDTO>>> getNarudzbeTrgovina(@PathVariable Integer kupacId) {
-        Map<String, List<KupacProizvodInfoDTO>> groupedProizvodi = kupacProizvodService.getTrgovinaNarudzbe(kupacId);
+    // dohvati racune za odredenu trgovinu
+    @GetMapping("/narudzbeTrgovina/{trgovinaId}")
+    public ResponseEntity<Map<Long, List<KupacProizvodInfoDTO>>> getNarudzbeTrgovina(@PathVariable Integer trgovinaId) {
+        Map<Long, List<KupacProizvodInfoDTO>> groupedProizvodi = kupacProizvodService.getTrgovinaNarudzbe(trgovinaId);
         return ResponseEntity.ok(groupedProizvodi);
     }
 
