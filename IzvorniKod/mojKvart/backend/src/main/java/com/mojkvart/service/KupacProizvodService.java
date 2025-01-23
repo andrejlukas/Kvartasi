@@ -133,9 +133,10 @@ public class KupacProizvodService {
                                                 Collectors.mapping(
                                                                 kp -> new KupacProizvodInfoDTO(
                                                                         kp.getProizvod().getProizvodId(),
-                                                                                kp.getProizvod().getProizvodNaziv(),
+                                                                              
                                                                                 kp.getKupac().getKupacIme(),
                                                                                 kp.getKupac().getKupacPrezime(),
+                                                                                kp.getProizvod().getProizvodNaziv(),
                                                                                 kp.getProizvod().getProizvodCijena(),
                                                                                 kp.getProizvod().getProizvodSlika(),
                                                                                 kp.getKolicinaProizvoda(),
