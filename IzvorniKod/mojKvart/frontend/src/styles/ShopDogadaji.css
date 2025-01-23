@@ -52,10 +52,7 @@ body {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-.event-card-alt:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
+
 
 .card-body-alt {
     padding: 20px;
@@ -92,7 +89,7 @@ body {
 }
 
 #addEvent {
-    background-color: #2c8c2c;
+    background-color:  #28a745;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -104,7 +101,7 @@ body {
 }
 
 #addEvent:hover {
-    background-color: rgba(62, 152, 30);
+    background-color: #1e7e34;
 }
 
 #vani2 {
@@ -165,7 +162,7 @@ body {
 
 #registrationPopup button {
     padding: 10px 20px;
-    background-color: #2c8c2c;
+    background-color: #28a745;
     color: #ffffff;
     font-size: 16px;
     font-weight: bold;
@@ -176,7 +173,7 @@ body {
 }
 
 #registrationPopup button:hover {
-    background-color: rgba(62, 152, 30);
+    background-color: #1e7e34;
 }
 
 #confirmDogadaj { display: none;}
