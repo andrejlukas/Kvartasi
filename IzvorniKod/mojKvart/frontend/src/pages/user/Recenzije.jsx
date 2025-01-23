@@ -114,11 +114,7 @@ export function Recenzije() {
                     return response.json();
                 })
                 .then((data) => {
-                    // Filtriranje odobrenih recenzija
-                    const approvedRecenzije = data.filter(
-                        (recenzija) => recenzija.odobrioModerator
-                    );
-                    setRecenzije(approvedRecenzije);
+                    setRecenzije(data);
                 })
                 .catch((error) => {
                     setError(error.message);

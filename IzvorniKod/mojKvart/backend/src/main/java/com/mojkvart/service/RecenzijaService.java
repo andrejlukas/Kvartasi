@@ -39,14 +39,14 @@ public class RecenzijaService {
 
     public List<RecenzijaDTO> getAllApproved() {
         final List<Recenzija> recenzijas = recenzijaRepository.findAll(Sort.by("recenzijaId"));
-        return recenzijas.stream().filter(recenzija -> recenzija.getOdobrioModerator() == true)
+        return recenzijas.stream().filter(Recenzija::getOdobrioModerator)
                 .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))
                 .toList();
     }
 
     public List<RecenzijaDTO> getAllNotApproved() {
         final List<Recenzija> recenzijas = recenzijaRepository.findAll(Sort.by("recenzijaId"));
-        return recenzijas.stream().filter(recenzija -> recenzija.getOdobrioModerator() == false)
+        return recenzijas.stream().filter(recenzija -> !recenzija.getOdobrioModerator())
                 .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))
                 .toList();
     }
@@ -97,6 +97,7 @@ public class RecenzijaService {
     }
         List<Recenzija> listaRecenzija = recenzijaRepository.findByTrgovina_TrgovinaId(id);
         return listaRecenzija.stream()
+                .filter(Recenzija::getOdobrioModerator)
                 .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))  
                 .collect(Collectors.toList());  
     }
