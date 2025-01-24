@@ -11,11 +11,6 @@ Ovaj projekt je reultat timskog rada u sklopu projektnog zadatka kolegija [Progr
 
 **PROBLEM KOJI RJEŠAVAMO:** Ovaj projekt omogućava rješenje problema nepraktičnosti tradicionalne kupovine u lokalnim trgovinama, gdje stanovnici moraju fizički ići u različite trgovine kako bi pronašli ono što im treba. Naša platforma nudi jednostavno digitalno rješenje, gdje trgovine mogu promovirati svoje proizvode i usluge, a kupci na jednom mjestu pregledati ponudu, usporediti cijene, kupiti proizvode, dobiti popuste i potvrditi dolakaz na događaje.
 
-Kratko opisati cilj Vašeg projekta. Vaša motivacija?  (Napomena: odgovor nije »Zato što je to bio zadatak i nismo imali ideje za drugo.«). Koji problem rješavate?
-> Obzirom da je ovo zadani projekt navedite i što želite/jeste novo  naučili.
-
-> Dobro izrađen opis omogućuje vam da pokažete svoj rad drugim programerima, kao i potencijalnim poslodavcima. Ne samo da prvi dojam na stranici opisa često razlikuje dobar projekt od lošeg projekta već i predstavlja dobru praksu koju morate savladati.
-
 # Funkcijski zahtjevi
 **STANOVNICI:** pregledavati proizvode, potvrditi dolazak na događaje, spremiti ponude, ostavljati recenzije, ocjenjivati trgovine
 
