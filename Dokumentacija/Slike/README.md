@@ -1,0 +1,1 @@
+Slike za dokumentaciju
