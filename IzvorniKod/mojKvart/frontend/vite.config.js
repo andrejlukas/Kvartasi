@@ -10,14 +10,13 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       port: 3000,
-      //strictPort: true,
-      //host: true,
+      strictPort: true,
+      host: true,
       proxy: {
         '/api': {
-          target: env.VITE_BACKEND_URL
-          //target: "https://kvartasialfabackend.onrender.com",
-          //changeOrigin: true,
-          //secure: true
+          target: env.VITE_BACKEND_URL,
+          changeOrigin: true,
+          secure: true
         },
       },
     },

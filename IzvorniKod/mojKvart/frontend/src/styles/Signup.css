@@ -118,6 +118,13 @@
     margin-bottom: 15px;
 }
 
+.registration-type{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 .toggle-password-button-signup{
     
         margin-bottom: 15px !important;
