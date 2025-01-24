@@ -1,0 +1,248 @@
+.moji-racuni-container {
+
+    height: 100%;
+    text-align: left;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: relative;
+    flex-direction: column;
+    box-sizing: border-box;
+    margin: 20px;
+    display: flex;
+    width: 70%;
+
+}
+.main-container{
+    background-color: #ededed;
+
+}
+.main-container{
+    background-color: #ededed;
+}
+.idracun-button{
+    text-align: start;
+    padding: 10px;
+}
+
+
+body {
+    font-family: 'Raleway', sans-serif;
+  }
+
+.moji-racuni-naslov{
+    margin: 0;
+    padding-bottom: 10px;
+    color: #323131;
+    font-family: Raleway;
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.idracun-button{
+    color: rgb(0, 0, 0, 0.5);
+    border-style: none;
+    border-radius: 20px;
+    font-size: 24px;
+    transition: background-color 0.3s;
+
+}
+
+.idracun-button:hover{
+    background-color: rgb(0, 0, 0,0.6);
+    color: white;
+    
+}
+
+.racun-element{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+/* Dopunski tekst (naslovi kolona) */
+.racun-dopunski-tekst {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.racun-dopunski-tekst p{
+    width: 25%;
+}
+
+
+.racun-proizvod-element {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    padding: 8px 0;
+}
+.racun-proizvod-element p{
+    width: 25%;
+}
+
+
+.racun-ostavi-recenziju-gumb {
+    width: 100%;
+    text-align: start;
+    padding-left: 15px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color:#ffffff ; 
+    color: black; 
+    border-style: solid;
+    border-width: 2px; 
+    border-color: #4caf50;
+    border-radius: 20px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
+}
+
+.racun-ostavi-recenziju-gumb:hover {
+    background-color: #45a049; 
+    color: white;
+}
+.ostavljanje-recenzije-container{
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+    background-color:rgb(69, 160, 73,0.5) ;
+    border-radius: 30px;
+}
+.ostavljanje-recenzije-container form div {
+    display: flex;
+    flex-direction: column;
+}
+.ostavljanje-recenzije-container label {
+    color:  rgb(0, 0, 0,0.6);
+}
+.ostavljanje-recenzije-container input {
+    background-color:  rgb(0, 0, 0,0.1);
+    border-radius: 30px;
+    border-style: none;
+    padding: 3px;
+}
+.ostavljanje-recenzije-container button{
+    width: 100%;
+
+    padding: 5px 10px;
+    background-color:  rgb(0, 0, 0,0.1);
+    color:  rgb(0, 0, 0,0.6);
+    
+    border-style: solid;
+    border-width: 2px; 
+    border-color: #4caf50;
+    border-radius: 20px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
+}
+.ostavljanje-recenzije-container button:hover{
+    background-color: #45a049; 
+    color: white;
+}
+
+.ispisRacuna {
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+
+
+
+
+
+
+.ispisRacuna form  {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+}
+
+form-buttons  {
+    padding-left: 30px;
+}
+#tekstrecenzija-mojiracuni{
+    min-width: 50%;
+}
+
+
+
+/*respozivnost*/
+
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .moji-racuni-container {
+        width: 500px;
+        margin: 10px 0;
+    }
+
+    .moji-racuni-naslov {
+        font-size: 36px;
+        text-align: center;
+    }
+
+    /* .racun-dopunski-tekst {
+        flex-direction: column;
+        align-items: center;
+        text-align: left;
+    } */
+
+    .racun-dopunski-tekst p {
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+
+    
+
+    
+
+    .idracun-button {
+        font-size: 16px;
+        padding: 10px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .ispisRacuna {
+        border-top: none;
+        padding-top: 0;
+        margin-top: 15px;
+    }
+}
+
+
+/* Stilovi za zvjezdice */
+.star-rating {
+    display: flex;
+    flex-direction: row !important;
+}
+
+.star {
+    font-size: 2rem;
+    color: #ccc; /* Neobojane zvjezdice */
+    cursor: pointer;
+    transition: color 200ms;
+    margin-right: 5px;
+}
+
+.star.filled {
+    color: #ffc107; /* Boja obojenih zvjezdica */
+}
+
+.star:focus {
+    outline: none;
+    color: #ffc107;
+}

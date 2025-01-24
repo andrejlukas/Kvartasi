@@ -49,6 +49,9 @@ public class TrgovinaDTO {
     @Size(max = 200)
     private String trgovinaSifra;
 
+    @NotNull
+    private String trgovinaStatus;
+
 
     private Set<Integer> imaAtributeAtributs;
 

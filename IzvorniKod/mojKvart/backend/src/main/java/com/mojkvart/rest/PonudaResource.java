@@ -1,8 +1,11 @@
 package com.mojkvart.rest;
 
 import com.mojkvart.model.PonudaDTO;
+import com.mojkvart.service.DogadajService;
 import com.mojkvart.service.PonudaService;
 import jakarta.validation.Valid;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,9 +30,23 @@ public class PonudaResource {
         this.ponudaService = ponudaService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<PonudaDTO>> getAllPonudas() {
-        return ResponseEntity.ok(ponudaService.findAll());
+    // vraća sve ponude koje je moderator odobrio i koje kupac vec nije spremio ni iskoristio
+    @GetMapping("/flag-true/{kupacId}")
+    public ResponseEntity<List<PonudaDTO>> getPonudeForKupac( @PathVariable(name = "kupacId") Integer kupacId) {
+        List<PonudaDTO> ponude = ponudaService.findAllWithFlagTrue(kupacId);
+        return ResponseEntity.ok(ponude);
+    }
+
+    // vraća sve ponude koje moderator mora odobriti
+    @GetMapping("/flag-false")
+    public ResponseEntity<List<PonudaDTO>> getAllWithFlagFalse() {
+        return ResponseEntity.ok(ponudaService.findAllWithFlagFalse());
+    }
+
+    // vraća sve ponude koje je moderator odobrio
+    @GetMapping("/flag-true")
+    public ResponseEntity<List<PonudaDTO>> getAllWithFlagTrue() {
+        return ResponseEntity.ok(ponudaService.findAllWithFlagTrue());
     }
 
     @GetMapping("/{ponudaId}")
@@ -38,12 +55,40 @@ public class PonudaResource {
         return ResponseEntity.ok(ponudaService.get(ponudaId));
     }
 
+    @GetMapping("/valid/{trgovinaId}")
+    public ResponseEntity<List<PonudaDTO>> getTrgovinasValidPonudas(@PathVariable(name = "trgovinaId") final Integer trgovinaId) {
+        return ResponseEntity.ok(ponudaService.findAllTrgovinaValidPonudas(trgovinaId));
+    }
+
+    @GetMapping("/invalid/{trgovinaId}")
+    public ResponseEntity<List<PonudaDTO>> getTrgovinasNonValidPonudas(@PathVariable(name = "trgovinaId") final Integer trgovinaId) {
+        return ResponseEntity.ok(ponudaService.findAllTrgovinaNonValidPonudas(trgovinaId));
+    }
+
+    @PostMapping("/check")
+    public ResponseEntity<String> checkPonuda(@RequestBody @Valid final PonudaDTO ponudaDTO) {
+        if(ponudaDTO.getPonudaNaziv().length() < 2)
+            return ResponseEntity.badRequest().body("Naziv ponude treba biti minimalno duljine 2!");
+        if(ponudaDTO.getPonudaOpis().length() < 2)
+            return ResponseEntity.badRequest().body("Opis ponude treba biti minimalno duljine 2!");
+        try {
+            LocalDateTime rok = DogadajService.getVrijeme(ponudaDTO.getPonudaRok());
+            if(rok.isBefore(LocalDateTime.now()))
+                throw new RuntimeException("Datum roka mora biti u budućnosti!");
+        } catch(Exception e) {
+            if(e.getMessage().startsWith("Datum")) return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Datum i vrijeme mora biti u formatu \"dd.MM.gggg. ss:mm\"!");
+        }
+        return ResponseEntity.ok("Sve ok!");
+    }
+
     @PostMapping
     public ResponseEntity<Integer> createPonuda(@RequestBody @Valid final PonudaDTO ponudaDTO) {
         final Integer createdPonudaId = ponudaService.create(ponudaDTO);
         return new ResponseEntity<>(createdPonudaId, HttpStatus.CREATED);
     }
 
+    // za promijenu zastavice iz false u true pogledajte komentar kod putMapping u ponudaPopust
     @PutMapping("/{ponudaId}")
     public ResponseEntity<Integer> updatePonuda(
             @PathVariable(name = "ponudaId") final Integer ponudaId,
@@ -58,5 +103,4 @@ public class PonudaResource {
         ponudaService.delete(ponudaId);
         return ResponseEntity.noContent().build();
     }
-
 }

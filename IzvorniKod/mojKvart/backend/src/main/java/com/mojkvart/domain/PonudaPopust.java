@@ -10,6 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+
+import java.util.Objects;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,5 +51,18 @@ public class PonudaPopust {
 
     @OneToMany(mappedBy = "ponudaPopust")
     private Set<KupacPonudaPopust> ponudaPopustKupacPonudaPopusts;
+
+    @Override
+public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    PonudaPopust that = (PonudaPopust) o;
+    return Objects.equals(ponudaPopustId, that.ponudaPopustId); // Koristite primarni ključ za usporedbu
+}
+
+@Override
+public int hashCode() {
+    return Objects.hash(ponudaPopustId); // Koristite primarni ključ za generiranje hash koda
+}
 
 }

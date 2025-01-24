@@ -1,0 +1,66 @@
+.addPiPbutton {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#Vanjski1{
+    margin: 20px;
+    padding-inline: 10px;
+    padding-top: 5px;
+}
+
+.addPiPbutton:hover {
+    background-color:#1e7e34;
+}
+
+#addButtonsController {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.YesNoButtons button{
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+}
+
+.YesNoButtons button:hover{
+    background-color: #1e7e34;
+}
+
+#PiPdataList {
+    margin: 20px;
+    padding: 0;
+}
+
+.PiPbracket{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.bracketItem {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    font-family: Raleway, sans-serif;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    width: 45%;
+}
+
+
+
+@media (max-width: 750px) {
+    .bracketItem { width: 100%;}
+}

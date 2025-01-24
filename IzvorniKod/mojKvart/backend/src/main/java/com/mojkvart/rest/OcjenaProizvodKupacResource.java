@@ -39,6 +39,21 @@ public class OcjenaProizvodKupacResource {
         return ResponseEntity.ok(ocjenaProizvodKupacService.get(id));
     }
 
+    // API za dohvaćanje prosječne ocjene proizvoda
+    @GetMapping("/ocjena/{proizvodId}")
+    public ResponseEntity<Double> getProsjecnaOcjena(@PathVariable Integer proizvodId) {
+        double prosjecnaOcjena = ocjenaProizvodKupacService.getProsjecnaOcjena(proizvodId);
+        return ResponseEntity.ok(prosjecnaOcjena);
+    }
+
+    // API za dovaćanje broja ocjena proizvoda
+    @GetMapping("/brojOcjena/{proizvodId}")
+    public ResponseEntity<Integer> getBrojOcjena(@PathVariable Integer proizvodId) {
+        Integer brojOcjena = ocjenaProizvodKupacService.getBrojOcjenaForProizvod(proizvodId);
+        return ResponseEntity.ok(brojOcjena);
+    }
+
+
     //UC21, koristite api/ocjenaProizvodKupacs za davanje ocjene proizvodu, saljete JSON 
     @PostMapping
     public ResponseEntity<Long> createOcjenaProizvodKupac(

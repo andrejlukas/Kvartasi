@@ -9,6 +9,8 @@ import com.mojkvart.repos.KupacRepository;
 import com.mojkvart.util.NotFoundException;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -28,16 +30,25 @@ public class KupacDogadajService {
         this.dogadajRepository = dogadajRepository;
     }
 
-    public List<KupacDogadaj> findAll() {
+    public List<KupacDogadajDTO> findAll() {
         final List<KupacDogadaj> kupacDogadajs = kupacDogadajRepository.findAll(Sort.by("id"));
         return kupacDogadajs.stream()
-                .map(kupacDogadaj -> mapToDTO(kupacDogadaj, new KupacDogadaj()))
+                .map(kupacDogadaj -> mapToDTO(kupacDogadaj, new KupacDogadajDTO()))
                 .toList();
     }
 
-    public KupacDogadaj get(final Long id) {
+    // funkcija koja vraca sve kupacDogadaje za odredenog kupca na koje će kupac ići ili je išao
+    public List<KupacDogadajDTO> getDogadajiZaKupca(Integer kupacId) {
+    List<KupacDogadaj> kupacDogadaji = kupacDogadajRepository.findByKupac_KupacId(kupacId);
+    return kupacDogadaji.stream().filter(KupacDogadaj::getKupacDogadajFlag)
+            .map(kd -> mapToDTO(kd, new KupacDogadajDTO()))
+            .collect(Collectors.toList());
+}
+
+
+    public KupacDogadajDTO get(final Long id) {
         return kupacDogadajRepository.findById(id)
-                .map(kupacDogadaj -> mapToDTO(kupacDogadaj, new KupacDogadaj()))
+                .map(kupacDogadaj -> mapToDTO(kupacDogadaj, new KupacDogadajDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
@@ -59,14 +70,15 @@ public class KupacDogadajService {
         kupacDogadajRepository.deleteById(id);
     }
 
-    private KupacDogadaj mapToDTO(final KupacDogadaj kupacDogadaj,
-            final KupacDogadaj kupacDogadajDTO) {
-        kupacDogadajDTO.setId(kupacDogadaj.getId());
-        kupacDogadajDTO.setKupacDogadajFlag(kupacDogadaj.getKupacDogadajFlag());
-        kupacDogadajDTO.setKupac(kupacDogadaj.getKupac() == null ? null : kupacDogadaj.getKupac());
-        kupacDogadajDTO.setDogadaj(kupacDogadaj.getDogadaj() == null ? null : kupacDogadaj.getDogadaj());
-        return kupacDogadajDTO;
-    }
+    private KupacDogadajDTO mapToDTO(final KupacDogadaj kupacDogadaj,
+                                 final KupacDogadajDTO kupacDogadajDTO) {
+    kupacDogadajDTO.setId(kupacDogadaj.getId());
+    kupacDogadajDTO.setKupacDogadajFlag(kupacDogadaj.getKupacDogadajFlag());
+    kupacDogadajDTO.setKupac(kupacDogadaj.getKupac() == null ? null : kupacDogadaj.getKupac().getKupacId());
+    kupacDogadajDTO.setDogadaj(kupacDogadaj.getDogadaj() == null ? null : kupacDogadaj.getDogadaj().getDogadajId());
+    return kupacDogadajDTO;
+}
+
 
     private KupacDogadaj mapToEntity(final KupacDogadajDTO kupacDogadajDTO,
             final KupacDogadaj kupacDogadaj) {

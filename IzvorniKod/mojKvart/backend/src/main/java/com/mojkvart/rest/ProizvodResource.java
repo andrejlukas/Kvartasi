@@ -6,6 +6,8 @@ import com.mojkvart.util.ReferencedException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,29 +54,72 @@ public class ProizvodResource {
     }
 
     // za dohvacanje svih proizvoda jedne trgovine
-    @GetMapping("/fromTrgovina/{trgovinaId}")
-    public ResponseEntity<List<ProizvodDTO>> getTrgovinaProizvods(
+    @GetMapping("/approved/{trgovinaId}")
+    public ResponseEntity<List<ProizvodDTO>> getTrgovinaApprovedProizvods(
             @PathVariable(name = "trgovinaId") Integer trgovinaId) {
-        return ResponseEntity.ok(proizvodService.findByTrgovina(trgovinaId));
+        return ResponseEntity.ok(proizvodService.findApprovedByTrgovina(trgovinaId));
+    }
+    @GetMapping("/notApproved/{trgovinaId}")
+    public ResponseEntity<List<ProizvodDTO>> getTrgovinaNotApprovedProizvods(
+            @PathVariable(name = "trgovinaId") Integer trgovinaId) {
+        return ResponseEntity.ok(proizvodService.findNotApprovedByTrgovina(trgovinaId));
+    }
+    @GetMapping("/rejected/{trgovinaId}")
+    public ResponseEntity<List<ProizvodDTO>> getTrgovinaRejectedProizvods(
+            @PathVariable(name = "trgovinaId") Integer trgovinaId) {
+        return ResponseEntity.ok(proizvodService.findRejectedByTrgovina(trgovinaId));
+    }
+
+    // to promjeniti u samo potvrdene proizvode kasnije
+    @GetMapping("/getBySearch/{input}")
+    public ResponseEntity<List<ProizvodDTO>> getSearchedProizvods(@PathVariable(name = "input") String input) {
+        return ResponseEntity.ok(proizvodService.getAllProizvodsBySearch(input));
     }
 
     // UC11, koristite api/proizvods te pošaljite JSON objekt za kriranje novog
     // proizvoda od strane trgovine
     @PostMapping
-    public ResponseEntity<Integer> createProizvod(
-            @RequestBody @Valid final ProizvodDTO proizvodDTO) {
-        final Integer createdProizvodId = proizvodService.create(proizvodDTO);
-        return new ResponseEntity<>(createdProizvodId, HttpStatus.CREATED);
+    public ResponseEntity<String> createProizvod(@RequestBody @Valid final ProizvodDTO proizvodDTO) {
+        if(proizvodDTO.getProizvodNaziv().length() < 2)
+            return ResponseEntity.badRequest().body("Naziv proizvoda mora biti minimalno duljine 2!");
+        if(proizvodDTO.getProizvodOpis().length() < 10)
+            return ResponseEntity.badRequest().body("Opis proizvoda mora biti minimalno duljine 10!");
+        if(proizvodDTO.getProizvodCijena() <= 0)
+            return ResponseEntity.badRequest().body("Cijena proizvoda mora biti pozitivna!");
+        if(proizvodDTO.getProizvodKategorija().length() < 2)
+            return ResponseEntity.badRequest().body("Kategorija proizvoda mora biti minimalno duljine 2!");
+        if(proizvodDTO.getProizvodSlika().isEmpty())
+            return ResponseEntity.badRequest().body("Naziv proizvoda ne smije biti prazan!");
+        proizvodService.create(proizvodDTO); // evenutalno zaokružiti cijenu na 2 decimale
+        return new ResponseEntity<>("Kreiran proizvod za odobrenje!", HttpStatus.CREATED);
     }
 
-    // UC7, koristite api/proizvods/{proizvodId} za mijenjanje atributa iz F u T ako
-    // je odobren
     @PutMapping("/{proizvodId}")
-    public ResponseEntity<Integer> updateProizvod(
+    public ResponseEntity<String> updateProizvod(
             @PathVariable(name = "proizvodId") final Integer proizvodId,
             @RequestBody @Valid final ProizvodDTO proizvodDTO) {
+        if(proizvodDTO.getProizvodNaziv().length() < 2)
+            return ResponseEntity.badRequest().body("Naziv proizvoda mora biti minimalno duljine 2!");
+        if(proizvodDTO.getProizvodOpis().length() < 10)
+            return ResponseEntity.badRequest().body("Opis proizvoda mora biti minimalno duljine 10!");
+        if(proizvodDTO.getProizvodCijena() <= 0)
+            return ResponseEntity.badRequest().body("Cijena proizvoda mora biti pozitivna!");
+        if(proizvodDTO.getProizvodKategorija().length() < 2)
+            return ResponseEntity.badRequest().body("Kategorija proizvoda mora biti minimalno duljine 2!");
+        if(proizvodDTO.getProizvodSlika().isEmpty())
+            return ResponseEntity.badRequest().body("Naziv proizvoda ne smije biti prazan!");
         proizvodService.update(proizvodId, proizvodDTO);
-        return ResponseEntity.ok(proizvodId);
+        return ResponseEntity.ok("Uspješno promijenjen proizvod!");
+    }
+
+    // UC7, koristite za mijenjanje zastavice proizvoda kada ga moderator odobri
+    @PutMapping("/stanje/{proizvodId}")
+    public ResponseEntity<Void> promijeniZastavicu(
+            @PathVariable(name = "proizvodId") final Integer proizvodId,
+            @RequestBody Map<String, String> requestBody) {
+        String novoStanje = requestBody.get("novoStanje");
+        proizvodService.promijeniZastavicu(proizvodId, novoStanje);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{proizvodId}")

@@ -1,6 +1,9 @@
 package com.mojkvart.config;
 
+import com.mojkvart.repos.AdministratorRepository;
 import com.mojkvart.repos.KupacRepository;
+import com.mojkvart.repos.ModeratorRepository;
+import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.util.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,9 +21,26 @@ public class AuthenticationConfig {
     @Autowired
     private KupacRepository kupacRepository;
 
+    @Autowired
+    private TrgovinaRepository trgovinaRepository;
+
+    @Autowired
+    private ModeratorRepository moderatorRepository;
+
+    @Autowired
+    private AdministratorRepository administratorRepository;
+
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> kupacRepository.findByKupacEmail(username).orElseThrow(NotFoundException::new);
+        return username -> {
+            if(kupacRepository.findByKupacEmail(username).isPresent())
+                return kupacRepository.findByKupacEmail(username).get();
+            else if(trgovinaRepository.findByTrgovinaEmail(username).isPresent())
+                return trgovinaRepository.findByTrgovinaEmail(username).get();
+            else if(moderatorRepository.findByModeratorEmail(username).isPresent())
+                return moderatorRepository.findByModeratorEmail(username).get();
+            return administratorRepository.findByAdministratorEmail(username).orElseThrow(NotFoundException::new);
+        };
     }
 
     @Bean

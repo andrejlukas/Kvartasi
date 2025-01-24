@@ -26,4 +26,7 @@ public class ModeratorDTO {
 
     @Size(max = 200)
     private String moderatorSifra;
+
+    @NotNull
+    private String moderatorStatus;
 }

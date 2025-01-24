@@ -10,6 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+
+import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,16 +36,19 @@ public class Dogadaj {
     )
     private Integer dogadajId;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 500)
     private String dogadajNaziv;
 
     @Column(nullable = false, length = 50)
-    private String dogadajVrijeme;
+    private String dogadajPocetak;
 
     @Column(nullable = false, length = 50)
+    private String dogadajKraj;
+
+    @Column(nullable = false, length = 300)
     private String dogadajSlika;
 
-    @Column(length = 50)
+    @Column(length = 500)
     private String dogadajOpis;
 
     @ManyToOne(fetch = FetchType.LAZY)

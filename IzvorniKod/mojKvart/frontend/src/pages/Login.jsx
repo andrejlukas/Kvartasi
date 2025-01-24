@@ -1,4 +1,4 @@
-import "../styles/login.css"
+import "../styles/Login.css"
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/MojKvart.png"
@@ -9,7 +9,6 @@ export function Login() {
    const [emailAddress, setEmailAddress] = useState('');
    const [password, setPassword] = useState('');
    const [errorMessage, setErrorMessage] = useState('');
-
    const [showPassword, setShowPassword] = useState(false);
 
    const togglePasswordVisibility = () => {
@@ -44,7 +43,14 @@ export function Login() {
             }
          })
          .then(data => {
-            navigate('/home?token=' + data.token);
+            if(data.role === "KUPAC")
+               navigate('/home?token=' + data.token);
+            else if(data.role === "TRGOVINA")
+               navigate('/trgovina/home?token=' + data.token);
+            else if(data.role === "MODERATOR")
+               navigate('/moderator/home?token=' + data.token);
+            else 
+               navigate('/admin/home?token=' + data.token);
             window.location.reload();
          })
          .catch( error => {
@@ -84,7 +90,7 @@ export function Login() {
                <input type={showPassword ? "text" : "password"} id="password" name="password" className="inputs" onChange={(e) => setPassword(e.target.value)}/>
                <button
                         type="button"
-                        onClick={togglePasswordVisibility} // Dodaj funkciju za prikazivanje/sakrivanje
+                        onClick={togglePasswordVisibility}
                         className="toggle-password-button"
                      >
                         {showPassword ? "Sakrij" : "Otkrij"}
@@ -103,7 +109,7 @@ export function Login() {
                   <button type="button">Kreiraj novi korisnički račun</button>
                </a>
 
-               <a href="http://localhost:8080/oauth2/authorization/google" role="button" id="google-btn">
+               <a href={`${import.meta.env.VITE_BACKEND_URL}/oauth2/authorization/google`} role="button" id="google-btn">
                   <img src={googleLogo} alt="Google Logo"/>
                   <span>Google prijava</span>
                </a>

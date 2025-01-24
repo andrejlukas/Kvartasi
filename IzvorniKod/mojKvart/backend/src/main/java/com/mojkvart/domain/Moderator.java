@@ -49,6 +49,9 @@ public class Moderator implements UserDetails {
     @Column(length = 200)
     private String moderatorSifra;
 
+    @Column(nullable = false)
+    private String moderatorStatus;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("MODERATOR"));

@@ -1,9 +1,12 @@
 package com.mojkvart.rest;
 
 import com.mojkvart.model.KupacProizvodDTO;
+import com.mojkvart.model.KupacProizvodInfoDTO;
 import com.mojkvart.service.KupacProizvodService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +31,25 @@ public class KupacProizvodResource {
         this.kupacProizvodService = kupacProizvodService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<KupacProizvodDTO>> getAllkupacProizvods() {
-        return ResponseEntity.ok(kupacProizvodService.findAll());
+    // dohvati kosaricu za kupca s odredenim ID-jem
+    @GetMapping("/kosarica/{kupacId}")
+    public ResponseEntity<Map<Long, List<KupacProizvodInfoDTO>>> getKupacKosarica(@PathVariable Integer kupacId) {
+        Map<Long, List<KupacProizvodInfoDTO>> groupedProizvodi = kupacProizvodService.getKupacKosarica(kupacId);
+        return ResponseEntity.ok(groupedProizvodi);
+    }
+
+    // dohvati prosle narudzbe za kupca s odredenim ID-jem
+    @GetMapping("/prosleNarudzbe/{kupacId}")
+    public ResponseEntity<Map<Long, List<KupacProizvodInfoDTO>>> getKupacProsleNarudzbe(@PathVariable Integer kupacId) {
+        Map<Long, List<KupacProizvodInfoDTO>> groupedProizvodi = kupacProizvodService.getKupacProsleNarudzbe(kupacId);
+        return ResponseEntity.ok(groupedProizvodi);
+    }
+
+    // dohvati racune za odredenu trgovinu
+    @GetMapping("/narudzbeTrgovina/{trgovinaId}")
+    public ResponseEntity<Map<Long, List<KupacProizvodInfoDTO>>> getNarudzbeTrgovina(@PathVariable Integer trgovinaId) {
+        Map<Long, List<KupacProizvodInfoDTO>> groupedProizvodi = kupacProizvodService.getTrgovinaNarudzbe(trgovinaId);
+        return ResponseEntity.ok(groupedProizvodi);
     }
 
     @GetMapping("/{id}")
@@ -46,12 +65,49 @@ public class KupacProizvodResource {
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
+    // API koji povecaje kolicinu proizvoda u kosarici
+    @PostMapping("/povecaj/{kupacId}/{proizvodId}")
+    public ResponseEntity<String> povecajKolicinu(@PathVariable Long kupacId, @PathVariable Long proizvodId) {
+        kupacProizvodService.povecajKolicinu(kupacId, proizvodId);
+        return ResponseEntity.ok("Količina proizvoda uspješno povećana.");
+    }
+
+    // API koji smanjuje kolicinu proizvoda u kosarici
+    @PostMapping("/smanji/{kupacId}/{proizvodId}")
+    public ResponseEntity<String> smanjiKolicinu(@PathVariable Long kupacId, @PathVariable Long proizvodId) {
+        kupacProizvodService.smanjiKolicinu(kupacId, proizvodId);
+        return ResponseEntity.ok("Količina proizvoda uspješno smanjena.");
+    }
+
+    // iskreno mozda najludi API ikad koji provjerava je li dani proizvod u kosarici, ako nije, radi novi KupacProizvod
+    // i dodaje ga racunu (ako racun ne postoji isto ga radi), ako je, povecaje kolicinu proizvoda za 1
+    @PostMapping("/dodaj/{kupacId}/{trgovinaId}/{proizvodId}/{kolicina}")
+    public ResponseEntity<String> dodajIliAzurirajProizvodUKosarici(
+            @PathVariable Integer kupacId,
+            @PathVariable Integer trgovinaId,
+            @PathVariable Integer proizvodId,
+            @PathVariable Integer kolicina) {
+        try {
+            kupacProizvodService.dodajIliAzurirajProizvodUKosarici(kupacId, trgovinaId, proizvodId, kolicina);
+            return ResponseEntity.ok("Proizvod je uspješno dodan ili ažuriran u košarici.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Greška: " + e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Long> updatekupacProizvod(
             @PathVariable(name = "id") final Long id,
             @RequestBody @Valid final KupacProizvodDTO kupacProizvodDTO) {
         kupacProizvodService.update(id, kupacProizvodDTO);
         return ResponseEntity.ok(id);
+    }
+
+    //Za testiranje neimplementiranih funkcije
+    @PostMapping("/kosarica/{kupacId}/kupi")
+    public ResponseEntity<String> kupiProizvodeIzKosarice(@PathVariable Integer kupacId) {
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
+                .body("Funkcionalnost kupovine proizvoda iz kosarice trenutno nije implementirana.");
     }
 
     @DeleteMapping("/{id}")

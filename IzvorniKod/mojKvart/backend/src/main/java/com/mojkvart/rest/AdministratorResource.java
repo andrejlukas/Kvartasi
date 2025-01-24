@@ -4,6 +4,7 @@ import com.mojkvart.model.AdministratorDTO;
 import com.mojkvart.service.AdministratorService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,11 +36,18 @@ public class AdministratorResource {
         return ResponseEntity.ok(administratorService.findAll());
     }
 
-    @GetMapping("/{administratorId}")
-    public ResponseEntity<AdministratorDTO> getAdministrator(
+    @GetMapping("/id/{administratorId}")
+    public ResponseEntity<AdministratorDTO> getAdministratorById(
             @PathVariable(name = "administratorId") final Integer administratorId) {
         return ResponseEntity.ok(administratorService.get(administratorId));
     }
+
+    @GetMapping("/mail/{administratorEmail}")
+    public ResponseEntity<Optional<AdministratorDTO>> getAdministratorByEmail(
+            @PathVariable(name = "administratorEmail") final String administratorEmail) {
+        return ResponseEntity.ok(administratorService.findByAdministratorEmail(administratorEmail));
+    }
+
 
     @PostMapping
     public ResponseEntity<Integer> createAdministrator(

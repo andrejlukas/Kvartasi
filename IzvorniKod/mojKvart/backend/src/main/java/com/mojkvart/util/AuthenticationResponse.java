@@ -9,5 +9,5 @@ import lombok.*;
 @NoArgsConstructor
 public class AuthenticationResponse {
     private String token;
-    //private String role;  ovo ce kasnije ici u token
+    private String role;
 }

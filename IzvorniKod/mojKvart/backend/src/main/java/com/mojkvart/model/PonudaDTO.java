@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -21,6 +23,11 @@ public class PonudaDTO {
     private String ponudaOpis;
 
     @NotNull
+    private String ponudaRok;
+
+    @NotNull
     private Integer ponudaPopust;
 
+    // nije obavezno polje, njega popunjavam s trgovinaIme prilikom fetcha
+    private String trgovinaIme;
 }

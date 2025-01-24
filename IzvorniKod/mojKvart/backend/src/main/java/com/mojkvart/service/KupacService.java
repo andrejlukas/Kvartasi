@@ -7,6 +7,7 @@ import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,28 @@ public class KupacService {
                 .map(kupac -> mapToDTO(kupac, new KupacDTO()));
     }
 
+    public List<KupacDTO> getSuspendedCustomers() {
+        return kupacRepository.findAll()
+                .stream().filter(k -> k.getKupacStatus().equals("S"))
+                .map(kupac -> mapToDTO(kupac, new KupacDTO()))
+                .collect(Collectors.toList());
+    }
+
+    public List<KupacDTO> getVerifiedCustomers() {
+        return kupacRepository.findAll()
+                .stream().filter(k -> k.getKupacStatus().equals("V"))
+                .map(kupac -> mapToDTO(kupac, new KupacDTO()))
+                .collect(Collectors.toList());
+    }
+
+    public List<KupacDTO> getUnverifiedCustomers() {
+        return kupacRepository.findAll()
+        .stream().filter(k -> k.getKupacStatus().equals("N"))
+        .map(kupac -> mapToDTO(kupac, new KupacDTO()))
+        .collect(Collectors.toList());
+    }
+
+
     public KupacDTO get(final Integer kupacId) {
         return kupacRepository.findById(kupacId)
                 .map(kupac -> mapToDTO(kupac, new KupacDTO()))
@@ -75,6 +98,9 @@ public class KupacService {
         kupacDTO.setKupacPrezime(kupac.getKupacPrezime());
         kupacDTO.setKupacAdresa(kupac.getKupacAdresa());
         kupacDTO.setKupacSifra(kupac.getKupacSifra());
+        kupacDTO.setVerifikacijskiKod(kupac.getVerifikacijskiKod());
+        kupacDTO.setKodValidanDo(kupac.getKodValidanDo());
+        kupacDTO.setKupacStatus(kupac.getKupacStatus());
         return kupacDTO;
     }
 
@@ -84,6 +110,9 @@ public class KupacService {
         kupac.setKupacPrezime(kupacDTO.getKupacPrezime());
         kupac.setKupacAdresa(kupacDTO.getKupacAdresa());
         kupac.setKupacSifra(kupacDTO.getKupacSifra());
+        kupac.setVerifikacijskiKod(kupacDTO.getVerifikacijskiKod());
+        kupac.setKodValidanDo(kupacDTO.getKodValidanDo());
+        kupac.setKupacStatus(kupacDTO.getKupacStatus());
         return kupac;
     }
 

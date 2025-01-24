@@ -1,0 +1,229 @@
+body {
+  background-color: #ededed;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#trgov{
+  font-size: 20px;
+    font-family: Raleway;
+    font-weight: bold;
+    color: #323131;
+}
+
+.price-alt {
+  font-size: 18px;
+  color: #28a745;
+  font-weight: bold;
+}
+
+#products-alt {
+  flex: 2;
+  background-color: #ededed;
+  border-radius: 8px;
+  margin: 30px;
+  margin-top: 40px;
+}
+
+.card-title-alt {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#productsbox{
+  margin-bottom: 20px;
+}
+
+.product-card-alt img {
+  padding-top: 10px;
+  margin-bottom: 10px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  align-self: center;
+}
+
+.product-card-alt {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+  text-align: left;
+  font-family: Raleway, sans-serif;
+  display: flex;
+  flex-direction: column; 
+  padding: 20px;
+  height: 100%;
+}
+
+.card-body-alt {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1; 
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+#gumbcijena-alt {
+  display: flex;
+  justify-content: space-between; 
+  align-items: baseline; 
+  font-family: Raleway, sans-serif;
+}
+
+.add-to-cart-btn-alt, .pogl {
+  background-color: #28a745; 
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-to-cart-btn-alt:hover, .pogl:hover {
+  background-color: #218838;
+}
+
+#productController {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#productController label {
+  font-family: Raleway, sans-serif;
+  font-size: 16px;
+  color: #333;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#productController input[type="radio"] {
+  margin-right: 5px;
+  accent-color: #28a745;
+}
+
+
+#vani2 {
+  z-index: 1;
+}
+
+#vani2[style*="cursor: not-allowed"] * {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+#vani2[style*="cursor: not-allowed"] #registrationPopup {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+#registrationPopup {
+  display: none;
+  flex-direction: column;
+  gap: 3px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 90%;
+  max-width: 500px;
+  background-color: #ffffff;
+  padding: 20px 30px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  font-family: Raleway, sans-serif;
+}
+
+#registrationPopup input,
+#registrationPopup textarea {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-family: Raleway, sans-serif;
+}
+
+#registrationPopup input:focus,
+#registrationPopup textarea:focus {
+  outline: none;
+  border-color: #2c8c2c;
+  box-shadow: 0px 0px 5px rgba(44, 140, 44, 0.5);
+}
+
+#registrationPopup textarea {
+  resize: none;
+  height: 80px;
+}
+
+#registrationPopup button {
+  padding: 10px 20px;
+  background-color: #2c8c2c;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#registrationPopup button:hover {
+  background-color: rgba(62, 152, 30);
+}
+
+.YesNoButtons button {
+  width: 100%;
+}
+
+#addProduct {
+  background-color: #2c8c2c;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-family: Raleway, sans-serif;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#addProduct:hover {
+  background-color: rgba(62, 152, 30);
+}
+
+@media (max-width: 768px) {
+  .shop-product-row-alt {
+      flex-direction: column;
+  }
+}
+
+@media (max-width: 750px) {
+  #productController {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  #productController label {
+    margin-right: 0;
+  }
+
+  #addProduct {
+    align-self: flex-start;
+  }
+}

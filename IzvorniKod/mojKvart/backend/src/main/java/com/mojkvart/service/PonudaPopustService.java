@@ -4,6 +4,7 @@ import com.mojkvart.domain.KupacPonudaPopust;
 import com.mojkvart.domain.Ponuda;
 import com.mojkvart.domain.PonudaPopust;
 import com.mojkvart.domain.Popust;
+import com.mojkvart.domain.Proizvod;
 import com.mojkvart.domain.Trgovina;
 import com.mojkvart.model.PonudaPopustDTO;
 import com.mojkvart.repos.KupacPonudaPopustRepository;
@@ -61,6 +62,14 @@ public class PonudaPopustService {
         final PonudaPopust ponudaPopust = ponudaPopustRepository.findById(ponudaPopustId)
                 .orElseThrow(NotFoundException::new);
         mapToEntity(ponudaPopustDTO, ponudaPopust);
+        ponudaPopustRepository.save(ponudaPopust);
+    }
+
+    public void promijeniZastavicu(Integer ponudaPopustId, Boolean novoStanje){
+        PonudaPopust ponudaPopust = ponudaPopustRepository.findById(ponudaPopustId)
+                .orElseThrow(() -> new NotFoundException("Ponuda ili popust s ID-jem " + ponudaPopustId + " nije pronađena."));
+        ponudaPopust.setPonudaPopustFlag(novoStanje);
+
         ponudaPopustRepository.save(ponudaPopust);
     }
 

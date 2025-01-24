@@ -49,4 +49,6 @@ public class KupacProizvod {
     @JoinColumn(name = "proizvod_id", nullable = false)
     private Proizvod proizvod;
 
+
+
 }

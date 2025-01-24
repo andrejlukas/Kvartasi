@@ -1,0 +1,125 @@
+#addAttributesController {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+#addAttributesController input[type="text"] {
+    border-radius: 30px;
+    background: rgba(40, 134, 33, 0.30);
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    width: 60%;
+}
+
+#addAttributesController input[type="text"]:focus {
+    background: rgba(40, 134, 33, 0.10);
+    outline: none;
+    border-color: rgba(40, 134, 33, 0.6);
+}
+
+#addAttributesController input[type="text"]::placeholder {
+    color: rgba(40, 134, 33, 0.6);
+}
+
+#addAttributesController button, #updateAtributs {
+    border-radius: 30px;
+    background-color: #28a745; 
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#addAttributesController button:hover
+, #updateAtributs:hover {
+    background-color: #218838;
+}
+
+.atributsList {
+    font-family: 'Raleway', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: rgba(50, 49, 49, 0.7);
+    margin-bottom: 10px;
+    width: 80%;
+    justify-self: center;
+}
+
+.atributsList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.atributsList div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.atributsList label {
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+    color: #323131;
+    margin-left: 8px;
+}
+
+.atributsList input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #218838;
+    cursor: pointer;
+}
+
+.atributsList button {
+    border-radius: 30px;
+    background: rgba(196, 196, 196, 0.8);
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.atributsList button:hover {
+    background: rgba(100, 100, 100, 0.8);
+}
+
+#updateAtributs {
+    display: block;
+    justify-self: center;
+}
+
+#errorPopup{ justify-self: center;}
+
+
+@media (max-width: 768px) {
+    #addAttributesController {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    #addAttributesController input[type="text"] {
+        width: 90%;
+    }
+
+    .atributsList {
+        padding: 15px;
+    }
+
+    .atributsList label {
+        font-size: 16px;
+    }
+}

@@ -5,6 +5,7 @@ import com.mojkvart.domain.Dogadaj;
 import com.mojkvart.domain.PonudaPopust;
 import com.mojkvart.domain.Proizvod;
 import com.mojkvart.domain.Trgovina;
+import com.mojkvart.model.AtributDTO;
 import com.mojkvart.model.TrgovinaDTO;
 import com.mojkvart.repos.AtributRepository;
 import com.mojkvart.repos.DogadajRepository;
@@ -16,13 +17,13 @@ import com.mojkvart.repos.TrgovinaRepository;
 import com.mojkvart.util.NotFoundException;
 import com.mojkvart.util.ReferencedWarning;
 import jakarta.transaction.Transactional;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -47,11 +48,41 @@ public class TrgovinaService {
         this.proizvodRepository = proizvodRepository;
         this.dogadajRepository = dogadajRepository;
         this.ponudaPopustRepository = ponudaPopustRepository;
-        }
+    }
+
+    public static Boolean containsAllOfTheseWords(String[] wordsToCheck, String checker) {
+        for(String word : Stream.of(wordsToCheck).filter(s -> !s.isEmpty()).toList())
+            if (!checker.contains(word)) return false;
+        return true;
+    }
 
     public List<TrgovinaDTO> findAll() {
         final List<Trgovina> trgovinas = trgovinaRepository.findAll(Sort.by("trgovinaId"));
         return trgovinas.stream()
+                .map(trgovina -> mapToDTO(trgovina, new TrgovinaDTO()))
+                .toList();
+    }
+
+    public List<TrgovinaDTO> findAllVerified() {
+        final List<Trgovina> trgovinas = trgovinaRepository.findAll(Sort.by("trgovinaId"));
+        return trgovinas.stream()
+                .filter(t ->t.getTrgovinaStatus().equals("V"))
+                .map(trgovina -> mapToDTO(trgovina, new TrgovinaDTO()))
+                .toList();
+    }
+
+    public List<TrgovinaDTO> findAllNotVerified() {
+        final List<Trgovina> trgovinas = trgovinaRepository.findAll(Sort.by("trgovinaId"));
+        return trgovinas.stream()
+                .filter(t ->t.getTrgovinaStatus().equals("N"))
+                .map(trgovina -> mapToDTO(trgovina, new TrgovinaDTO()))
+                .toList();
+    }
+
+    public List<TrgovinaDTO> findAllSuspended() {
+        final List<Trgovina> trgovinas = trgovinaRepository.findAll(Sort.by("trgovinaId"));
+        return trgovinas.stream()
+                .filter(t ->t.getTrgovinaStatus().equals("S"))
                 .map(trgovina -> mapToDTO(trgovina, new TrgovinaDTO()))
                 .toList();
     }
@@ -84,6 +115,16 @@ public class TrgovinaService {
         trgovinaRepository.deleteById(trgovinaId);
     }
 
+    public List<TrgovinaDTO> getAllTrgovinasBySearch(String input) {
+        String[] keyWords = input.toLowerCase().split("\\s+");
+        return trgovinaRepository.findAll().stream().filter(
+    t -> (containsAllOfTheseWords(keyWords, t.getTrgovinaNaziv().toLowerCase()) ||
+            containsAllOfTheseWords(keyWords, t.getTrgovinaKategorija().toLowerCase()) ||
+            containsAllOfTheseWords(keyWords, t.getTrgovinaOpis().toLowerCase()) &&
+            t.getTrgovinaStatus().equals("V"))
+        ).map(t -> mapToDTO(t, new TrgovinaDTO())).toList();
+    }
+
     private TrgovinaDTO mapToDTO(final Trgovina trgovina, final TrgovinaDTO trgovinaDTO) {
         trgovinaDTO.setTrgovinaId(trgovina.getTrgovinaId());
         trgovinaDTO.setTrgovinaEmail(trgovina.getTrgovinaEmail());
@@ -95,6 +136,7 @@ public class TrgovinaService {
         trgovinaDTO.setTrgovinaRadnoVrijemeOd(trgovina.getTrgovinaRadnoVrijemeOd());
         trgovinaDTO.setTrgovinaRadnoVrijemeDo(trgovina.getTrgovinaRadnoVrijemeDo());
         trgovinaDTO.setTrgovinaSifra(trgovina.getTrgovinaSifra());
+        trgovinaDTO.setTrgovinaStatus(trgovina.getTrgovinaStatus());
         trgovinaDTO.setImaAtributeAtributs(trgovina.getImaAtributeAtributs().stream()
                 .map(Atribut::getAtributId)
                 .collect(Collectors.toSet()));
@@ -111,6 +153,7 @@ public class TrgovinaService {
         trgovina.setTrgovinaRadnoVrijemeOd(trgovinaDTO.getTrgovinaRadnoVrijemeOd());
         trgovina.setTrgovinaRadnoVrijemeDo(trgovinaDTO.getTrgovinaRadnoVrijemeDo());
         trgovina.setTrgovinaSifra(trgovinaDTO.getTrgovinaSifra());
+        trgovina.setTrgovinaStatus(trgovinaDTO.getTrgovinaStatus());
         final List<Atribut> imaAtributeAtributs = atributRepository.findAllById(
                 trgovinaDTO.getImaAtributeAtributs() == null ? Collections.emptyList() : trgovinaDTO.getImaAtributeAtributs());
         if (imaAtributeAtributs.size() != (trgovinaDTO.getImaAtributeAtributs() == null ? 0 : trgovinaDTO.getImaAtributeAtributs().size())) {
@@ -144,5 +187,4 @@ public class TrgovinaService {
         }
         return null;
     }
-
 }

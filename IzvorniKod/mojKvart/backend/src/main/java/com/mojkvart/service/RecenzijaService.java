@@ -37,11 +37,27 @@ public class RecenzijaService {
                 .toList();
     }
 
+    public List<RecenzijaDTO> getAllApproved() {
+        final List<Recenzija> recenzijas = recenzijaRepository.findAll(Sort.by("recenzijaId"));
+        return recenzijas.stream().filter(Recenzija::getOdobrioModerator)
+                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))
+                .toList();
+    }
+
+    public List<RecenzijaDTO> getAllNotApproved() {
+        final List<Recenzija> recenzijas = recenzijaRepository.findAll(Sort.by("recenzijaId"));
+        return recenzijas.stream().filter(recenzija -> !recenzija.getOdobrioModerator())
+                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))
+                .toList();
+    }
+
     public RecenzijaDTO get(final Integer recenzijaId) {
         return recenzijaRepository.findById(recenzijaId)
                 .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))
                 .orElseThrow(NotFoundException::new);
     }
+
+
 
     public Integer create(final RecenzijaDTO recenzijaDTO) {
         final Recenzija recenzija = new Recenzija();
@@ -56,6 +72,20 @@ public class RecenzijaService {
         recenzijaRepository.save(recenzija);
     }
 
+    public void dodajOdgovorNaRecenziju(Integer recenzijaId, String odgovor){
+        Recenzija recenzija = recenzijaRepository.findById(recenzijaId)
+        .orElseThrow(() -> new NotFoundException("Recenzija s ID " + recenzijaId + " nije pronađena"));
+        recenzija.setRecenzijaOdgovor(odgovor);
+        recenzijaRepository.save(recenzija);
+    }
+
+    public void promijeniZastavicu(Integer recenzijaId){
+        Recenzija recenzija = recenzijaRepository.findById(recenzijaId)
+        .orElseThrow(() -> new NotFoundException("Recenzija s ID " + recenzijaId + " nije pronađena"));
+        recenzija.setOdobrioModerator(true);
+        recenzijaRepository.save(recenzija);
+    }
+
     public void delete(final Integer recenzijaId) {
         recenzijaRepository.deleteById(recenzijaId);
     }
@@ -67,19 +97,20 @@ public class RecenzijaService {
     }
         List<Recenzija> listaRecenzija = recenzijaRepository.findByTrgovina_TrgovinaId(id);
         return listaRecenzija.stream()
-                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))  // mapiraš recenziju u DTO
-                .collect(Collectors.toList());  // vraćaš listu DTO objekata
+                .filter(Recenzija::getOdobrioModerator)
+                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))  
+                .collect(Collectors.toList());  
     }
 
     public List<RecenzijaDTO> getKupacsRecenzijas(Integer id) {
-        // Provera postojanja trgovine
+        // Provera postojanja kupca
     if (!kupacRepository.existsById(id)) {
         throw new NotFoundException("Kupac sa ID " + id + " nije pronađen");
     }
         List<Recenzija> listaRecenzija = recenzijaRepository.findByKupac_KupacId(id);
         return listaRecenzija.stream()
-                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO()))  // mapiraš recenziju u DTO
-                .collect(Collectors.toList());  // vraćaš listu DTO objekata
+                .map(recenzija -> mapToDTO(recenzija, new RecenzijaDTO())) 
+                .collect(Collectors.toList());  
     }
     
     

@@ -1,0 +1,183 @@
+body {
+    background-color: #ededed;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  #reviews-alt1 {
+    flex: 2;
+    background-color: #ededed;
+    border-radius: 8px;
+    margin: 30px;
+    margin-top: 5px;
+  }
+  
+  .card-title-alt1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #323131;
+  }
+  
+  #reviewsbox1 {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  .review-card-alt1 {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    text-align: left;
+    font-family: Raleway, sans-serif;
+    display: flex;
+    flex-direction: column; 
+    padding: 20px;
+    width:  98%;
+  }
+  
+  .card-body-alt1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1; 
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+  
+  .review-section-alt1 {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 30px 0;
+  }
+  
+  .row1 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0px;
+  }
+
+  #opisrec{
+    font-size: 18px;
+  }
+
+  .card-text-alt1 strong{
+    color:#323131;
+  }
+  
+  
+
+  .add-to-cart-btn-yes{
+    background-color: #28a745; 
+    margin-top: 10px;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+    width: 60%;
+    align-self: center;
+  }
+
+  .add-to-cart-btn-yes:hover{
+    background-color: #218838;
+  }
+
+  .add-to-cart-btn-no{
+    background-color: #e12020; 
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+    width: 60%;
+    align-self: center;
+  }
+
+  .add-to-cart-btn-no:hover{
+    background-color: #ae2323;
+  }
+  
+ 
+  
+  #reviewController1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  #reviewController1 label {
+    font-family: Raleway, sans-serif;
+    font-size: 16px;
+    color: #323131;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  #reviewController1 input[type="radio"] {
+    margin-right: 5px;
+    accent-color: #28a745;
+  }
+  
+  #vani2 {
+    z-index: 1;
+  }
+  
+  
+
+  @media (max-width: 780px) {
+    .review-card-alt1 {
+      flex-direction: column;
+    }
+
+    .add-to-cart-btn-yes{
+        width: 80%;
+       }
+     
+     
+       .add-to-cart-btn-no{
+         width: 80%;
+       }
+  }
+  
+  @media (max-width: 750px) {
+    #reviewController1 {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+  
+    #reviewController1 label {
+      margin-right: 0;
+    }
+  
+    #addReview {
+      align-self: flex-start;
+    }
+
+    .add-to-cart-btn-yes{
+       width: 80%;
+      }
+    
+    
+      .add-to-cart-btn-no{
+        width: 80%;
+      }
+  }
+  

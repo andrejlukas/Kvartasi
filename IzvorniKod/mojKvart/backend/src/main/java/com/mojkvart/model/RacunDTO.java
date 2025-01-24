@@ -12,11 +12,10 @@ public class RacunDTO {
 
     private Long racunId;
 
-    @NotNull
     private LocalDateTime vrijemeDatumNastanka;
 
     @NotNull
-    private boolean placen;
+    private Character stanje;
 
     @NotNull
     private Integer kupac;
