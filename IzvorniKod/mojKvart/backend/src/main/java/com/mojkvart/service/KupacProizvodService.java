@@ -72,7 +72,10 @@ public class KupacProizvodService {
                 List<KupacProizvod> kupacProizvodi = kupacProizvodRepository.findByKupac_KupacId(kupacId);
 
                 // Grupiraj proizvode po trgovinama koristeći mapu
-                return kupacProizvodi.stream().filter(kp -> kp.getRacun().getStanje() == 'K')
+                return kupacProizvodi.stream()
+                        .filter(kp -> kp.getRacun().getStanje() == 'K' &&
+                                kp.getRacun().getTrgovina().getTrgovinaStatus().equals("V") &&
+                                kp.getProizvod().getProizvodFlag().equals("A"))
                                 .collect(Collectors.groupingBy(
                                                 kp -> kp.getRacun().getRacunId(), // Grupiraj po racun id-ju
                                                 Collectors.mapping(
