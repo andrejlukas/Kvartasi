@@ -1,5 +1,6 @@
 # Kvartaši
 
+https://mojkvartfinalversion.onrender.com/
 
 # Opis projekta
 Ovaj projekt je reultat timskog rada u sklopu projektnog zadatka kolegija [Programsko inženjerstvo](https://www.fer.unizg.hr/predmet/proinz) na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu. 
@@ -25,7 +26,7 @@ Kratko opisati cilj Vašeg projekta. Vaša motivacija?  (Napomena: odgovor nije 
 **ADMINISTRATORI:** dodjeljivati uloge, izbaciti korisnike iz aplikacije po potrebi
 
 # Tehnologije
-Kao framework za frontend koristimo React, a za backend SpringBoot. Takoder smo koristili alate kao Vite i Bootstrap da nam olakšaju izradu. Za testiranje backenda smo se poslužili POSTMAN clientom, a za testiranje frontenda smo iskoristili Google development tools.
+Kao framework za frontend koristimo React, a za backend SpringBoot. Takoder smo koristili alate kao Vite i Bootstrap da nam olakšaju izradu. Za testiranje backenda smo se poslužili POSTMAN klijentom, a za testiranje frontenda smo iskoristili Google development tools.
 
 # Članovi tima 
 Andrej Lukas <br/>
@@ -39,6 +40,3 @@ Petar Božović  <br/>
 
 # Kontribucije
 >Pravila ovise o organizaciji tima i su često izdvojena u CONTRIBUTING.md
-
-# Licence
-
