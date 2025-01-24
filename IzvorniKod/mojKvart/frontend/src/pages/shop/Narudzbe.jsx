@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navbar } from "../../components/ShopNavbar";
-import '../../styles/ShopNarudzbe.css'
+import '../../styles/ShopNarudzbe.css';
 
 export function ShopNarudzbe() {
   const [shopEmail, setShopEmail] = useState(null);
@@ -75,6 +75,7 @@ export function ShopNarudzbe() {
       },
     };
 
+    // Fetch preuzete narudzbe
     fetch(`/api/racuns?trgovinaId=${shopId}`, options)
       .then(async (response) => {
         if (!response.ok) {
@@ -84,19 +85,45 @@ export function ShopNarudzbe() {
         return response.json();
       })
       .then((data) => {
-        const nepreuzete = data.filter((narudzba) => narudzba.stanje === "T");
         const preuzete = data.filter((narudzba) => narudzba.stanje === "P");
+        setPreuzeteNarudzbe(preuzete);
+        if (narudzbeType === "preuzete") {
+          setSelectedNarudzbe(preuzete);
+        }
+      })
+      .catch((error) => setError(error.message));
+
+    // Fetch nepreuzete narudzbe
+    fetch(`/api/kupacProizvods/narudzbeTrgovina/${shopId}`, options)
+      .then(async (response) => {
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(text);
+        }
+        return response.json();
+      })
+      .then((data) => {
+
+        console.log(data);
+        const nepreuzete = Object.entries(data).map(([racunId, proizvodi]) => ({
+          racunId,
+          kupacIme: proizvodi[0].kupacIme,
+          kupacPrezime: proizvodi[0].kupacPrezime,
+          proizvodi: proizvodi.map((p) => ({
+            naziv: p.proizvodNaziv,
+            cijena: p.proizvodCijena,
+            kolicina: p.proizvodKolicina,
+          })),
+          ukupnaCijena: proizvodi.reduce((sum, p) => sum + p.proizvodCijena * p.proizvodKolicina, 0),
+        }));
 
         setNepreuzeteNarudzbe(nepreuzete);
-        setPreuzeteNarudzbe(preuzete);
-
-        // Postavi početni prikaz narudžbi na nepreuzete
-        setSelectedNarudzbe(nepreuzete);
+        if (narudzbeType === "nepreuzete") {
+          setSelectedNarudzbe(nepreuzete);
+        }
       })
-      .catch((error) => {
-        setError(error.message);
-      });
-  }, [shopId]);
+      .catch((error) => setError(error.message));
+  }, [shopId, narudzbeType]);
 
   const handleNarudzbeTypeChange = (type) => {
     setNarudzbeType(type);
@@ -122,7 +149,6 @@ export function ShopNarudzbe() {
         }
       })
       .then(() => {
-        // Ažuriraj lokalni state
         setNepreuzeteNarudzbe((prev) =>
           prev.filter((narudzba) => narudzba.racunId !== racunId)
         );
@@ -131,78 +157,75 @@ export function ShopNarudzbe() {
           ...nepreuzeteNarudzbe.filter((narudzba) => narudzba.racunId === racunId),
         ]);
 
-        // Ažuriraj trenutno prikazane narudžbe
         if (narudzbeType === "nepreuzete") {
           setSelectedNarudzbe((prev) =>
             prev.filter((narudzba) => narudzba.racunId !== racunId)
           );
         }
       })
-      .catch((error) => {
-        setError(error.message);
-      });
+      .catch((error) => setError(error.message));
   };
 
   return (
-   <div>
-     <Navbar />
-     <div className="shop-orders-container">
-       {error && <p className="shop-orders-error-text">{error}</p>}
- 
-       <div className="shop-orders-radio-buttons mb-3">
-         <div id="divov">
-            <div>
-         <label className="me-3">
-           <input
-             type="radio"
-             name="narudzbeType"
-             value="nepreuzete"
-             checked={narudzbeType === "nepreuzete"}
-             onChange={() => handleNarudzbeTypeChange("nepreuzete")}
-           />
-           Nepreuzete narudžbe
-         </label>
-         </div>
-         <div>
-         <label>
-           <input
-             type="radio"
-             name="narudzbeType"
-             value="preuzete"
-             checked={narudzbeType === "preuzete"}
-             onChange={() => handleNarudzbeTypeChange("preuzete")}
-           />
-           Preuzete narudžbe
-         </label>
-         </div>
-         </div>
-       </div>
-   
-      <div id="sve">
-       {selectedNarudzbe.length > 0 ? (
-         selectedNarudzbe.map((narudzba) => (
-           <div key={narudzba.racunId} className="shop-order-card my-3">
-             <div className="shop-order-card-body">
-               <h5 className="shop-order-card-title">Račun ID: {narudzba.racunId}</h5>
-               <p>Status: {narudzbeType === "nepreuzete" ? "Nepreuzeta narudžba" : "Preuzeta narudžba"}</p>
-               {narudzbeType === "nepreuzete" && (
-                 <button
-                   className="shop-order-btn shop-order-btn-success"
-                   onClick={() => markAsPreuzeta(narudzba.racunId)}
-                 >
-                   Označi kao preuzeto
-                 </button>
-               )}
-             </div>
-           </div>
-         ))
-       ) : (
-         <p>
-           Nema {narudzbeType === "nepreuzete" ? "nepreuzetih" : "preuzetih"} narudžbi.
-         </p>
-       )}
-     </div>
-     </div>
-   </div>
- ); 
+    <div>
+      <Navbar />
+      <div className="shop-orders-container">
+        {error && <p className="shop-orders-error-text">{error}</p>}
+
+        <div className="shop-orders-radio-buttons mb-3">
+          <label className="me-3">
+            <input
+              type="radio"
+              name="narudzbeType"
+              value="nepreuzete"
+              checked={narudzbeType === "nepreuzete"}
+              onChange={() => handleNarudzbeTypeChange("nepreuzete")}
+            />
+            Nepreuzete narudžbe
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="narudzbeType"
+              value="preuzete"
+              checked={narudzbeType === "preuzete"}
+              onChange={() => handleNarudzbeTypeChange("preuzete")}
+            />
+            Preuzete narudžbe
+          </label>
+        </div>
+
+        <div>
+        {selectedNarudzbe.map((narudzba) => (
+  <div key={narudzba.racunId} className="shop-order-card my-3">
+    <div className="shop-order-card-body">
+      <h5 className="shop-order-card-title">Račun ID: {narudzba.racunId}</h5>
+      {narudzbeType === "nepreuzete" ? (
+        <>
+          <p>Kupac: <strong>{narudzba.kupacIme} {narudzba.kupacPrezime}</strong></p>
+          <ul>
+            {narudzba.proizvodi.map((proizvod, index) => (
+              <li key={index}>
+                {proizvod.naziv} - {proizvod.kolicina} x {proizvod.cijena} €
+              </li>
+            ))}
+          </ul>
+          <p>Ukupna cijena: <strong>{narudzba.ukupnaCijena.toFixed(2)} € </strong></p>
+          <button
+            className="shop-order-btn shop-order-btn-success"
+            onClick={() => markAsPreuzeta(narudzba.racunId)}
+          >
+            Označi kao preuzeto
+          </button>
+        </>
+      ) : (
+        <p>Status: Preuzeta</p>
+      )}
+    </div>
+  </div>
+))}
+        </div>
+      </div>
+    </div>
+  );
 }
