@@ -71,13 +71,13 @@ body {
 }
 
 .moji-podaci-form-group textarea{
-    resize: none;
+    resize: none; 
     height: 80px !important;
 }
 
 #spremi-promjene-button, #zatvori-button {
     border-radius: 30px;
-    background: rgba(196, 196, 196, 0.80);
+    background-color: #28a745; 
     color: #ffffff;
     border: none;
     padding: 10px 20px;
@@ -88,7 +88,7 @@ body {
 }
 
 #spremi-promjene-button:hover, #zatvori-button:hover {
-    background: rgba(100, 100, 100, 0.8);
+    background-color: #218838;
 }
 
 #spremi-promjene-button:disabled, #zatvori-button:disabled {

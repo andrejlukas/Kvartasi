@@ -227,9 +227,10 @@ export function ModeratorRecenzije() {
                     <div className="card-body-alt1">
                       <h5 className="card-title-alt1">Recenzija ID: {review.recenzijaId}</h5>
                       <p className="card-text-alt1" id="opisrec">{review.recenzijaOpis}</p>
-                      <p className="card-text-alt1" > <strong> Ocjena:</strong> {review.recenzijaZvjezdice}</p>
-                      <p className="card-text-alt1"><strong> Kupac ID: </strong> {review.kupacId}</p>
-                      <p className="card-text-alt1"><strong>Trgovina ID:</strong> {review.trgovinaId}</p>
+                      <p className="card-text-alt1"><strong>Odgovor: </strong>{review.recenzijaOdgovor == null ? "Nema odgovora" : review.recenzijaOdgovor}</p>
+                      <p className="card-text-alt1"><strong>Ocjena: </strong>{review.recenzijaZvjezdice}</p>
+                      <p className="card-text-alt1"><strong>Kupac ID: </strong> {review.kupacId}</p>
+                      <p className="card-text-alt1"><strong>Trgovina ID: </strong> {review.trgovinaId}</p>
                       {reviewsType === "notApproved" && (
                         <>
                           <button

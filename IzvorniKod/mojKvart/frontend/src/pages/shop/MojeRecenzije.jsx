@@ -114,11 +114,40 @@ export function ShopMojeRecenzije() {
          recenzijaZvjezdice: "",
          recenzijaOdgovor: "",
          vrijemeKreiranja: "",
-         odobrioModerator: "",
+         odobrioModerator: true,
          kupacId: "",
          trgovinaId: ""
       });
       document.getElementById("registrationPopup").style.display = "none";
+   };
+
+   const sendResponse = () => {
+      popupRecenzija.odobrioModerator = false;
+
+      const token = localStorage.getItem("token");
+      const options = {
+         method: "PUT",
+         headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+         }, body: JSON.stringify(popupRecenzija)
+      }
+
+      fetch(`/api/recenzijas/${popupRecenzija.recenzijaId}`, options)
+         .then(async (response) => {
+            if (!response.ok) {
+               const text = await response.text();
+               throw new Error(text);
+            }
+            return response.text();
+         })
+         .then(resp => {
+            closePopup();
+            window.location.reload();
+         })
+         .catch((error) => {
+            setPopupError(error.message);
+         });
    };
    
    return (
@@ -138,7 +167,7 @@ export function ShopMojeRecenzije() {
                               <strong id="odg">Vaš odgovor:</strong> {recenzija.recenzijaOdgovor || "Nema odgovora"}
                            </p>
                            <p>
-                              <button onClick={() => openPopup(recenzija)}>Uredi odgovor</button>
+                              <button className="sendResponse" onClick={() => openPopup(recenzija)}>Uredi odgovor</button>
                            </p>
                         </li>
                      ))}
@@ -158,10 +187,11 @@ export function ShopMojeRecenzije() {
                name="popupRecenzija"
                value={popupRecenzija.recenzijaOdgovor || ""}
                onChange={handlePopupRecenzijaChange}
+               maxLength={70}
             />
             {popupError && <p style={{"textAlign": "center", "color": "red"}}>{popupError}</p>}
             <div className="YesNoButtons">
-               <button onClick={() => {}}>Odgovori</button>
+               <button onClick={() => sendResponse()}>Odgovori</button>
                <button onClick={closePopup}>Odustani</button>
             </div>
          </div>

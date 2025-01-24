@@ -28,7 +28,7 @@
 
 #addAttributesController button, #updateAtributs {
     border-radius: 30px;
-    background: rgba(40, 134, 33, 0.8);
+    background-color: #28a745; 
     color: #ffffff;
     border: none;
     padding: 10px 20px;
@@ -38,7 +38,7 @@
 
 #addAttributesController button:hover
 , #updateAtributs:hover {
-    background: rgba(30, 120, 25, 0.8);
+    background-color: #218838;
 }
 
 .atributsList {
@@ -78,7 +78,7 @@
 .atributsList input[type="checkbox"] {
     width: 20px;
     height: 20px;
-    accent-color: rgba(40, 134, 33, 0.8);
+    accent-color: #218838;
     cursor: pointer;
 }
 

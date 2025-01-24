@@ -166,6 +166,20 @@ body {
   color:rgb(0, 0, 0, 0.6) ;
 }
 
+.sendResponse{
+  border-radius: 30px;
+  background-color: #28a745; 
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.sendResponse:hover {
+  background-color: #218838;
+}
+
 /*respozivnost*/
 
 @media (max-width: 768px) {
